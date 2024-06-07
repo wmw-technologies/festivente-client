@@ -1,0 +1,19 @@
+//py-2 text-xs text-white bg-black
+.footer {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 0.75rem;
+    color: white;
+    background-color: black;
+
+    //container mx-auto text-center
+    .container {
+        width: 1536px;
+        margin: 0 auto;
+        text-align: center;
+        //display: flex;
+        //flex-direction: column;
+        //flex: 1 1 100%;
+        //margin: 0 auto;
+    }
+}
