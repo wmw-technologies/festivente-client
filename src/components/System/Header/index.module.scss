@@ -1,19 +1,47 @@
-//py-2 text-xs text-white bg-black
-.footer {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    font-size: 0.75rem;
-    color: white;
-    background-color: black;
+.header {
+    display: flex;
+}
 
-    //container mx-auto text-center
-    .container {
-        width: 1536px;
-        margin: 0 auto;
-        text-align: center;
-        //display: flex;
-        //flex-direction: column;
-        //flex: 1 1 100%;
-        //margin: 0 auto;
+.headerLeft {
+    padding: 1rem;
+    background-color: var(--f-white);
+    transition: width 0.3s;
+    display: flex;
+    overflow: hidden;
+
+    &.expanded {
+        width: 18rem; // Tailwind's w-72 is 18rem
     }
+
+    &.collapsed {
+        width: 100px; // Custom width
+    }
+}
+
+//.nuxt-link {
+//    height: 4rem; // Tailwind's h-16 is 4rem
+//    flex-shrink: 0;
+//
+//    &.expanded {
+//        width: 14rem; // Tailwind's w-56 is 14rem
+//    }
+//
+//    &.collapsed {
+//        width: 4rem; // Tailwind's w-16 is 4rem
+//    }
+//}
+
+.logo {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+
+.headerRight {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: 1;
+    padding: 1rem;
+    border-left: 1px solid #d3d3d3;
 }

@@ -25,12 +25,12 @@ export default function RootLayout({
         <body className={inter.className}>
         <main className={styles.main}>
             <SystemBanner/>
-            <div className={styles.container}>
+            <div className={styles.mainContainer}>
                 {/*<NuxtLoadingIndicator color="red" :height="20" /> */}
                 <SystemHeader/>
-                <div className="flex flex-1">
+                <div className={styles.mainContent}>
                     <SytemMenu/>
-                    <div className="flex-1 p-4 pt-0 border-l border-gray-light">
+                    <div className={styles.mainContentInner}>
                         <SystemBreadcrumb/>
                         {children}
                     </div>
