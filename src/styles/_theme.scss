@@ -1,10 +1,11 @@
 @import "variables";
 
 :root {
-  --f-primary:  #1e40af;
+  --f-primary: #1e40af;
   --f-gray-100: #f8fafc;
   --f-gray-200: #f1f5f9;
   --f-gray-300: #e2e8f0;
+  --f-white: #ffffff;
 }
 
 * {
@@ -23,6 +24,9 @@ ul, ol {
   list-style: none;
 }
 
-//body {
-//  background: var(--f-primary);
-//}
+button {
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  display: flex;
+}

@@ -1,0 +1,15 @@
+.banner {
+    background-color: var(--f-primary);
+    color: var(--f-white);
+    padding: 0.5rem;
+    text-align: center;
+    position: relative;
+    font-size: 0.875rem;
+}
+
+.bannerButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0.75rem;
+}

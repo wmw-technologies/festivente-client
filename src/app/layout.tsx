@@ -3,7 +3,11 @@ import type {Metadata} from "next";
 import {Inter} from "next/font/google";
 import "../styles/styles.scss";
 import styles from "./layout.module.scss";
+import SystemBanner from "@/src/components/System/Banner";
+import SystemHeader from "@/src/components/System/Header";
+import SytemMenu from "@/src/components/System/Menu";
 import SystemFooter from "@/src/components/System/Footer";
+import SystemBreadcrumb from "@/src/components/System/Breadcrumb";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -19,38 +23,20 @@ export default function RootLayout({
     return (
         <html lang="pl">
         <body className={inter.className}>
-        {/*<nav>*/}
-        {/*    <div className="logo">LOGO</div>*/}
-        {/*    <ul className="menu">*/}
-        {/*        {SITEMAP.map((item) => (*/}
-        {/*            <li key={item.path}>*/}
-        {/*                <Link href={item.path}>*/}
-        {/*                    /!*<UIIcon name={item.icon} size={24}/>*!/*/}
-        {/*                    <span>{item.name}</span>*/}
-        {/*                </Link>*/}
-        {/*            </li>*/}
-        {/*        ))}*/}
-        {/*    </ul>*/}
-        {/*</nav>*/}
-        {/*<div>*/}
-        {/*    <header></header>*/}
-        {/*    <main>{children}</main>*/}
-        {/*</div>*/}
         <main className={styles.main}>
-            {/*// <TheBanner />*/}
+            <SystemBanner/>
             <div className={styles.container}>
                 {/*<NuxtLoadingIndicator color="red" :height="20" /> */}
-                {/*<TheHeader/>*/}
+                <SystemHeader/>
                 <div className="flex flex-1">
-                    {/*<TheMenu/>*/}
+                    <SytemMenu/>
                     <div className="flex-1 p-4 pt-0 border-l border-gray-light">
-                        {/*<TheBreadcrumb/>*/}
-                        {/*<slot/>*/}
+                        <SystemBreadcrumb/>
+                        {children}
                     </div>
                 </div>
             </div>
             <SystemFooter/>
-            {/*<TheFooter/>*/}
         </main>
         </body>
         </html>
