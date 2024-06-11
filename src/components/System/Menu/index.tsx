@@ -1,6 +1,7 @@
 import styles from "./index.module.scss";
 import {SITEMAP} from "@/sitemap";
 import Link from 'next/link';
+import UIIcon from "@/src/components/UI/Icon";
 
 export default function SystemMenu() {
     const isMenuCollapsed = false;
@@ -25,24 +26,21 @@ export default function SystemMenu() {
                                     {/*    title={item.name}*/}
                                     {/*    className={`flex items-center justify-between px-6 py-3 rounded-full ${styles.link} ${item.path === openedTab ? 'active' : ''}`}*/}
                                     {/*>*/}
-                                    {/*    <div className="flex items-center">*/}
-                                    {/*        /!*{item.icon && <BaseIcon name={item.icon}/>}*!/*/}
-                                    {/*        {!isMenuCollapsed && (*/}
-                                    {/*            <>*/}
-                                    {/*                <span className="ml-3 mr-2 leading-5">{item.name}</span>*/}
-                                    {/*                /!*{item.info && <BaseBadge>{item.info}</BaseBadge>}*!/*/}
-                                    {/*            </>*/}
-                                    {/*        )}*/}
-                                    {/*    </div>*/}
-                                    {/*    /!*{item.children?.length && !isMenuCollapsed && (*!/*/}
-                                    {/*    /!*    // <BaseToggleButton*!/*/}
-                                    {/*    /!*    //     isOpen={item.route === openedTab}*!/*/}
-                                    {/*    /!*    //     onClick={(e) => {*!/*/}
-                                    {/*    /!*    //         e.preventDefault();*!/*/}
-                                    {/*    /!*    //         changeTab(item.route);*!/*/}
-                                    {/*    /!*    //     }}*!/*/}
-                                    {/*    /!*    // />*!/*/}
-                                    {/*    /!*)}*!/*/}
+                                        <div className="flex items-center">
+                                            {item.icon && <UIIcon name={item.icon}/>}
+                                            {!isMenuCollapsed && (
+                                                <span className="ml-3 mr-2 leading-5">{item.name}</span>
+                                            )}
+                                        </div>
+                                        {/*{item.children?.length && !isMenuCollapsed && (*/}
+                                        {/*    // <BaseToggleButton*/}
+                                        {/*    //     isOpen={item.route === openedTab}*/}
+                                        {/*    //     onClick={(e) => {*/}
+                                        {/*    //         e.preventDefault();*/}
+                                        {/*    //         changeTab(item.route);*/}
+                                        {/*    //     }}*/}
+                                        {/*    // />*/}
+                                        {/*)}*/}
                                     {/*</a>*/}
                                 </Link>
                                 {/*{item.children?.length && item.route === openedTab && !isMenuCollapsed && (*/}

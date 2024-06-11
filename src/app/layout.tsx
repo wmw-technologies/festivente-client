@@ -24,7 +24,7 @@ export default function RootLayout({
         <html lang="pl">
         <body className={inter.className}>
         <main className={styles.main}>
-            <SystemBanner/>
+            {/*<SystemBanner/>*/}
             <div className={styles.mainContainer}>
                 {/*<NuxtLoadingIndicator color="red" :height="20" /> */}
                 <SystemHeader/>

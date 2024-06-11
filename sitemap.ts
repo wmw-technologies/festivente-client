@@ -19,7 +19,7 @@ export const SITEMAP = [
     },
     {
         name: "Wypożyczenia",
-        icon: "Convert3DCube",
+        icon: "HomeIcon",
         path: "/rentals"
     },
     {

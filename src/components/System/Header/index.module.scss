@@ -1,47 +1,48 @@
 .header {
     display: flex;
-}
 
-.headerLeft {
-    padding: 1rem;
-    background-color: var(--f-white);
-    transition: width 0.3s;
-    display: flex;
-    overflow: hidden;
+    .headerLeft {
+        padding: 1rem;
+        background-color: var(--f-white);
+        transition: width 0.3s;
+        display: flex;
+        overflow: hidden;
 
-    &.expanded {
-        width: 18rem; // Tailwind's w-72 is 18rem
+        &.expanded {
+            width: 18rem;
+        }
+
+        &.collapsed {
+            width: 100px;
+        }
+
+        .logoLink {
+            height: 4rem;
+            flex-shrink: 0;
+            transition: width 0.3s;
+
+            &.expanded {
+                width: 14rem;
+            }
+
+            &.collapsed {
+                width: 4rem;
+            }
+
+            .logo {
+                object-fit: contain;
+                width: 100%;
+                height: 100%;
+            }
+        }
     }
 
-    &.collapsed {
-        width: 100px; // Custom width
+    .headerRight {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex: 1;
+        padding: 1rem;
+        border-left: 1px solid #d3d3d3;
     }
-}
-
-//.nuxt-link {
-//    height: 4rem; // Tailwind's h-16 is 4rem
-//    flex-shrink: 0;
-//
-//    &.expanded {
-//        width: 14rem; // Tailwind's w-56 is 14rem
-//    }
-//
-//    &.collapsed {
-//        width: 4rem; // Tailwind's w-16 is 4rem
-//    }
-//}
-
-.logo {
-    object-fit: contain;
-    width: 100%;
-    height: 100%;
-}
-
-.headerRight {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex: 1;
-    padding: 1rem;
-    border-left: 1px solid #d3d3d3;
 }
