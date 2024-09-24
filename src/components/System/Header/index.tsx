@@ -3,6 +3,7 @@ import logoMark from '@/public/logo.svg';
 import logo from '@/public/logo.svg';
 import Image from 'next/image';
 import Link from 'next/link';
+import UIDropdown from '@/src/components/UI/Dropdown';
 
 export default function SystemHeader() {
     const isMenuCollapsed = false;
@@ -28,6 +29,7 @@ export default function SystemHeader() {
                 {/*            <BaseDropdownItem @click="$router.push({ name: 'my-account' }), close()"> Moje konto </BaseDropdownItem>*/}
                 {/*        <BaseDropdownItem @click="logout(), close()">Wyloguj się</BaseDropdownItem>*/}
                 {/*</BaseDropdown>*/}
+                <UIDropdown />
             </div>
         </header>
     );

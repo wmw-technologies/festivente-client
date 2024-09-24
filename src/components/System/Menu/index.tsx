@@ -5,7 +5,7 @@ import styles from './index.module.scss';
 import { SITEMAP } from '@/sitemap';
 import Link from 'next/link';
 import UIIcon from '@/src/components/UI/Icon';
-import UIToggleButton from '@/src/components/UI/ToggleButton';
+import UIButton from '@/src/components/UI/Button';
 
 export default function SystemMenu() {
     const pathName = usePathname();
@@ -40,7 +40,7 @@ export default function SystemMenu() {
                                             <UIIcon name={item.icon} />
                                             {!isMenuCollapsed && <span>{item.name}</span>}
                                         </div>
-                                        {item.children?.length && <UIToggleButton isOpen={true} />}
+                                        {item.children?.length && <UIButton.Toggle isOpen={true} />}
                                     </Link>
                                     {/*{item.children?.length && item.route === openedTab && !isMenuCollapsed && (*/}
                                     {/*    <ul className="flex flex-col gap-1 mt-3 mb-1 ml-10">*/}
