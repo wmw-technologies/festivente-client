@@ -1,4 +1,7 @@
-import styles from "./index.module.scss"
+import styles from './index.module.scss';
+import logoMark from '@/public/logo.svg';
+import logo from '@/public/logo.svg';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function SystemHeader() {
@@ -7,8 +10,12 @@ export default function SystemHeader() {
     return (
         <header className={styles.header}>
             <div className={`${styles.headerLeft} ${isMenuCollapsed ? styles.collapsed : styles.expanded}`}>
-                <Link href="/" className={`${styles.logoLink} ${isMenuCollapsed ? styles.collapsed : styles.expanded}`}>
-                    <img src={isMenuCollapsed ? '/logomark.png' : '/logo.png'} alt="logo" className={styles.logo}/>
+                <Link href='/' className={`${styles.logoLink} ${isMenuCollapsed ? styles.collapsed : styles.expanded}`}>
+                    <Image
+                        src={isMenuCollapsed ? logoMark : logo}
+                        alt='logo'
+                        className={styles.logo}
+                    />
                 </Link>
             </div>
             <div className={styles.headerRight}>

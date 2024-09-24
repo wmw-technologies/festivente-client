@@ -4,42 +4,43 @@ interface SitemapItem {
     name: string;
     icon: Icon;
     path: string;
+    children?: Array<SitemapItem>;
 }
 
 export const SITEMAP = [
     {
         name: "Dashboard",
-        icon: "AdjustmentsVerticalIcon",
+        icon: "Squares2X2Icon",
         path: "/dashboard"
     },
     {
         name: "Magazyn",
-        icon: "ArrowLongUpIcon",
+        icon: "CubeIcon",
         path: "/warehouse"
     },
     {
         name: "Wypożyczenia",
-        icon: "HomeIcon",
+        icon: "ArrowsRightLeftIcon",
         path: "/rentals"
     },
     {
         name: "Pracownicy",
-        icon: "ArrowLongUpIcon",
+        icon: "UsersIcon",
         path: "/employees"
     },
     {
         name: "Imprezy",
-        icon: "ArrowLongUpIcon",
+        icon: "StarIcon",
         path: "/events"
     },
     {
         name: "Transport",
-        icon: "ArrowLongUpIcon",
+        icon: "TruckIcon",
         path: "/transport"
     },
     {
         name: "Serwis",
-        icon: "ArrowLongUpIcon",
+        icon: "Cog6ToothIcon",
         path: "/service"
     },
 ] as Array<SitemapItem>;
