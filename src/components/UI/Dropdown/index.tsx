@@ -15,7 +15,7 @@ function UIDropdown({ icon, children }: UIDropdownProps) {
   return (
     <Tippy
       trigger="click"
-      placement="bottom-start"
+      placement="bottom-end"
       interactive
       maxWidth={350}
       offset={[0, 8]}
