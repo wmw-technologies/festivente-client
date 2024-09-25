@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import styles from './index.module.scss';
-import { SITEMAP } from '@/sitemap';
+import { SITEMAP } from '@/src/sitemap';
 import Link from 'next/link';
 import UIIcon from '@/src/components/UI/Icon';
 import UIButton from '@/src/components/UI/Button';

@@ -1,7 +1,3 @@
 export default function Employees() {
-    return (
-        <div>
-            employees
-        </div>
-    );
+  return <div>employees</div>;
 }
