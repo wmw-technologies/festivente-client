@@ -5,8 +5,8 @@ import UIIcon from '@/src/components/UI/Icon';
 
 type UIButtonProps = {
     type?: 'button' | 'submit' | 'reset';
+    icon?: Icon;
     variant?: string;
-    icon?: any;
     children?: ReactNode;
 };
 
@@ -24,11 +24,18 @@ type UIActionButtonProps = {
     active?: boolean;
     disabled?: boolean;
     smaller?: boolean;
+    onClick?: () => void;
 };
 
-function UIActionButton({ icon, variant = 'gray', active, disabled, smaller }: UIActionButtonProps) {
+function UIActionButton({ icon, variant = 'black', active, disabled, smaller, onClick }: UIActionButtonProps) {
     return (
-        <button type='button' disabled={disabled} aria-label='button'>
+        <button
+            type='button'
+            disabled={disabled}
+            aria-label='button'
+            className={`${styles.actionButton} ${variant === 'black' ? styles.black : styles.gray}`}
+            onClick={onClick}
+        >
             <UIIcon name={icon} smaller={smaller} />
         </button>
     );
@@ -41,7 +48,7 @@ type UIToggleButtonProps = {
 
 function UIToggleButton({ isOpen, variant }: UIToggleButtonProps) {
     return (
-        <button type='button' title={isOpen ? 'Rozwiń' : 'Zwiń'} className={styles.actionButton}>
+        <button type='button' title={isOpen ? 'Rozwiń' : 'Zwiń'} className={styles.toggleButton}>
             <UIIcon name={isOpen ? 'PlusIcon' : 'MinusIcon'} />
         </button>
     );

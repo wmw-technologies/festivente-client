@@ -1,4 +1,37 @@
 .actionButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition-property: color, background-color;
+    transition-duration: 300ms;
+    transition-timing-function: ease;
+
+    &.black {
+        background-color: var(--f-black);
+        color: var(--f-white);
+
+        &:hover {
+            background-color: var(--f-primary);
+        }
+    }
+
+    &.gray {
+        background-color: var(--f-gray-300);
+        color: var(--f-black);
+
+        &:hover {
+            color: var(--f-primary);
+        }
+    }
+}
+
+.toggleButton {
     border-radius: 9999px;
     padding: 0.375rem;
     transition: color 0.3s, background-color 0.3s;

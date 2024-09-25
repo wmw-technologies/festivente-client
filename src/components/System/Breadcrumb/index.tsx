@@ -1,16 +1,16 @@
-import styles from "./index.module.scss"
+import styles from './index.module.scss';
 import Link from 'next/link';
-import UIIcon from "@/src/components/UI/Icon";
+import UIIcon from '@/src/components/UI/Icon';
 
 export default function SystemBreadcrumb() {
     const breadcrumbs: any[] = [];
 
     return (
         <nav className={styles.nav}>
-            <ol role="list">
+            <ol role='list'>
                 <li>
-                    <Link href="/">
-                        <UIIcon name={'HomeIcon'} smaller/>
+                    <Link href='/'>
+                        <UIIcon name={'HomeIcon'} smaller />
                     </Link>
                 </li>
                 {breadcrumbs.map((item, index) => (

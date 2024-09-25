@@ -1,9 +1,5 @@
 type UIBadgeProps = {};
 
 export default function UIBadge({}: UIBadgeProps) {
-    return (
-        <button>
-            TEST
-        </button>
-    );
+    return <button>TEST</button>;
 }
