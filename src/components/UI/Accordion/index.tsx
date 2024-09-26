@@ -1,5 +1,5 @@
-type UIAccordionProps = {};
+// type UIAccordionProps = {};
 
-export default function UIAccordion({}: UIAccordionProps) {
-    return <button>TEST</button>;
-}
+// export default function UIAccordion({}: UIAccordionProps) {
+//   return <button>TEST</button>;
+// }
