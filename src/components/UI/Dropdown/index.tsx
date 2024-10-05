@@ -34,10 +34,15 @@ function UIDropdown({ icon, children }: UIDropdownProps) {
 
 type UIDropdownItemProps = {
   children: ReactNode;
+  onClick?: () => void;
 };
 
-function UIDropdownItem({ children }: UIDropdownItemProps) {
-  return <div className={styles.dropdownItem}>{children}</div>;
+function UIDropdownItem({ children, onClick }: UIDropdownItemProps) {
+  return (
+    <div className={styles.dropdownItem} onClick={onClick}>
+      {children}
+    </div>
+  );
 }
 
 UIDropdown.Item = UIDropdownItem;

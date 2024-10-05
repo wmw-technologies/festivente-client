@@ -15,7 +15,7 @@ export default function SystemBanner() {
 
   return (
     <div className={styles.banner}>
-      <p>Nowa wersja Festivente 0.0.1 już dostępna!</p>
+      <p>Nowa wersja Festivente 0.2 już dostępna!</p>
       <button type="button" className={styles.bannerButton} aria-label="close-button" onClick={handleClick}>
         <UIIcon name={'XMarkIcon'} smaller />
       </button>

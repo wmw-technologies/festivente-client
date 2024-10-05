@@ -3,14 +3,20 @@
   --f-gray-100: #f8fafc;
   --f-gray-200: #f1f5f9;
   --f-gray-300: #e2e8f0;
+  --f-gray-400: #9ca3af;
   --f-white: #ffffff;
   --f-black: #000000;
+  --f-red: #dc2626;
 }
 
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+}
+
+html {
+  line-height: 1.5;
 }
 
 body {
@@ -21,6 +27,7 @@ strong {
   font-weight: 500;
 }
 
-ul, ol {
+ul,
+ol {
   list-style: none;
 }
