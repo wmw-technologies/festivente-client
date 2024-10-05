@@ -1,0 +1,33 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  .thead {
+    width: 100%;
+
+    tr {
+      border-bottom: 1px solid var(--f-gray-300);
+      color: var(--f-primary);
+
+      th {
+        padding: 0.75rem 0.75rem 0.75rem 1.25rem;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .tbody {
+    tr {
+      border-bottom: 1px solid var(--f-gray-300);
+      height: 50px;
+
+      &:hover {
+        background-color: var(--f-gray-100);
+      }
+      td {
+        padding: 0.5rem 0.75rem 0.5rem 1.25rem;
+      }
+    }
+  }
+}
