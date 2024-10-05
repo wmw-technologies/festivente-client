@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import styles from './index.module.scss';
 import logoMark from '@/public/logo.svg';
 import logo from '@/public/logo.svg';
@@ -9,7 +10,13 @@ import UIDropdown from '@/src/components/UI/Dropdown';
 import UIButton from '@/src/components/UI/Button';
 
 export default function SystemHeader() {
+  const router = useRouter();
   const isMenuCollapsed = false;
+
+  function handleLogout() {
+    console.log('logout');
+    router.push('/sign-in');
+  }
 
   return (
     <header className={styles.header}>
@@ -22,7 +29,7 @@ export default function SystemHeader() {
         <UIButton.Action icon="Bars3BottomLeftIcon" variant="gray" />
         <UIDropdown icon="Cog6ToothIcon">
           <UIDropdown.Item>Moje konto</UIDropdown.Item>
-          <UIDropdown.Item>Wyloguj się</UIDropdown.Item>
+          <UIDropdown.Item onClick={handleLogout}>Wyloguj się</UIDropdown.Item>
         </UIDropdown>
       </div>
     </header>
