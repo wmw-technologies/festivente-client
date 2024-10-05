@@ -1,11 +1,4 @@
-import { Icon } from '@/src/types';
-
-interface SitemapItem {
-  name: string;
-  icon: Icon;
-  path: string;
-  children?: Array<SitemapItem>;
-}
+import { SitemapItem } from '@/src/types';
 
 export const SITEMAP = [
   {

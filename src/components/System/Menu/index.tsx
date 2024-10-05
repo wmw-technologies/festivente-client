@@ -13,7 +13,7 @@ export default function SystemMenu() {
   const pathName = usePathname();
   const isMenuCollapsed = false;
 
-  const isActive = useCallback((path: string) => pathName.startsWith(path), [pathName]);
+  const isActive = (path: string) => pathName.startsWith(path);
   const handleChangeTab = useCallback((tab: string) => setOpenedTab((prev) => (prev === tab ? null : tab)), []);
 
   useEffect(() => {
@@ -26,7 +26,8 @@ export default function SystemMenu() {
         });
       }
     });
-  }, [isActive]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <aside className={`${styles.sidebar} ${isMenuCollapsed ? styles.collapsed : styles.expanded}`}>
