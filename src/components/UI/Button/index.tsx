@@ -6,15 +6,18 @@ import UIIcon from '@/src/components/UI/Icon';
 type UIButtonProps = {
   type?: 'button' | 'submit' | 'reset';
   icon?: Icon;
-  variant?: string;
   children?: ReactNode;
+  onClick?: () => void;
 };
 
-function UIButton({ type = 'button', children }: UIButtonProps) {
+function UIButton({ type = 'button', icon, children, onClick }: UIButtonProps) {
   return (
-    <button type={type}>
-      <span>{children}</span>
-    </button>
+    <div className={styles.containerButton} onClick={onClick}>
+      <button type={type} className={styles.button}>
+        {icon && <UIIcon name={icon} smaller />}
+        <span>{children}</span>
+      </button>
+    </div>
   );
 }
 

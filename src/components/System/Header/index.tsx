@@ -13,8 +13,11 @@ export default function SystemHeader() {
   const router = useRouter();
   const isMenuCollapsed = false;
 
+  function handleRedirect() {
+    router.push('/my-account');
+  }
+
   function handleLogout() {
-    console.log('logout');
     router.push('/sign-in');
   }
 
@@ -28,7 +31,7 @@ export default function SystemHeader() {
       <div className={styles.headerRight}>
         <UIButton.Action icon="Bars3BottomLeftIcon" variant="gray" />
         <UIDropdown icon="Cog6ToothIcon">
-          <UIDropdown.Item>Moje konto</UIDropdown.Item>
+          <UIDropdown.Item onClick={handleRedirect}>Moje konto</UIDropdown.Item>
           <UIDropdown.Item onClick={handleLogout}>Wyloguj się</UIDropdown.Item>
         </UIDropdown>
       </div>

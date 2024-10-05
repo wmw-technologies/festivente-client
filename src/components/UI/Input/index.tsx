@@ -1,15 +1,10 @@
 import styles from './index.module.scss';
-import UIIcon from '@/src/components/UI/Icon';
 
 type UIInputProps = {
-  isOpen: boolean;
-  variant?: 'gray' | 'blue';
+  type?: 'text' | 'password' | 'email';
+  placeholder?: string;
 };
 
-export default function UIInput({ isOpen }: UIInputProps) {
-  return (
-    <button type="button" title={isOpen ? 'Rozwiń' : 'Zwiń'} className={styles.button}>
-      <UIIcon name={isOpen ? 'PlusIcon' : 'MinusIcon'} />
-    </button>
-  );
+export default function UIInput({ type = 'text', placeholder }: UIInputProps) {
+  return <input type={type} placeholder={placeholder} className={styles.input} />;
 }
