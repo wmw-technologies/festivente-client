@@ -21,7 +21,19 @@ export const SITEMAP = [
   {
     name: 'Administracja',
     icon: 'CommandLineIcon',
-    path: '/administration'
+    path: '/administration',
+    children: [
+      {
+        name: 'Użytkownicy',
+        icon: 'UsersIcon',
+        path: '/administration/users'
+      },
+      {
+        name: 'Uprawnienia',
+        icon: 'UsersIcon',
+        path: '/administration/permissions'
+      }
+    ]
   },
   {
     name: 'Magazyn',
