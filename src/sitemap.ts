@@ -1,11 +1,4 @@
-import { Icon } from '@/src/types';
-
-interface SitemapItem {
-  name: string;
-  icon: Icon;
-  path: string;
-  children?: Array<SitemapItem>;
-}
+import { SitemapItem } from '@/src/types';
 
 export const SITEMAP = [
   {
@@ -21,7 +14,19 @@ export const SITEMAP = [
   {
     name: 'Administracja',
     icon: 'CommandLineIcon',
-    path: '/administration'
+    path: '/administration',
+    children: [
+      {
+        name: 'Użytkownicy',
+        icon: 'UsersIcon',
+        path: '/administration/users'
+      },
+      {
+        name: 'Uprawnienia',
+        icon: 'UsersIcon',
+        path: '/administration/permissions'
+      }
+    ]
   },
   {
     name: 'Magazyn',

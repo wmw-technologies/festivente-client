@@ -1,7 +1,7 @@
 .containerButton {
   background: var(--f-black);
   border-radius: 0.25rem;
-  display: flex;
+  display: inline-block;
   justify-self: self-start;
 
   &:hover {
@@ -56,7 +56,7 @@
   }
 
   &.gray {
-    background-color: var(--f-gray-300);
+    background-color: var(--f-gray-200);
     color: var(--f-black);
 
     &:hover {

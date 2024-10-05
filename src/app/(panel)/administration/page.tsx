@@ -1,3 +1,5 @@
-export default function Admin() {
-  return <div>Admin</div>;
+import { redirect } from 'next/navigation';
+
+export default function Administration() {
+  redirect('/administration/users');
 }

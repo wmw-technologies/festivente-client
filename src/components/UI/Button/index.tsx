@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { MouseEvent, ReactNode } from 'react';
 import styles from './index.module.scss';
 import { Icon } from '@/src/types';
 import UIIcon from '@/src/components/UI/Icon';
@@ -45,14 +45,20 @@ function UIActionButton({ icon, variant = 'black', disabled, smaller, onClick }:
 }
 
 type UIToggleButtonProps = {
-  isOpen: boolean;
-  variant?: 'gray' | 'blue';
+  isOpened: boolean;
+  onClick: () => void;
+  // variant?: 'gray' | 'blue';
 };
 
-function UIToggleButton({ isOpen }: UIToggleButtonProps) {
+function UIToggleButton({ isOpened, onClick }: UIToggleButtonProps) {
+  function handleOnClick(e: MouseEvent<HTMLElement>) {
+    e.preventDefault();
+    e.stopPropagation();
+    onClick();
+  }
   return (
-    <button type="button" title={isOpen ? 'Rozwiń' : 'Zwiń'} className={styles.toggleButton}>
-      <UIIcon name={isOpen ? 'PlusIcon' : 'MinusIcon'} />
+    <button type="button" title={isOpened ? 'Zwiń' : 'Rozwiń'} className={styles.toggleButton} onClick={handleOnClick}>
+      <UIIcon name={isOpened ? 'MinusIcon' : 'PlusIcon'} />
     </button>
   );
 }
