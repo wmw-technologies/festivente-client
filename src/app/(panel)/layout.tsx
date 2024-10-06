@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <main className={styles.main}>
       <SystemBanner />
-      <div className={styles.mainContainer}>
+      <div className={`${styles.mainContainer} container`}>
         {/*<NuxtLoadingIndicator color="red" :height="20" /> */}
         <SystemHeader />
         <div className={styles.mainContent}>

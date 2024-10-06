@@ -30,13 +30,13 @@ type UIActionButtonProps = {
   onClick?: () => void;
 };
 
-function UIActionButton({ icon, variant = 'black', disabled, smaller, onClick }: UIActionButtonProps) {
+function UIActionButton({ icon, variant = 'black', active, disabled, smaller, onClick }: UIActionButtonProps) {
   return (
     <button
       type="button"
       disabled={disabled}
       aria-label="button"
-      className={`${styles.actionButton} ${variant === 'black' ? styles.black : styles.gray}`}
+      className={`${styles.actionButton} ${smaller ? styles.smaller : ''} ${active ? styles.active : ''} ${variant === 'black' ? styles.black : styles.gray}`}
       onClick={onClick}
     >
       <UIIcon name={icon} smaller={smaller} />
@@ -47,7 +47,6 @@ function UIActionButton({ icon, variant = 'black', disabled, smaller, onClick }:
 type UIToggleButtonProps = {
   isOpened: boolean;
   onClick: () => void;
-  // variant?: 'gray' | 'blue';
 };
 
 function UIToggleButton({ isOpened, onClick }: UIToggleButtonProps) {
