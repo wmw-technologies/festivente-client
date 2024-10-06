@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import styles from './index.module.scss';
 import { SitemapItem } from '@/src/types';
 import { SITEMAP } from '@/src/sitemap';
@@ -12,28 +13,35 @@ import { useEffect } from 'react';
 export default function SystemBreadcrumb() {
   const [breadcrumbs, setBreadcrumbs] = useState<SitemapItem[]>([]);
   const pathName = usePathname();
+  const params = useParams<Record<string, string>>();
 
-  const findBreadcrumbs = useCallback((items: SitemapItem[], path: string): SitemapItem[] => {
+  const findBreadcrumbs = (items: SitemapItem[], path: string): SitemapItem[] => {
     for (const item of items) {
-      if (item.path === path) {
-        return [item];
+      const sitemapItem = { ...item };
+
+      if (Object.keys(params).length) {
+        sitemapItem.path = item.path.replace(/:([^/]+)/g, (match, p1) => params[p1] || match);
       }
 
-      if (item.children) {
-        const children = findBreadcrumbs(item.children, path);
+      if (sitemapItem.path === path) {
+        return [sitemapItem];
+      }
+
+      if (sitemapItem.children) {
+        const children = findBreadcrumbs(sitemapItem.children, path);
         if (children.length) {
-          return [item, ...children];
+          return [sitemapItem, ...children];
         }
       }
     }
 
     return [];
-  }, []);
+  };
 
   useEffect(() => {
     const breadcrumbs = findBreadcrumbs(SITEMAP, pathName);
     setBreadcrumbs(breadcrumbs);
-  }, [findBreadcrumbs, pathName]);
+  }, [pathName, params]);
 
   return (
     <nav className={styles.nav}>

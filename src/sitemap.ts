@@ -1,6 +1,6 @@
 import { SitemapItem } from '@/src/types';
 
-export const SITEMAP = [
+export const SITEMAP: Array<SitemapItem> = [
   {
     name: 'Dashboard',
     icon: 'Squares2X2Icon',
@@ -19,7 +19,17 @@ export const SITEMAP = [
       {
         name: 'Użytkownicy',
         icon: 'UsersIcon',
-        path: '/administration/users'
+        path: '/administration/users',
+        children: [
+          {
+            name: 'Dodaj użytkownika',
+            path: '/administration/users/add'
+          },
+          {
+            name: 'Edytuj użytkownika',
+            path: '/administration/users/:id'
+          }
+        ]
       },
       {
         name: 'Uprawnienia',
@@ -58,4 +68,4 @@ export const SITEMAP = [
     icon: 'Cog6ToothIcon',
     path: '/service'
   }
-] as Array<SitemapItem>;
+];

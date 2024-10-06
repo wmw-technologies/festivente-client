@@ -9,7 +9,7 @@ export default function AuthLayout({
 }>) {
   return (
     <main className={styles.main}>
-      <div className={styles.mainContainer}>{children}</div>
+      <div className={`${styles.mainContainer} container`}>{children}</div>
       <SystemFooter />
     </main>
   );

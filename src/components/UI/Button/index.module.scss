@@ -63,6 +63,15 @@
       color: var(--f-primary);
     }
   }
+
+  &.smaller {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  &.active {
+    background-color: var(--f-primary);
+  }
 }
 
 .toggleButton {

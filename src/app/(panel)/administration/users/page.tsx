@@ -1,14 +1,16 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { Column } from '@/src/types';
 import UIHeader from '@/src/components/UI/Header';
 import UIButton from '@/src/components/UI/Button';
+import UIDropdown from '@/src/components/UI/Dropdown';
 import UITable from '@/src/components/UI/Table';
 
 export default function AdministrationUsers() {
   const router = useRouter();
 
-  const columns = [
+  const columns: Array<Column> = [
     {
       id: 1,
       header: 'ID',
@@ -33,6 +35,16 @@ export default function AdministrationUsers() {
       id: 5,
       header: 'Email',
       item: (item: any) => <span>{item.email || '-'}</span>
+    },
+    {
+      id: 6,
+      header: '',
+      item: (item: any) => (
+        <UIDropdown icon="EllipsisVerticalIcon" smaller>
+          <UIDropdown.Item onClick={() => handleEdit(item.id)}>Edytuj</UIDropdown.Item>
+        </UIDropdown>
+      ),
+      width: 36
     }
   ];
 
@@ -55,6 +67,10 @@ export default function AdministrationUsers() {
 
   function handleAddUser() {
     router.push('/administration/users/add');
+  }
+
+  function handleEdit(id: number) {
+    router.push(`/administration/users/${id}`);
   }
 
   return (

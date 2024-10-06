@@ -19,7 +19,7 @@ export default function SignIn() {
   return (
     <div className={styles.page}>
       <div className={styles.logo}>
-        <Image src={logo} alt="logo" height={80} />
+        <Image src={logo} alt="logo" height={80} priority />
       </div>
       <div className={styles.container}>
         <form className={styles.form}>

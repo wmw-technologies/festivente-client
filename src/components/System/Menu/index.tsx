@@ -32,16 +32,6 @@ export default function SystemMenu() {
   return (
     <aside className={`${styles.sidebar} ${isMenuCollapsed ? styles.collapsed : styles.expanded}`}>
       <div className="flex flex-col whitespace-nowrap">
-        {!isMenuCollapsed && (
-          <div className={styles.info}>
-            <p>
-              Użytkownik: <strong>Wojciech Skirło</strong>
-            </p>
-            <p>
-              E-mail: <strong>wojciech.skirlo@microsoft.pl</strong>
-            </p>
-          </div>
-        )}
         <nav className={styles.nav}>
           <ul className={styles.levelone}>
             {SITEMAP.map((item) => (
@@ -52,7 +42,7 @@ export default function SystemMenu() {
                   className={`${styles.link} ${isActive(item.path) && styles.active}`}
                 >
                   <div>
-                    <UIIcon name={item.icon} />
+                    <UIIcon name={item.icon ?? 'AcademicCapIcon'} />
                     {!isMenuCollapsed && <span>{item.name}</span>}
                   </div>
                   {item.children?.length && (
