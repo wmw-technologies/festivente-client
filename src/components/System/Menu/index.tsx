@@ -49,8 +49,8 @@ export default function SystemMenu() {
                     <UIButton.Toggle isOpened={item.path === openedTab} onClick={() => handleChangeTab(item.path)} />
                   )}
                 </Link>
-                {item.children?.length && item.path === openedTab && !isMenuCollapsed && (
-                  <ul className={styles.leveltwo}>
+                {item.children?.length && !isMenuCollapsed && (
+                  <ul className={`${styles.leveltwo} ${item.path === openedTab ? styles.show : ''}`}>
                     {item.children.map((el) => (
                       <li key={el.path}>
                         <Link
