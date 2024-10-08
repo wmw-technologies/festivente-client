@@ -41,6 +41,8 @@ export default function SystemBreadcrumb() {
   useEffect(() => {
     const breadcrumbs = findBreadcrumbs(SITEMAP, pathName);
     setBreadcrumbs(breadcrumbs);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathName, params]);
 
   return (

@@ -39,7 +39,7 @@ export default function SystemMenu() {
                 <Link
                   href={item.path}
                   title={item.name}
-                  className={`${styles.link} ${isActive(item.path) && styles.active}`}
+                  className={`${styles.link} ${isActive(item.path) ? styles.active : ''}`}
                 >
                   <div>
                     <UIIcon name={item.icon ?? 'AcademicCapIcon'} />
@@ -56,7 +56,7 @@ export default function SystemMenu() {
                         <Link
                           href={el.path}
                           title={el.name}
-                          className={`${styles.link} ${isActive(el.path) && styles.active}`}
+                          className={`${styles.link} ${isActive(el.path) ? styles.active : ''}`}
                         >
                           {el.name}
                         </Link>
