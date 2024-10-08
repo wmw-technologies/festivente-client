@@ -1,8 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { useStore } from '@/src/store';
 import styles from './index.module.scss';
-import logoMark from '@/public/logo.svg';
 import logo from '@/public/logo.svg';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -11,7 +11,12 @@ import UIButton from '@/src/components/UI/Button';
 
 export default function SystemHeader() {
   const router = useRouter();
-  const isMenuCollapsed = false;
+  const isMenuCollapsed = useStore((state) => state.isCollapsed);
+  const setIsMenuCollapsed = useStore((state) => state.toggleMenu);
+
+  function handleCollapseMenu() {
+    setIsMenuCollapsed();
+  }
 
   function handleRedirect() {
     router.push('/my-account');
@@ -24,12 +29,12 @@ export default function SystemHeader() {
   return (
     <header className={styles.header}>
       <div className={`${styles.headerLeft} ${isMenuCollapsed ? styles.collapsed : styles.expanded}`}>
-        <Link href="/" className={`${styles.logoLink} ${isMenuCollapsed ? styles.collapsed : styles.expanded}`}>
-          <Image src={isMenuCollapsed ? logoMark : logo} alt="logo" className={styles.logo} />
+        <Link href="/" className={styles.logoLink}>
+          <Image src={logo} alt="logo" className={styles.logo} />
         </Link>
       </div>
       <div className={styles.headerRight}>
-        <UIButton.Action icon="Bars3BottomLeftIcon" variant="gray" />
+        <UIButton.Action icon="Bars3BottomLeftIcon" variant="gray" onClick={handleCollapseMenu} />
         <UIDropdown icon="Cog6ToothIcon">
           <UIDropdown.Item onClick={handleRedirect}>Moje konto</UIDropdown.Item>
           <UIDropdown.Item onClick={handleLogout}>Wyloguj się</UIDropdown.Item>

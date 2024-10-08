@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useCallback, useState } from 'react';
+import { useStore } from '@/src/store';
 import { usePathname } from 'next/navigation';
 import styles from './index.module.scss';
 import { SITEMAP } from '@/src/sitemap';
@@ -11,7 +12,7 @@ import UIButton from '@/src/components/UI/Button';
 export default function SystemMenu() {
   const [openedTab, setOpenedTab] = useState<string | null>(null);
   const pathName = usePathname();
-  const isMenuCollapsed = false;
+  const isMenuCollapsed = useStore((state) => state.isCollapsed);
 
   const isActive = (path: string) => pathName.startsWith(path);
   const handleChangeTab = useCallback((tab: string) => setOpenedTab((prev) => (prev === tab ? null : tab)), []);
@@ -45,7 +46,7 @@ export default function SystemMenu() {
                     <UIIcon name={item.icon ?? 'AcademicCapIcon'} />
                     {!isMenuCollapsed && <span>{item.name}</span>}
                   </div>
-                  {item.children?.length && (
+                  {item.children?.length && !isMenuCollapsed && (
                     <UIButton.Toggle isOpened={item.path === openedTab} onClick={() => handleChangeTab(item.path)} />
                   )}
                 </Link>
