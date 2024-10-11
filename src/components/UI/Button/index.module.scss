@@ -1,19 +1,9 @@
 .containerButton {
-  background: var(--f-black);
   border-radius: 0.25rem;
   display: inline-block;
   justify-self: self-start;
 
-  &:hover {
-    .button {
-      background: var(--f-primary);
-      transform: translate(3px, -3px);
-    }
-  }
-
   .button {
-    background: var(--f-black);
-    color: var(--f-white);
     padding: 0.5rem 0.75rem;
     line-height: 1.25;
     display: flex;
@@ -28,6 +18,57 @@
 
     &:focus {
       background: var(--f-primary);
+    }
+  }
+
+  // &.gray {
+  //   background: var(--f-gray-300);
+
+  //   .button {
+  //     background: var(--f-gray-300);
+  //     color: var(--f-black);
+
+  //     &:hover {
+  //       color: var(--f-white);
+  //       background: var(--f-primary);
+  //       transform: translate(3px, -3px);
+  //     }
+  //   }
+  // }
+
+  &.success {
+    background: var(--f-green);
+
+    .button {
+      background: var(--f-green);
+      color: var(--f-white);
+
+      &:hover {
+        color: var(--f-white);
+        background: var(--f-black);
+        transform: translate(3px, -3px);
+      }
+    }
+  }
+
+  &.black {
+    background: var(--f-black);
+
+    .button {
+      background: var(--f-black);
+      color: var(--f-white);
+
+      &:hover {
+        background: var(--f-primary);
+        transform: translate(3px, -3px);
+      }
+    }
+
+    &:hover {
+      .button {
+        background: var(--f-primary);
+        transform: translate(3px, -3px);
+      }
     }
   }
 }

@@ -6,13 +6,16 @@ import UIIcon from '@/src/components/UI/Icon';
 type UIButtonProps = {
   type?: 'button' | 'submit' | 'reset';
   icon?: Icon;
+  variant?: 'gray' | 'black' | 'success';
   children?: ReactNode;
   onClick?: () => void;
 };
 
-function UIButton({ type = 'button', icon, children, onClick }: UIButtonProps) {
+function UIButton({ type = 'button', icon, variant, children, onClick }: UIButtonProps) {
+  const variantClass = variant === 'gray' ? styles.gray : variant === 'success' ? styles.success : styles.black;
+
   return (
-    <div className={styles.containerButton} onClick={onClick}>
+    <div className={`${styles.containerButton} ${variantClass}`} onClick={onClick}>
       <button type={type} className={styles.button}>
         {icon && <UIIcon name={icon} smaller />}
         <span>{children}</span>

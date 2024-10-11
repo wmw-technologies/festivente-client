@@ -11,7 +11,6 @@ export default function UIGroup({ header, required, children }: UIGroupProps) {
   return (
     <label className={styles.group}>
       {children}
-      <slot />
       <span className={styles.label}>
         {header}
         {required && <span className={styles.asterisk}>*</span>}

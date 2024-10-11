@@ -41,7 +41,6 @@ export default function MyAccount() {
   return (
     <>
       <UIHeader>Moje konto</UIHeader>
-      <div style={{ width: '100%', marginBottom: 8 }}></div>
       <UITable columns={columns} data={data} noHeader />
     </>
   );
