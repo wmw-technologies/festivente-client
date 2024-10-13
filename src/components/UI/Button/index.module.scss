@@ -29,7 +29,8 @@
     color: var(--f-white);
   }
 
-  &:hover {
+  &:hover,
+  &:focus {
     &.gray {
       color: var(--f-primary);
     }
@@ -42,6 +43,26 @@
       background: var(--f-primary);
       border-color: var(--f-primary);
     }
+  }
+
+  &:disabled {
+    opacity: 0.6;
+
+    &:hover {
+      &.gray {
+        color: var(--f-primary);
+      }
+  
+      &.success {
+        background: var(--f-primary);
+      }
+  
+      &.black {
+        background: var(--f-black);
+        border-color: var(--f-black);
+      }
+    }
+    cursor: not-allowed;
   }
 }
 

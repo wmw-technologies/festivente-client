@@ -22,7 +22,7 @@ export default function AdministrationUsersForm() {
           <UIButton icon="ArrowLongLeftIcon" variant="gray" onClick={handleBack}>
             Powrót
           </UIButton>
-          <UIButton icon="CheckIcon" variant="black">
+          <UIButton icon="CheckCircleIcon" variant="black">
             Zapisz
           </UIButton>
         </UIPanel>

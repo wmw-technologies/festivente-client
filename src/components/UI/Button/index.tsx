@@ -7,15 +7,16 @@ type UIButtonProps = {
   type?: 'button' | 'submit' | 'reset';
   icon?: Icon;
   variant?: 'gray' | 'black' | 'success';
+  disabled?: boolean;
   children?: ReactNode;
   onClick?: () => void;
 };
 
-function UIButton({ type = 'button', icon, variant, children, onClick }: UIButtonProps) {
+function UIButton({ type = 'button', icon, variant, disabled, children, onClick }: UIButtonProps) {
   const variantClass = variant === 'gray' ? styles.gray : variant === 'success' ? styles.success : styles.black;
 
   return (
-    <button type={type} className={`${styles.button} ${variantClass}`} onClick={onClick}>
+    <button type={type} className={`${styles.button} ${variantClass}`} disabled={disabled} onClick={onClick}>
       {icon && <UIIcon name={icon} smaller />}
       <span>{children}</span>
     </button>

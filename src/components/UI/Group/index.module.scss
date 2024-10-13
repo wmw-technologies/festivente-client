@@ -18,3 +18,10 @@ input:focus ~ .label {
   margin-left: 4px;
   color: var(--f-red);
 }
+
+.error {
+  color: var(--f-red);
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 0.75rem;
+}

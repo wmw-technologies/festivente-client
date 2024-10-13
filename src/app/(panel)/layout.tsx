@@ -1,5 +1,4 @@
 import { ReactNode } from 'react';
-import '@/src/styles/styles.scss';
 import styles from './layout.module.scss';
 import SystemBanner from '@/src/components/System/Banner';
 import SystemHeader from '@/src/components/System/Header';
