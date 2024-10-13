@@ -22,12 +22,12 @@ export default function SignIn() {
         <Image src={logo} alt="logo" height={80} priority />
       </div>
       <div className={styles.container}>
+        <UIHeader margin>Logowanie</UIHeader>
         <form className={styles.form}>
-          <UIHeader>Logowanie</UIHeader>
-          <UIGroup header="Login">
+          <UIGroup header="Login" required>
             <UIInput placeholder="Wprowadź login" />
           </UIGroup>
-          <UIGroup header="Hasło">
+          <UIGroup header="Hasło" required>
             <UIInput placeholder="Wprowadź hasło" />
           </UIGroup>
           <UIButton icon="ArrowRightOnRectangleIcon" onClick={handleSignIn}>

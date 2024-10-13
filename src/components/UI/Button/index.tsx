@@ -15,12 +15,10 @@ function UIButton({ type = 'button', icon, variant, children, onClick }: UIButto
   const variantClass = variant === 'gray' ? styles.gray : variant === 'success' ? styles.success : styles.black;
 
   return (
-    <div className={`${styles.containerButton} ${variantClass}`} onClick={onClick}>
-      <button type={type} className={styles.button}>
-        {icon && <UIIcon name={icon} smaller />}
-        <span>{children}</span>
-      </button>
-    </div>
+    <button type={type} className={`${styles.button} ${variantClass}`} onClick={onClick}>
+      {icon && <UIIcon name={icon} smaller />}
+      <span>{children}</span>
+    </button>
   );
 }
 
