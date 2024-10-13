@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useStore } from '@/src/store';
 import styles from './index.module.scss';
-import logo from '@/public/logo.svg';
+import logo from '@/public/logo noname.svg';
 import Image from 'next/image';
 import Link from 'next/link';
 import UIDropdown from '@/src/components/UI/Dropdown';
