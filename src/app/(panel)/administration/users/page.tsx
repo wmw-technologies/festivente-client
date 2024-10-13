@@ -6,9 +6,13 @@ import UIHeader from '@/src/components/UI/Header';
 import UIButton from '@/src/components/UI/Button';
 import UIDropdown from '@/src/components/UI/Dropdown';
 import UITable from '@/src/components/UI/Table';
+import UIPagination from '@/src/components/UI/Pagination';
+import { useState } from 'react';
 
 export default function AdministrationUsers() {
   const router = useRouter();
+
+  const [currentPage, setCurrentPage] = useState(1);
 
   const columns: Array<Column> = [
     {
@@ -62,6 +66,34 @@ export default function AdministrationUsers() {
       name: 'Admasdin',
       surname: 'asd',
       email: ''
+    },
+    {
+      id: 3,
+      login: 'adm3123in',
+      name: 'Admasdin',
+      surname: 'asd',
+      email: ''
+    },
+    {
+      id: 4,
+      login: 'adm3123in',
+      name: 'Admasdin',
+      surname: 'asd',
+      email: ''
+    },
+    {
+      id: 5,
+      login: 'adm3123in',
+      name: 'Admasdin',
+      surname: 'asd',
+      email: ''
+    },
+    {
+      id: 6,
+      login: 'adm3123in',
+      name: 'Admasdin',
+      surname: 'asd',
+      email: ''
     }
   ];
 
@@ -82,6 +114,7 @@ export default function AdministrationUsers() {
       </UIButton>
       <div style={{ width: '100%', marginBottom: 16 }}></div>
       <UITable columns={columns} data={data} />
+      <UIPagination data={data} current={currentPage} onChange={setCurrentPage} />
     </>
   );
 }
