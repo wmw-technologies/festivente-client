@@ -23,15 +23,35 @@ export default function SignIn() {
   const {
     register,
     formState: { errors },
+    setError,
     handleSubmit
   } = useForm<Schema>({
     resolver: zodResolver(schema)
   });
   const router = useRouter();
 
-  function onSubmit(data: Schema) {
-    console.log('uns bumit', data);
-    router.push('/');
+  async function onSubmit(form: Schema) {
+    try {
+      const url = process.env.NEXT_PUBLIC_API_URL;
+      const response = await fetch(`${url}/auth/sign-in`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(form)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // localStorage.setItem('token', json.token);
+        router.push('/dashboard');
+      } else {
+        setError('password', { message: data.message });
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
   }
 
   return (
