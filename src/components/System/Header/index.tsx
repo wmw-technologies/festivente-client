@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useStore } from '@/src/store';
+import { signOut } from '@/src/app/actions';
 import styles from './index.module.scss';
 import logo from '@/public/logo.svg';
 import Image from 'next/image';
@@ -22,7 +23,8 @@ export default function SystemHeader() {
     router.push('/my-account');
   }
 
-  function handleLogout() {
+  async function handleLogout() {
+    await signOut();
     router.push('/sign-in');
   }
 

@@ -1,28 +1,22 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
+
+const AUTH_ROUTE = '/sign-in';
+const PANEL_ROUTE = '/';
+const PUBLIC_ROUTES = ['/sign-in'];
 
 export function middleware(request: NextRequest) {
-  //   const isLoggedIn = true;
-  //   const { pathname } = request.nextUrl;
+  const { nextUrl } = request;
 
-  //   if (pathname === '/sign-in') {
-  //     return isLoggedIn ? NextResponse.redirect(new URL('/dashboard', request.url)) : NextResponse.next();
-  //   }
+  const isAuthenticated = !!request.cookies.get('auth');
+  const isPublicRoute = PUBLIC_ROUTES.includes(nextUrl.pathname);
 
-  //   return isLoggedIn ? NextResponse.next() : NextResponse.redirect(new URL('/sign-in', request.url));
+  if (isPublicRoute && isAuthenticated) return NextResponse.redirect(new URL(PANEL_ROUTE, nextUrl));
+
+  if (!isAuthenticated && !isPublicRoute) return NextResponse.redirect(new URL(AUTH_ROUTE, nextUrl));
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)'
-  ]
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)']
 };

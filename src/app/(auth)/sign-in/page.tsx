@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { signIn } from '@/src/app/actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import Image from 'next/image';
@@ -32,26 +33,14 @@ export default function SignIn() {
   const router = useRouter();
 
   async function onSubmit(form: Schema) {
-    try {
-      const url = process.env.NEXT_PUBLIC_API_URL;
-      const response = await fetch(`${url}/auth/sign-in`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(form)
-      });
+    const response = await signIn(form);
 
-      const data = await response.json();
+    if (!response) return;
 
-      if (response.ok) {
-        // localStorage.setItem('token', json.token);
-        router.push('/dashboard');
-      } else {
-        setError('root', { type: 'validate', message: data.message });
-      }
-    } catch (error) {
-      console.log('error', error);
+    if (response.ok) {
+      router.push('/dashboard');
+    } else {
+      setError('root', { type: 'validate', message: response.message });
     }
   }
 
