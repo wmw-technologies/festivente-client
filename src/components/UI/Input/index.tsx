@@ -1,10 +1,20 @@
+import { ChangeEventHandler, forwardRef } from 'react';
 import styles from './index.module.scss';
 
 type UIInputProps = {
   type?: 'text' | 'password' | 'email';
+  name?: string;
   placeholder?: string;
+  onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
 };
 
-export default function UIInput({ type = 'text', placeholder }: UIInputProps) {
-  return <input type={type} placeholder={placeholder} className={styles.input} />;
-}
+const UIInput = forwardRef<HTMLInputElement, UIInputProps>(function UIInput(
+  { type = 'text', name, placeholder, onChange },
+  ref
+) {
+  return (
+    <input name={name} ref={ref} type={type} placeholder={placeholder} className={styles.input} onChange={onChange} />
+  );
+});
+
+export default UIInput;

@@ -108,7 +108,6 @@ export default function AdministrationUsers() {
   return (
     <>
       <UIHeader>Lista użytkowników</UIHeader>
-      <div style={{ width: '100%', marginBottom: 8 }}></div>
       <UIButton icon="PlusIcon" onClick={handleAddUser}>
         Dodaj użytkownika
       </UIButton>
