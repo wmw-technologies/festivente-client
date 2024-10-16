@@ -19,4 +19,8 @@
   &:focus {
     border-color: var(--f-primary);
   }
+
+  &:autofill {
+    background-color: var(--f-gray-400) !important;
+  }
 }

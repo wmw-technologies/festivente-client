@@ -1,12 +1,12 @@
 import { ReactNode } from 'react';
-import { FieldError } from 'react-hook-form';
+import { FieldError, GlobalError } from 'react-hook-form';
 import styles from './index.module.scss';
 
 type UIGroupProps = {
   header: string;
   required?: boolean;
   nospace?: boolean;
-  error?: FieldError;
+  error?: GlobalError;
   children: ReactNode;
 };
 

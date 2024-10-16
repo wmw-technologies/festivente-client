@@ -22,7 +22,7 @@ type Schema = z.infer<typeof schema>;
 export default function SignIn() {
   const {
     register,
-    formState: { errors },
+    formState: { errors, isValid, isSubmitted },
     setError,
     handleSubmit
   } = useForm<Schema>({
@@ -48,7 +48,7 @@ export default function SignIn() {
         // localStorage.setItem('token', json.token);
         router.push('/dashboard');
       } else {
-        setError('password', { message: data.message });
+        setError('root', { type: 'validate', message: data.message });
       }
     } catch (error) {
       console.log('error', error);
@@ -64,12 +64,12 @@ export default function SignIn() {
         <UIHeader>Logowanie</UIHeader>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           <UIGroup header="Email" error={errors.email} required>
-            <UIInput placeholder="Wprowadź email" {...register('email')} />
+            <UIInput type="email" placeholder="Wprowadź email" {...register('email')} />
           </UIGroup>
-          <UIGroup header="Hasło" error={errors.password} required>
+          <UIGroup header="Hasło" error={errors.password ?? errors.root} required>
             <UIInput type="password" placeholder="Wprowadź hasło" {...register('password')} />
           </UIGroup>
-          <UIButton type="submit" icon="ArrowRightOnRectangleIcon">
+          <UIButton type="submit" disabled={!isValid && isSubmitted} icon="ArrowRightOnRectangleIcon">
             Zaloguj się
           </UIButton>
         </form>
