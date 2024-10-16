@@ -8,11 +8,11 @@ import UIDropdown from '@/src/components/UI/Dropdown';
 import UITable from '@/src/components/UI/Table';
 import UIPagination from '@/src/components/UI/Pagination';
 import { useState } from 'react';
+import Pager from '@/src/utils/pager';
 
 export default function AdministrationUsers() {
   const router = useRouter();
-
-  const [currentPage, setCurrentPage] = useState(1);
+  const [pager, setPager] = useState(new Pager(1, 3));
 
   const columns: Array<Column> = [
     {
@@ -94,8 +94,37 @@ export default function AdministrationUsers() {
       name: 'Admasdin',
       surname: 'asd',
       email: ''
+    },
+    {
+      id: 7,
+      login: 'adm3123in',
+      name: 'Admasdin',
+      surname: 'asd',
+      email: ''
+    },
+    {
+      id: 8,
+      login: 'adm3123in',
+      name: 'Admasdin',
+      surname: 'asd',
+      email: ''
+    },
+    {
+      id: 9,
+      login: 'adm3123in',
+      name: 'Admasdin',
+      surname: 'asd',
+      email: ''
+    },
+    {
+      id: 10,
+      login: 'adm3123in',
+      name: 'Admasdin',
+      surname: 'asd',
+      email: ''
     }
   ];
+  pager.setTotal(data.length);
 
   function handleAddUser() {
     router.push('/administration/users/add');
@@ -112,8 +141,11 @@ export default function AdministrationUsers() {
         Dodaj użytkownika
       </UIButton>
       <div style={{ width: '100%', marginBottom: 16 }}></div>
-      <UITable columns={columns} data={data} />
-      <UIPagination data={data} current={currentPage} onChange={setCurrentPage} />
+      <UITable
+        columns={columns}
+        data={data.slice((pager.getPage() - 1) * pager.getPerPage(), pager.getPage() * pager.getPerPage())}
+      />
+      <UIPagination pager={pager} setPager={setPager} />
     </>
   );
 }

@@ -7,7 +7,7 @@ export default class Pager {
   private sort: string;
   private order: Order;
 
-  constructor(page: number, perPage: number = 10, sort = '', order: Order = 'ASC') {
+  constructor(page: number, perPage: number = 3, sort = '', order: Order = 'ASC') {
     this.page = page;
     this.perPage = perPage;
     this.sort = sort;
