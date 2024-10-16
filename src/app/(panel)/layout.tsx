@@ -37,7 +37,7 @@ export default async function RootLayout({
           <SytemMenu />
           <div className={styles.mainContentInner}>
             <SystemBreadcrumb />
-            {JSON.stringify(json)}
+            {/* {JSON.stringify(json)} */}
             {children}
           </div>
         </div>

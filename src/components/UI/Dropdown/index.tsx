@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { cloneElement, ReactNode, useState, Children, isValidElement, ReactElement } from 'react';
 import styles from './index.module.scss';
 import Tippy, { TippyProps } from '@tippyjs/react/headless';
 import { Icon } from '@/src/types';
@@ -26,7 +26,9 @@ function UIDropdown({ icon, variant = 'black', smaller, placement = 'bottom-end'
       offset={[0, 6]}
       render={(attrs) => (
         <div className={styles.dropdownBody} {...attrs}>
-          {children}
+          {Children.toArray(children)
+            .filter(isValidElement)
+            .map((child) => cloneElement(child as ReactElement<{ hide?: () => void }>, { hide }))}
         </div>
       )}
       onClickOutside={hide}
@@ -46,12 +48,18 @@ function UIDropdown({ icon, variant = 'black', smaller, placement = 'bottom-end'
 
 type UIDropdownItemProps = {
   children: ReactNode;
+  hide?: () => void;
   onClick?: () => void;
 };
 
-function UIDropdownItem({ children, onClick }: UIDropdownItemProps) {
+function UIDropdownItem({ children, hide, onClick }: UIDropdownItemProps) {
+  function handleClick() {
+    onClick?.();
+    hide?.();
+  }
+
   return (
-    <div className={styles.dropdownItem} onClick={onClick}>
+    <div className={styles.dropdownItem} onClick={handleClick}>
       {children}
     </div>
   );
