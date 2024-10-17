@@ -1,6 +1,11 @@
 import { Column } from '@/src/types';
 import UIHeader from '@/src/components/UI/Header';
 import UITable from '@/src/components/UI/Table';
+import UIPanel from '@/src/components/UI/Panel';
+import UIButton from '@/src/components/UI/Button';
+import UICard from '@/src/components/UI/Card';
+import UIGroup from '@/src/components/UI/Group';
+import UIInput from '@/src/components/UI/Input';
 
 export default function MyAccount() {
   const columns: Array<Column> = [
@@ -39,9 +44,8 @@ export default function MyAccount() {
   ];
 
   return (
-    <>
-      <UIHeader>Moje konto</UIHeader>
+    <UICard header={<UIPanel header="Moje konto" />} background={false}>
       <UITable columns={columns} data={data} noHeader />
-    </>
+    </UICard>
   );
 }

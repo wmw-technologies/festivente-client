@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useStore } from '@/src/store';
 import { signOut } from '@/src/actions/auth';
 import styles from './index.module.scss';
-import logo from '@/public/logo noname.svg';
+import logo from '@/public/logo-no-name.svg';
 import Image from 'next/image';
 import Link from 'next/link';
 import UIDropdown from '@/src/components/UI/Dropdown';

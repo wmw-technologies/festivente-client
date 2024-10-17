@@ -10,8 +10,8 @@ type UIPanelProps = {
 export default function UIInput({ header, children }: UIPanelProps) {
   return (
     <div className={styles.panel}>
-      {header && <UIHeader>{header}</UIHeader>}
-      <div className={styles.bar}>{children}</div>
+      {header && <UIHeader margin={!!children}>{header}</UIHeader>}
+      {children && <div className={styles.bar}>{children}</div>}
     </div>
   );
 }
