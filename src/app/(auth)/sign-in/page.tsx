@@ -53,10 +53,15 @@ export default function SignIn() {
         <UIHeader>Logowanie</UIHeader>
         <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
           <UIGroup header="Email" error={errors.email} required>
-            <UIInput type="email" placeholder="Wprowadź email" {...register('email')} />
+            <UIInput type="email" placeholder="Wprowadź email" autocomplete="email" {...register('email')} />
           </UIGroup>
           <UIGroup header="Hasło" error={errors.password ?? errors.root} required>
-            <UIInput type="password" placeholder="Wprowadź hasło" {...register('password')} />
+            <UIInput
+              type="password"
+              placeholder="Wprowadź hasło"
+              autocomplete="current-password"
+              {...register('password')}
+            />
           </UIGroup>
           <UIButton type="submit" disabled={!isValid && isSubmitted} icon="ArrowRightOnRectangleIcon">
             Zaloguj się

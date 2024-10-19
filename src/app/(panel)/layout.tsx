@@ -17,7 +17,6 @@ export default async function PanelLayout({
   if (!authCookie) return null;
 
   const accessToken = JSON.parse(authCookie).accessToken;
-
   const data = await fetch(`${url}/user/me`, {
     headers: {
       'Content-Type': 'application/json',
@@ -30,7 +29,6 @@ export default async function PanelLayout({
   return (
     <AuthProvider value={json.data.user}>
       <div className={`${styles.mainContainer} container`}>
-        {/*<NuxtLoadingIndicator color="red" :height="20" /> */}
         <SystemHeader />
         <div className={styles.mainContent}>
           <SytemMenu />

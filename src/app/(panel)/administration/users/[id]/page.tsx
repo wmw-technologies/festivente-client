@@ -40,7 +40,6 @@ export default function AdministrationUsersForm() {
   }
 
   async function onSubmit(form: Schema) {
-    console.log('onform');
     try {
       console.log('form', form);
     } catch (error) {
@@ -63,9 +62,6 @@ export default function AdministrationUsersForm() {
     >
       <form id="user-form" className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <UIGroup header="Nazwa użytkownika" error={errors.username} required>
-            <UIInput placeholder="Wprowadź nazwę użytkownika" {...register('username')} />
-          </UIGroup>
           <UIGroup header="Imię" error={errors.firstName} required>
             <UIInput placeholder="Wprowadź imię" {...register('firstName')} />
           </UIGroup>
@@ -78,14 +74,23 @@ export default function AdministrationUsersForm() {
           <UIGroup header="Rola" nospace required>
             <UISelect placeholder="Wprowadź email" />
           </UIGroup>
-          {/* {...register('email')} */}
         </div>
         <div>
           <UIGroup header="Hasło" error={errors.password} required>
-            <UIInput placeholder="Wprowadź hasło" type="password" {...register('password')} />
+            <UIInput
+              placeholder="Wprowadź hasło"
+              type="password"
+              autocomplete="new-password"
+              {...register('password')}
+            />
           </UIGroup>
           <UIGroup header="Powtórz hasło" error={errors.repeatPassword} required>
-            <UIInput placeholder="Wprowadź powtórz hasło" type="password" {...register('repeatPassword')} />
+            <UIInput
+              placeholder="Wprowadź powtórz hasło"
+              type="password"
+              autocomplete="new-password"
+              {...register('repeatPassword')}
+            />
           </UIGroup>
         </div>
       </form>
