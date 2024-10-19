@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import '@/src/styles/styles.scss';
 import styles from './layout.module.scss';
+import HolyLoader from 'holy-loader';
 import SystemBanner from '@/src/components/System/Banner';
 import SystemFooter from '@/src/components/System/Footer';
 
@@ -20,8 +21,9 @@ export default function RootLayout({
   return (
     <html lang="pl">
       <body className={inter.className}>
+        <HolyLoader color="#812538" />
         <main className={styles.main}>
-          <SystemBanner />
+          {/* <SystemBanner /> */}
           {children}
           <SystemFooter />
         </main>

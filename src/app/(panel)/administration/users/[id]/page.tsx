@@ -63,13 +63,13 @@ export default function AdministrationUsersForm() {
       <form id="user-form" className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <div>
           <UIGroup header="Imię" error={errors.firstName} required>
-            <UIInput placeholder="Wprowadź imię" {...register('firstName')} />
+            <UIInput placeholder="Wprowadź imię" autocomplete="name" {...register('firstName')} />
           </UIGroup>
           <UIGroup header="Nazwisko" error={errors.lastName} required>
-            <UIInput placeholder="Wprowadź nazwisko" {...register('lastName')} />
+            <UIInput placeholder="Wprowadź nazwisko" autocomplete="family-name" {...register('lastName')} />
           </UIGroup>
           <UIGroup header="Email" error={errors.email} required>
-            <UIInput placeholder="Wprowadź email" {...register('email')} />
+            <UIInput placeholder="Wprowadź email" autocomplete="email" {...register('email')} />
           </UIGroup>
           <UIGroup header="Rola" nospace required>
             <UISelect placeholder="Wprowadź email" />
