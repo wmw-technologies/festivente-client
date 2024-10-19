@@ -1,3 +1,5 @@
+'use client';
+
 import { cloneElement, ReactNode, useState, Children, isValidElement, ReactElement } from 'react';
 import styles from './index.module.scss';
 import Tippy, { TippyProps } from '@tippyjs/react/headless';

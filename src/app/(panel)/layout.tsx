@@ -17,17 +17,17 @@ export default async function PanelLayout({
   if (!authCookie) return null;
 
   const accessToken = JSON.parse(authCookie).accessToken;
-  const data = await fetch(`${url}/user/me`, {
+  const response = await fetch(`${url}/user/me`, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'Bearer ' + accessToken
     }
   });
 
-  const json: Response<{ user: User }> = await data.json();
+  const data: Response<{ user: User }> = await response.json();
 
   return (
-    <AuthProvider value={json.data.user}>
+    <AuthProvider value={data.data?.user ?? null}>
       <div className={`${styles.mainContainer} container`}>
         <SystemHeader />
         <div className={styles.mainContent}>

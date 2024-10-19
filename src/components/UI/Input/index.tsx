@@ -1,3 +1,5 @@
+'use client';
+
 import { ChangeEventHandler, forwardRef, HTMLInputAutoCompleteAttribute } from 'react';
 import styles from './index.module.scss';
 

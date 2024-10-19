@@ -31,6 +31,13 @@ export default function UITable({ columns, data, noHeader }: UITableProps) {
             ))}
           </tr>
         ))}
+        {data.length === 0 && (
+          <tr>
+            <td colSpan={columns.length} className={styles.empty}>
+              Brak danych
+            </td>
+          </tr>
+        )}
       </tbody>
     </table>
   );

@@ -1,9 +1,13 @@
+'use client';
+
 import { MouseEvent, ReactNode } from 'react';
 import styles from './index.module.scss';
 import { Icon } from '@/src/types';
+import Link from 'next/link';
 import UIIcon from '@/src/components/UI/Icon';
 
 type UIButtonProps = {
+  href?: string;
   icon?: Icon;
   variant?: 'gray' | 'black' | 'success';
   type?: 'button' | 'submit' | 'reset';
@@ -13,10 +17,15 @@ type UIButtonProps = {
   onClick?: () => void;
 };
 
-function UIButton({ type = 'button', icon, variant, disabled, form, children, onClick }: UIButtonProps) {
+function UIButton({ href, type = 'button', icon, variant, disabled, form, children, onClick }: UIButtonProps) {
   const variantClass = variant === 'gray' ? styles.gray : variant === 'success' ? styles.success : styles.black;
 
-  return (
+  return href ? (
+    <Link href={href} className={`${styles.button} ${variantClass}`}>
+      {icon && <UIIcon name={icon} smaller />}
+      <span>{children}</span>
+    </Link>
+  ) : (
     <button
       type={type}
       form={form}

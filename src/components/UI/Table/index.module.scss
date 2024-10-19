@@ -27,6 +27,11 @@
       }
       td {
         padding: 0.5rem 0.75rem 0.5rem 1.25rem;
+
+        &.empty {
+          text-align: center;
+          color: var(--f-gray-400);
+        }
       }
     }
   }

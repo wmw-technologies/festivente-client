@@ -35,10 +35,6 @@ export default function AdministrationUsersForm() {
 
   const router = useRouter();
 
-  function handleBack() {
-    router.back();
-  }
-
   async function onSubmit(form: Schema) {
     try {
       console.log('form', form);
@@ -51,7 +47,7 @@ export default function AdministrationUsersForm() {
     <UICard
       header={
         <UIPanel header="Formularz dodawania użytkownika">
-          <UIButton icon="ArrowLongLeftIcon" variant="gray" onClick={handleBack}>
+          <UIButton href="/administration/users" icon="ArrowLongLeftIcon" variant="gray">
             Powrót
           </UIButton>
           <UIButton type="submit" form="user-form" icon="CheckCircleIcon" variant="black">

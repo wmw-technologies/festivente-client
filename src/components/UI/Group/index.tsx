@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { FieldError, GlobalError } from 'react-hook-form';
+import { GlobalError } from 'react-hook-form';
 import styles from './index.module.scss';
 
 type UIGroupProps = {
