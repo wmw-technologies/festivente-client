@@ -1,13 +1,14 @@
+'use client';
+
 import { Column } from '@/src/types';
-import UIHeader from '@/src/components/UI/Header';
+import { useAuth } from '@/src/context/auth';
 import UITable from '@/src/components/UI/Table';
 import UIPanel from '@/src/components/UI/Panel';
-import UIButton from '@/src/components/UI/Button';
 import UICard from '@/src/components/UI/Card';
-import UIGroup from '@/src/components/UI/Group';
-import UIInput from '@/src/components/UI/Input';
 
 export default function MyAccount() {
+  const auth = useAuth();
+
   const columns: Array<Column> = [
     {
       id: 1,
@@ -24,22 +25,22 @@ export default function MyAccount() {
     {
       id: 1,
       header: 'Nazwa użytkownika',
-      content: 'test'
+      content: '-'
     },
     {
       id: 2,
       header: 'Imię',
-      content: 'Test'
+      content: '-'
     },
     {
       id: 3,
       header: 'Nazwisko',
-      content: 'Nazwisko test'
+      content: '-'
     },
     {
       id: 4,
       header: 'Email',
-      content: 'test@test.pl'
+      content: auth?.email
     }
   ];
 

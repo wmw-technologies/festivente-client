@@ -2,7 +2,7 @@
   border-radius: 6px;
   border: 1px solid var(--f-gray-300);
   background: var(--f-white);
-  min-width: 196px;
+  min-width: 208px;
 }
 
 .dropdownItem {
@@ -13,6 +13,8 @@
   border-radius: 6px;
   cursor: pointer;
   line-height: 22px;
+  display: flex;
+  flex-direction: column;
 
   &:hover {
     background-color: var(--f-gray-100);

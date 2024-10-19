@@ -47,7 +47,7 @@ export default function SignIn() {
   return (
     <div className={styles.page}>
       <div className={styles.logo}>
-        <Image src={logo} alt="logo" height={140} priority />
+        <Image src={logo} alt="logo" height={120} priority />
       </div>
       <div className={styles.container}>
         <UIHeader>Logowanie</UIHeader>

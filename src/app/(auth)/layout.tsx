@@ -7,10 +7,5 @@ export default function AuthLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
-  return (
-    <main className={styles.main}>
-      <div className={`${styles.mainContainer} container`}>{children}</div>
-      <SystemFooter />
-    </main>
-  );
+  return <div className={`${styles.mainContainer} container`}>{children}</div>;
 }

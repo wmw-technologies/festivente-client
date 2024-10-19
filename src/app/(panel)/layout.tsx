@@ -1,13 +1,13 @@
 import { ReactNode } from 'react';
 import { cookies } from 'next/headers';
+import { AuthProvider } from '@/src/context/auth';
+import { Response, User } from '@/src/types';
 import styles from './layout.module.scss';
-import SystemBanner from '@/src/components/System/Banner';
 import SystemHeader from '@/src/components/System/Header';
 import SytemMenu from '@/src/components/System/Menu';
-import SystemFooter from '@/src/components/System/Footer';
 import SystemBreadcrumb from '@/src/components/System/Breadcrumb';
 
-export default async function RootLayout({
+export default async function PanelLayout({
   children
 }: Readonly<{
   children: ReactNode;
@@ -25,11 +25,10 @@ export default async function RootLayout({
     }
   });
 
-  const json = await data.json();
+  const json: Response<{ user: User }> = await data.json();
 
   return (
-    <main className={styles.main}>
-      <SystemBanner />
+    <AuthProvider value={json.data.user}>
       <div className={`${styles.mainContainer} container`}>
         {/*<NuxtLoadingIndicator color="red" :height="20" /> */}
         <SystemHeader />
@@ -37,12 +36,10 @@ export default async function RootLayout({
           <SytemMenu />
           <div className={styles.mainContentInner}>
             <SystemBreadcrumb />
-            {/* {JSON.stringify(json)} */}
             {children}
           </div>
         </div>
       </div>
-      <SystemFooter />
-    </main>
+    </AuthProvider>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useStore } from '@/src/store';
+import { useAuth } from '@/src/context/auth';
 import { signOut } from '@/src/actions/auth';
 import styles from './index.module.scss';
 import logo from '@/public/logo-no-name.svg';
@@ -11,6 +12,7 @@ import UIDropdown from '@/src/components/UI/Dropdown';
 import UIButton from '@/src/components/UI/Button';
 
 export default function SystemHeader() {
+  const auth = useAuth();
   const router = useRouter();
   const isMenuCollapsed = useStore((state) => state.isCollapsed);
   const setIsMenuCollapsed = useStore((state) => state.toggleMenu);
@@ -38,7 +40,10 @@ export default function SystemHeader() {
       <div className={styles.headerRight}>
         <UIButton.Action icon="Bars3BottomLeftIcon" variant="gray" onClick={handleCollapseMenu} />
         <UIDropdown icon="Cog6ToothIcon">
-          <UIDropdown.Item onClick={handleRedirect}>Moje konto</UIDropdown.Item>
+          <UIDropdown.Item onClick={handleRedirect}>
+            Moje konto
+            {auth?.email && <span className={styles.email}>({auth.email})</span>}
+          </UIDropdown.Item>
           <UIDropdown.Item onClick={handleLogout}>Wyloguj się</UIDropdown.Item>
         </UIDropdown>
       </div>

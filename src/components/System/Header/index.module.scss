@@ -21,7 +21,7 @@
       height: 4rem;
       flex-shrink: 0;
       transition: width 0.3s;
-      padding: 0.25rem;
+      padding: 0.5rem;
 
       .logo {
         object-fit: contain;
@@ -38,5 +38,11 @@
     flex: 1;
     padding: 1rem;
     border-left: 1px solid var(--f-gray-200);
+
+    .email {
+      font-size: 0.75rem;
+      line-height: 1.25;
+      color: var(--f-gray-400);
+    }
   }
 }

@@ -10,6 +10,7 @@ import UIButton from '@/src/components/UI/Button';
 import UICard from '@/src/components/UI/Card';
 import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
+import UISelect from '@/src/components/UI/Select';
 
 const schema = z.object({
   username: z.string().min(3).max(64),
@@ -71,9 +72,13 @@ export default function AdministrationUsersForm() {
           <UIGroup header="Nazwisko" error={errors.lastName} required>
             <UIInput placeholder="Wprowadź nazwisko" {...register('lastName')} />
           </UIGroup>
-          <UIGroup header="Email" error={errors.email} nospace required>
+          <UIGroup header="Email" error={errors.email} required>
             <UIInput placeholder="Wprowadź email" {...register('email')} />
           </UIGroup>
+          <UIGroup header="Rola" nospace required>
+            <UISelect placeholder="Wprowadź email" />
+          </UIGroup>
+          {/* {...register('email')} */}
         </div>
         <div>
           <UIGroup header="Hasło" error={errors.password} required>

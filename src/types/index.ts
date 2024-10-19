@@ -16,3 +16,23 @@ export interface Column {
   item: (item: unknown, index: number) => ReactNode;
   width?: number;
 }
+
+export interface Response<T> {
+  data: T;
+  message: string;
+}
+
+export interface User {
+  id: string;
+  aud: string;
+  role: string;
+  email: string;
+  email_confirmed_at: string;
+  phone: string;
+  confirmed_at: string;
+  last_sign_in_at: string;
+  app_metadata: any;
+  created_at: string;
+  updated_at: string;
+  is_anonymous: boolean;
+}
