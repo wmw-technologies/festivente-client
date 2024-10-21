@@ -13,15 +13,22 @@ import UIInput from '@/src/components/UI/Input';
 import UISelect from '@/src/components/UI/Select';
 
 const schema = z.object({
-  username: z.string().min(3).max(64),
   firstName: z.string().min(3).max(64),
   lastName: z.string().min(3).max(64),
   email: z.string().email().trim(),
+  phone: z.string().min(9).max(16).optional(),
   password: z.string().min(8),
-  repeatPassword: z.string().min(8)
+  repeatPassword: z.string().min(8),
+  // role: z.string().refine((value) => ['user', 'admin'].includes(value))
+  role: z.string()
 });
 
 type Schema = z.infer<typeof schema>;
+
+const roles = [
+  { text: 'Użytkownik', value: 'user' },
+  { text: 'Administrator', value: 'admin' }
+];
 
 export default function AdministrationUsersForm() {
   const {
@@ -67,8 +74,11 @@ export default function AdministrationUsersForm() {
           <UIGroup header="Email" error={errors.email} required>
             <UIInput placeholder="Wprowadź email" autocomplete="email" {...register('email')} />
           </UIGroup>
-          <UIGroup header="Rola" nospace required>
-            <UISelect placeholder="Wprowadź email" />
+          <UIGroup header="Numer telefonu" error={errors.phone}>
+            <UIInput placeholder="Wprowadź numer telefonu" autocomplete="tel" {...register('phone')} />
+          </UIGroup>
+          <UIGroup header="Rola" nospace error={errors.role} required>
+            <UISelect placeholder="Wybierz rolę" options={roles} {...register('role')} />
           </UIGroup>
         </div>
         <div>

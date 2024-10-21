@@ -36,3 +36,8 @@ export interface User {
   updated_at: string;
   is_anonymous: boolean;
 }
+
+export interface Option {
+  text: string;
+  value: string;
+}

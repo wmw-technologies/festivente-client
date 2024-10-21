@@ -24,6 +24,10 @@ export default async function PanelLayout({
     }
   });
 
+  if (!response.ok) {
+    return null;
+  }
+
   const data: Response<{ user: User }> = await response.json();
 
   return (

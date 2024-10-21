@@ -24,23 +24,28 @@ export default function MyAccount() {
   const data = [
     {
       id: 1,
-      header: 'Nazwa użytkownika',
-      content: '-'
-    },
-    {
-      id: 2,
       header: 'Imię',
       content: '-'
     },
     {
-      id: 3,
+      id: 2,
       header: 'Nazwisko',
       content: '-'
     },
     {
-      id: 4,
+      id: 3,
       header: 'Email',
       content: auth?.email
+    },
+    {
+      id: 4,
+      header: 'Numer telefonu',
+      content: auth?.phone || '-'
+    },
+    {
+      id: 5,
+      header: 'Rola',
+      content: '-'
     }
   ];
 

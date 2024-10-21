@@ -2,11 +2,11 @@
   border-radius: 6px;
   border: 1px solid var(--f-gray-300);
   background: var(--f-white);
-  min-width: 208px;
+  min-width: 220px;
 }
 
 .dropdownItem {
-  padding: 0.5rem 1.25rem;
+  padding: 0.5rem 1rem;
   color: var(--f-black);
   transition-property: color, background-color;
   transition-duration: 150ms;

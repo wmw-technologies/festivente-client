@@ -20,31 +20,33 @@ function UIDropdown({ icon, variant = 'black', smaller, placement = 'bottom-end'
   const hide = () => setVisible(false);
 
   return (
-    <Tippy
-      placement={placement}
-      interactive
-      maxWidth={350}
-      visible={visible}
-      offset={[0, 6]}
-      render={(attrs) => (
-        <div className={styles.dropdownBody} {...attrs}>
-          {Children.toArray(children)
-            .filter(isValidElement)
-            .map((child) => cloneElement(child as ReactElement<{ hide?: () => void }>, { hide }))}
+    <div>
+      <Tippy
+        placement={placement}
+        interactive
+        maxWidth={350}
+        visible={visible}
+        offset={[0, 6]}
+        render={(attrs) => (
+          <div className={styles.dropdownBody} {...attrs}>
+            {Children.toArray(children)
+              .filter(isValidElement)
+              .map((child) => cloneElement(child as ReactElement<{ hide?: () => void }>, { hide }))}
+          </div>
+        )}
+        onClickOutside={hide}
+      >
+        <div>
+          <UIButton.Action
+            icon={icon}
+            variant={variant}
+            active={visible}
+            smaller={smaller}
+            onClick={visible ? hide : show}
+          />
         </div>
-      )}
-      onClickOutside={hide}
-    >
-      <div>
-        <UIButton.Action
-          icon={icon}
-          variant={variant}
-          active={visible}
-          smaller={smaller}
-          onClick={visible ? hide : show}
-        />
-      </div>
-    </Tippy>
+      </Tippy>
+    </div>
   );
 }
 
