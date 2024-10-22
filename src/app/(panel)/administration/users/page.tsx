@@ -30,8 +30,6 @@ export default async function AdministrationUsers() {
 
   const data: any = await response.json();
 
-  console.log('data', data);
-
   const columns: Array<Column> = [
     {
       id: 1,

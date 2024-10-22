@@ -32,9 +32,19 @@ export const SITEMAP: Array<SitemapItem> = [
         ]
       },
       {
-        name: 'Uprawnienia',
+        name: 'Role',
         icon: 'UsersIcon',
-        path: '/administration/permissions'
+        path: '/administration/roles',
+        children: [
+          {
+            name: 'Dodaj rolę',
+            path: '/administration/roles/add'
+          },
+          {
+            name: 'Edytuj rolę',
+            path: '/administration/roles/:id'
+          }
+        ]
       }
     ]
   },

@@ -7,11 +7,11 @@ import SystemHeader from '@/src/components/System/Header';
 import SytemMenu from '@/src/components/System/Menu';
 import SystemBreadcrumb from '@/src/components/System/Breadcrumb';
 
-export default async function PanelLayout({
-  children
-}: Readonly<{
+type PanelLayoutProps = {
   children: ReactNode;
-}>) {
+};
+
+async function fetchData() {
   const url = process.env.NEXT_PUBLIC_API_URL;
   const authCookie = cookies().get('auth')?.value;
   if (!authCookie) return null;
@@ -24,14 +24,18 @@ export default async function PanelLayout({
     }
   });
 
-  if (!response.ok) {
-    return null;
-  }
+  if (!response.ok) return null;
 
   const data: Response<{ user: User }> = await response.json();
 
+  return data;
+}
+
+export default async function PanelLayout({ children }: PanelLayoutProps) {
+  const data = await fetchData();
+
   return (
-    <AuthProvider value={data.data?.user ?? null}>
+    <AuthProvider value={data?.data?.user ?? null}>
       <div className={`${styles.mainContainer} container`}>
         <SystemHeader />
         <div className={styles.mainContent}>

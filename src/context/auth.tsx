@@ -6,7 +6,7 @@ import { User } from '@/src/types';
 const AuthContext = createContext<User | null>(null);
 
 interface AuthProviderProps {
-  value: User;
+  value: User | null;
   children: ReactNode;
 }
 

@@ -52,6 +52,7 @@ const UISelect = forwardRef<HTMLSelectElement, UISelectProps>(function UISelect(
 
   return (
     <>
+      {value}
       <div className={`${styles.selectContainer} ${visible ? 'active' : ''}`}>
         <Tippy
           placement={'bottom-start'}
