@@ -40,6 +40,7 @@ export default function Form({ isEdit, data }: FormProps) {
   const {
     register,
     formState: { errors },
+    setValue,
     handleSubmit
   } = useForm<Schema>({
     resolver: zodResolver(schema)

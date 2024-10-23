@@ -10,35 +10,40 @@
     align-items: center;
     min-height: 34px;
 
-    .arrowButton {
-      outline: none;
-      border: none;
-      background: transparent;
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
+    .placeholder {
+      color: var(--f-gray-400);
+      font-size: 0.8125rem;
+    }
+
+    .buttons {
       display: flex;
-      justify-content: center;
       align-items: center;
-      color: var(--f-black);
+      gap: 6px;
+
+      .button {
+        outline: none;
+        border: none;
+        background: transparent;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--f-black);
+
+        &:hover {
+          color: var(--f-primary);
+        }
+      }
     }
 
     &.active {
       border-bottom: 1px solid var(--f-primary);
 
-      .arrowButton {
+      .button:last-child {
         color: var(--f-primary);
       }
-    }
-
-    &::placeholder {
-      color: var(--f-gray-400);
-      font-size: 0.8125rem;
-    }
-
-    .placeholder {
-      color: var(--f-gray-400);
-      font-size: 0.8125rem;
     }
   }
 }
@@ -60,6 +65,7 @@
     display: flex;
     flex-direction: column;
 
+    &.active,
     &:hover {
       background-color: var(--f-gray-100);
       color: var(--f-primary);
