@@ -141,7 +141,7 @@ export default function Warehouse() {
     },
     {
       id: 8,
-      name: 'Mieszalnik dźwięku',
+      name: 'Mikser dźwięku',
       producer: 'Yamaha',
       serialNumber: '222324',
       addDate: '30.07.2022',
@@ -185,7 +185,7 @@ export default function Warehouse() {
       header={
         <UIPanel header="Magazyn">
           <UIButton icon="PlusIcon" onClick={handleAddUser}>
-            Dodaj użytkownika
+            Dodaj urządzenie
           </UIButton>
         </UIPanel>
       }
