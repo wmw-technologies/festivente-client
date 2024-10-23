@@ -23,26 +23,41 @@ export default function Warehouse() {
     },
     {
       id: 2,
-      header: 'Login',
-      item: (item: any) => <span>{item.login}</span>
-    },
-    {
-      id: 3,
-      header: 'Imię',
+      header: 'Name',
       item: (item: any) => <span>{item.name}</span>
     },
     {
+      id: 3,
+      header: 'Producer',
+      item: (item: any) => <span>{item.producer}</span>
+    },
+    {
       id: 4,
-      header: 'Nazwisko',
-      item: (item: any) => <span>{item.surname}</span>
+      header: 'Serial number',
+      item: (item: any) => <span>{item.serialNumber}</span>
     },
     {
       id: 5,
-      header: 'Email',
-      item: (item: any) => <span>{item.email || '-'}</span>
+      header: 'Add date',
+      item: (item: any) => <span>{item.addDate || '-'}</span>
     },
     {
       id: 6,
+      header: 'Category',
+      item: (item: any) => <span>{item.category}</span>
+    },
+    {
+      id: 7,
+      header: 'Quantity',
+      item: (item: any) => <span>{item.quantity}</span>
+    },
+    {
+      id: 8,
+      header: 'Value',
+      item: (item: any) => <span>{item.value}</span>
+    },
+    {
+      id: 9,
       header: '',
       item: (item: any) => (
         <UIDropdown icon="EllipsisVerticalIcon" smaller>
@@ -56,73 +71,103 @@ export default function Warehouse() {
   const data = [
     {
       id: 1,
-      login: 'admin',
-      name: 'Admin',
-      surname: 'Admin',
-      email: ''
+      name: 'Lampa',
+      producer: 'Philips',
+      serialNumber: '123123',
+      addDate: '12.12.2021',
+      category: 'Oświetlenie',
+      quantity: 10,
+      value: '100 PLN'
     },
     {
       id: 2,
-      login: 'adm3123in',
-      name: 'Admasdin',
-      surname: 'asd',
-      email: ''
+      name: 'Głośnik',
+      producer: 'Sony',
+      serialNumber: '456456',
+      addDate: '15.01.2022',
+      category: 'Nagłośnienie',
+      quantity: 5,
+      value: '500 PLN'
     },
     {
       id: 3,
-      login: 'adm3123in',
-      name: 'Admasdin',
-      surname: 'asd',
-      email: ''
+      name: 'Projektor',
+      producer: 'Epson',
+      serialNumber: '789789',
+      addDate: '20.02.2022',
+      category: 'Projektory',
+      quantity: 3,
+      value: '1500 PLN'
     },
     {
       id: 4,
-      login: 'adm3123in',
-      name: 'Admasdin',
-      surname: 'asd',
-      email: ''
+      name: 'Mikrofon',
+      producer: 'Shure',
+      serialNumber: '101112',
+      addDate: '05.03.2022',
+      category: 'Nagłośnienie',
+      quantity: 15,
+      value: '200 PLN'
     },
     {
       id: 5,
-      login: 'adm3123in',
-      name: 'Admasdin',
-      surname: 'asd',
-      email: ''
+      name: 'Kamera',
+      producer: 'Canon',
+      serialNumber: '131415',
+      addDate: '10.04.2022',
+      category: 'Kamery',
+      quantity: 7,
+      value: '2500 PLN'
     },
     {
       id: 6,
-      login: 'adm3123in',
-      name: 'Admasdin',
-      surname: 'asd',
-      email: ''
+      name: 'Statyw',
+      producer: 'Manfrotto',
+      serialNumber: '161718',
+      addDate: '20.05.2022',
+      category: 'Akcesoria',
+      quantity: 20,
+      value: '300 PLN'
     },
     {
       id: 7,
-      login: 'adm3123in',
-      name: 'Admasdin',
-      surname: 'asd',
-      email: ''
+      name: 'Ekran projekcyjny',
+      producer: 'Elite Screens',
+      serialNumber: '192021',
+      addDate: '25.06.2022',
+      category: 'Projektory',
+      quantity: 5,
+      value: '800 PLN'
     },
     {
       id: 8,
-      login: 'adm3123in',
-      name: 'Admasdin',
-      surname: 'asd',
-      email: ''
+      name: 'Mikser dźwięku',
+      producer: 'Yamaha',
+      serialNumber: '222324',
+      addDate: '30.07.2022',
+      category: 'Nagłośnienie',
+      quantity: 2,
+      value: '3500 PLN'
     },
     {
       id: 9,
-      login: 'adm3123in',
-      name: 'Admasdin',
-      surname: 'asd',
-      email: ''
+      name: 'Reflektor sceniczny',
+      producer: 'Chauvet',
+      serialNumber: '252627',
+      addDate: '15.08.2022',
+      category: 'Oświetlenie',
+      quantity: 8,
+      value: '1200 PLN'
     },
     {
       id: 10,
-      login: 'adm3123in',
-      name: 'Admasdin',
-      surname: 'asd',
-      email: ''
+      name: 'Mikser wideo',
+      producer: 'Blackmagic Design',
+      serialNumber: '282930',
+      addDate: '01.09.2022',
+      category: 'Wideo',
+      quantity: 3,
+      value: '4000 PLN'
     }
   ];
   pager.setTotal(data.length);
@@ -140,7 +185,7 @@ export default function Warehouse() {
       header={
         <UIPanel header="Magazyn">
           <UIButton icon="PlusIcon" onClick={handleAddUser}>
-            Dodaj użytkownika
+            Dodaj urządzenie
           </UIButton>
         </UIPanel>
       }

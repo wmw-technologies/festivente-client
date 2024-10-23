@@ -1,7 +1,7 @@
-import UIDropdown from '../Dropdown';
 import UIIcon from '@/src/components/UI/Icon';
 import styles from './index.module.scss';
 import Pager from '@/src/utils/pager';
+import React from 'react';
 
 type UIPaginationProps = {
   pager: Pager;
@@ -26,9 +26,9 @@ export default function UIPagination({ pager, setPager }: UIPaginationProps) {
 
   const { startPage, endPage } = getPageRange();
 
-  const handleRowsPerPageChange = (newPerPage: number) => {
-    pager.setPerPage(newPerPage);
-    setPager(new Pager(1, newPerPage, pager.getSort(), pager.getOrder()));
+  const handleRowsPerPageChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
+    pager.setPerPage(Number(e.target.value));
+    setPager(new Pager(1, Number(e.target.value), pager.getSort(), pager.getOrder()));
   };
 
   return (
@@ -53,7 +53,7 @@ export default function UIPagination({ pager, setPager }: UIPaginationProps) {
             {page}
           </button>
         ))}
-        {endPage !== totalPages ? '...' : ''}
+        {endPage !== totalPages ? <span style={{ alignContent: 'end' }}>...</span> : ''}
         <button
           className={styles.button}
           onClick={() =>
@@ -65,12 +65,17 @@ export default function UIPagination({ pager, setPager }: UIPaginationProps) {
         </button>
       </div>
       <div className={styles['pagination__set-rows']}>
-        <span className={styles.perPage}>Ilość wierszy:</span>
-        <UIDropdown icon="ArrowDownIcon" smaller>
-          <UIDropdown.Item onClick={() => handleRowsPerPageChange(3)}>3</UIDropdown.Item>
-          <UIDropdown.Item onClick={() => handleRowsPerPageChange(5)}>5</UIDropdown.Item>
-          <UIDropdown.Item onClick={() => handleRowsPerPageChange(15)}>15</UIDropdown.Item>
-        </UIDropdown>
+        <span className={styles.perPage}>
+          Ilość stron: {startPage} &ndash; {endPage} z {totalPages}
+        </span>
+
+        <select className={styles.pagination__select} onChange={handleRowsPerPageChange}>
+          <option value="3" defaultChecked>
+            3
+          </option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+        </select>
       </div>
     </div>
   );
