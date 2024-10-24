@@ -78,6 +78,4 @@ function UIDropdownItem({ href, children, hide, onClick }: UIDropdownItemProps) 
   );
 }
 
-UIDropdown.Item = UIDropdownItem;
-
-export default UIDropdown;
+export { UIDropdown, UIDropdownItem };

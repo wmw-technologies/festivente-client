@@ -7,7 +7,7 @@ import { Column } from '@/src/types';
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
-import UIDropdown from '@/src/components/UI/Dropdown';
+import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 import UITable from '@/src/components/UI/Table';
 import UIPagination from '@/src/components/UI/Pagination';
 
@@ -61,7 +61,7 @@ export default function Warehouse() {
       header: '',
       item: (item: any) => (
         <UIDropdown icon="EllipsisVerticalIcon" smaller>
-          <UIDropdown.Item onClick={() => handleEdit(item.id)}>Edytuj</UIDropdown.Item>
+          <UIDropdownItem onClick={() => handleEdit(item.id)}>Edytuj</UIDropdownItem>
         </UIDropdown>
       ),
       width: 36

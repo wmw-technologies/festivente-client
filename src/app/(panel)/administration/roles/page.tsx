@@ -5,7 +5,7 @@ import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
 import UITable from '@/src/components/UI/Table';
-import UIDropdown from '@/src/components/UI/Dropdown';
+import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 
 async function fetchData() {
   const url = process.env.NEXT_PUBLIC_API_URL;
@@ -42,7 +42,7 @@ export default async function AdministrationRoles() {
       header: '',
       item: (item: any) => (
         <UIDropdown icon="EllipsisVerticalIcon" smaller>
-          {/* <UIDropdown.Item href={item.id}>Edytuj</UIDropdown.Item> */}
+          <UIDropdownItem href={item._id}>Edytuj</UIDropdownItem>
         </UIDropdown>
       ),
       width: 36

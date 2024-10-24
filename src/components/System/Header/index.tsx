@@ -8,7 +8,7 @@ import styles from './index.module.scss';
 import logo from '@/public/logo-no-name.svg';
 import Image from 'next/image';
 import Link from 'next/link';
-import UIDropdown from '@/src/components/UI/Dropdown';
+import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 import UIButton from '@/src/components/UI/Button';
 
 export default function SystemHeader() {
@@ -40,11 +40,11 @@ export default function SystemHeader() {
       <div className={styles.headerRight}>
         <UIButton.Action icon="Bars3BottomLeftIcon" variant="gray" onClick={handleCollapseMenu} />
         <UIDropdown icon="Cog6ToothIcon">
-          <UIDropdown.Item onClick={handleRedirect}>
+          <UIDropdownItem onClick={handleRedirect}>
             Moje konto
             {auth?.email && <span className={styles.email}>({auth.email})</span>}
-          </UIDropdown.Item>
-          <UIDropdown.Item onClick={handleLogout}>Wyloguj się</UIDropdown.Item>
+          </UIDropdownItem>
+          <UIDropdownItem onClick={handleLogout}>Wyloguj się</UIDropdownItem>
         </UIDropdown>
       </div>
     </header>
