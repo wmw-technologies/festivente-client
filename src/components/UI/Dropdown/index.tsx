@@ -4,6 +4,7 @@ import { cloneElement, ReactNode, useState, Children, isValidElement, ReactEleme
 import styles from './index.module.scss';
 import Tippy, { TippyProps } from '@tippyjs/react/headless';
 import { Icon } from '@/src/types';
+import Link from 'next/link';
 import UIButton from '@/src/components/UI/Button';
 
 type UIDropdownProps = {
@@ -51,16 +52,24 @@ function UIDropdown({ icon, variant = 'black', smaller, placement = 'bottom-end'
 }
 
 type UIDropdownItemProps = {
+  href?: string;
   children: ReactNode;
   hide?: () => void;
   onClick?: () => void;
 };
 
-function UIDropdownItem({ children, hide, onClick }: UIDropdownItemProps) {
+function UIDropdownItem({ href, children, hide, onClick }: UIDropdownItemProps) {
   function handleClick() {
     onClick?.();
     hide?.();
   }
+
+  if (href)
+    return (
+      <Link href={href} className={styles.dropdownItem}>
+        <span>{children}</span>
+      </Link>
+    );
 
   return (
     <div className={styles.dropdownItem} onClick={handleClick}>

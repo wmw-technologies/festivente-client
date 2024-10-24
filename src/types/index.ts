@@ -15,6 +15,7 @@ export interface Column {
   header?: any;
   item: (item: unknown, index: number) => ReactNode;
   width?: number;
+  sortable?: boolean;
 }
 
 export interface Response<T> {

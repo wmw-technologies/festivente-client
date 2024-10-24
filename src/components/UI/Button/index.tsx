@@ -20,12 +20,15 @@ type UIButtonProps = {
 function UIButton({ href, type = 'button', icon, variant, disabled, form, children, onClick }: UIButtonProps) {
   const variantClass = variant === 'gray' ? styles.gray : variant === 'success' ? styles.success : styles.black;
 
-  return href ? (
-    <Link href={href} className={`${styles.button} ${variantClass}`}>
-      {icon && <UIIcon name={icon} smaller />}
-      <span>{children}</span>
-    </Link>
-  ) : (
+  if (href)
+    return (
+      <Link href={href} className={`${styles.button} ${variantClass}`}>
+        {icon && <UIIcon name={icon} smaller />}
+        <span>{children}</span>
+      </Link>
+    );
+
+  return (
     <button
       type={type}
       form={form}

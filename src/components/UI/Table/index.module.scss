@@ -10,7 +10,7 @@
       color: var(--f-primary);
 
       th {
-        padding: 0.75rem 0.75rem 0.75rem 1.25rem;
+        padding: 0.625rem 0.75rem 0.625rem 1.25rem;
         white-space: nowrap;
       }
     }
@@ -20,7 +20,7 @@
     border-top: 1px solid var(--f-gray-300);
     tr {
       border-bottom: 1px solid var(--f-gray-300);
-      height: 50px;
+      height: 52px;
 
       &:hover {
         background-color: var(--f-gray-100);
