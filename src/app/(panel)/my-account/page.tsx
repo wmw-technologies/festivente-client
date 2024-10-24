@@ -5,6 +5,7 @@ import { useAuth } from '@/src/context/auth';
 import UITable from '@/src/components/UI/Table';
 import UIPanel from '@/src/components/UI/Panel';
 import UICard from '@/src/components/UI/Card';
+import UIBadge from '@/src/components/UI/Badge';
 
 export default function MyAccount() {
   const auth = useAuth();
@@ -17,7 +18,7 @@ export default function MyAccount() {
     },
     {
       id: 2,
-      item: (item: any) => <span>{item.content}</span>
+      item: (item: any) => <>{item.id === 5 ? <UIBadge>{item.content}</UIBadge> : item.content}</>
     }
   ];
 
@@ -25,12 +26,12 @@ export default function MyAccount() {
     {
       id: 1,
       header: 'Imię',
-      content: '-'
+      content: auth?.first_name || '-'
     },
     {
       id: 2,
       header: 'Nazwisko',
-      content: '-'
+      content: auth?.last_name || '-'
     },
     {
       id: 3,
@@ -45,7 +46,7 @@ export default function MyAccount() {
     {
       id: 5,
       header: 'Rola',
-      content: '-'
+      content: auth?.role.name || '-'
     }
   ];
 

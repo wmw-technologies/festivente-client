@@ -16,9 +16,9 @@ export async function signIn(form: any) {
     const json = await response.json();
 
     if (response.ok) {
-      const accessToken = json.data.session.access_token;
-      const refreshToken = json.data.session.refresh_token;
-      const expiresIn = json.data.session.expires_in;
+      const accessToken = json.data.access_token;
+      const refreshToken = json.data.refresh_token;
+      const expiresIn = json.data.expires_in;
 
       cookies().set('auth', JSON.stringify({ accessToken, refreshToken }), { maxAge: expiresIn, httpOnly: true });
     }

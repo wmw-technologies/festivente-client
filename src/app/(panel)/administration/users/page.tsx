@@ -16,19 +16,20 @@ export default async function AdministrationUsers() {
   // const router = useRouter();
   // const [pager, setPager] = useState(new Pager(1, 3));
 
-  const url = process.env.NEXT_PUBLIC_API_URL;
-  const authCookie = cookies().get('auth')?.value;
-  if (!authCookie) return null;
+  // const url = process.env.NEXT_PUBLIC_API_URL;
+  // const authCookie = cookies().get('auth')?.value;
+  // if (!authCookie) return null;
 
-  const accessToken = JSON.parse(authCookie).accessToken;
-  const response = await fetch(`${url}/user/list`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + accessToken
-    }
-  });
+  // const accessToken = JSON.parse(authCookie).accessToken;
+  // const response = await fetch(`${url}/user/list`, {
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     Authorization: 'Bearer ' + accessToken
+  //   }
+  // });
 
-  const data: any = await response.json();
+  // const data: any = await response.json();
+  const data = [];
 
   const columns: Array<Column> = [
     {

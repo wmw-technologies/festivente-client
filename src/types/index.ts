@@ -23,18 +23,18 @@ export interface Response<T> {
 }
 
 export interface User {
-  id: string;
-  aud: string;
-  role: string;
+  _id: string;
+  first_name: string;
+  last_name: string;
   email: string;
-  email_confirmed_at: string;
   phone: string;
-  confirmed_at: string;
-  last_sign_in_at: string;
-  app_metadata: any;
-  created_at: string;
-  updated_at: string;
-  is_anonymous: boolean;
+  role: Role;
+}
+
+export interface Role {
+  _id: string;
+  name: string;
+  permissions: Array<string>;
 }
 
 export interface Option {

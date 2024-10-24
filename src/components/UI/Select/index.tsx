@@ -102,7 +102,6 @@ const UISelect = forwardRef<HTMLSelectElement, UISelectProps>(function UISelect(
       <select
         ref={selectRef}
         className={styles.hideSelect}
-        defaultValue=""
         name={name}
         onChange={(e) => {
           setValue(e.target.value);

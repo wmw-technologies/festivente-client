@@ -26,7 +26,7 @@ async function fetchData() {
 
   if (!response.ok) return null;
 
-  const data: Response<{ user: User }> = await response.json();
+  const data: Response<User> = await response.json();
 
   return data;
 }
@@ -35,7 +35,7 @@ export default async function PanelLayout({ children }: PanelLayoutProps) {
   const data = await fetchData();
 
   return (
-    <AuthProvider value={data?.data?.user ?? null}>
+    <AuthProvider value={data?.data ?? null}>
       <div className={`${styles.mainContainer} container`}>
         <SystemHeader />
         <div className={styles.mainContent}>

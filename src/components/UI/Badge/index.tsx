@@ -1,5 +1,10 @@
-// type UIBadgeProps = {};
+import { ReactNode } from 'react';
+import styles from './index.module.scss';
 
-// export default function UIBadge({}: UIBadgeProps) {
-//     return <button>TEST</button>;
-// }
+type UIBadgeProps = {
+  children: ReactNode;
+};
+
+export default function UIBadge({ children }: UIBadgeProps) {
+  return <div className={styles.badge}>{children}</div>;
+}

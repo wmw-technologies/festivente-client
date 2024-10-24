@@ -18,6 +18,8 @@ async function fetchData() {
     }
   });
 
+  if (!response.ok) return [];
+
   const data: any = await response.json();
 
   // return data;
