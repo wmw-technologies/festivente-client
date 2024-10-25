@@ -1,6 +1,9 @@
 .input {
   outline: none;
   border: none;
+  border-radius: 0;
+  -webkit-appearance: none;
+  -webkit-border-radius: 0;
   border-bottom: 1px solid var(--f-black);
   order: 2;
   transition:
