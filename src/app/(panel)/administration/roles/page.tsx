@@ -38,11 +38,11 @@ export default async function AdministrationRoles() {
       sortable: true
     },
     {
-      id: 9,
+      id: 2,
       header: '',
       item: (item: any) => (
         <UIDropdown icon="EllipsisVerticalIcon" smaller>
-          <UIDropdownItem href={item._id}>Edytuj</UIDropdownItem>
+          <UIDropdownItem href={`/administration/roles/${item._id}`}>Edytuj</UIDropdownItem>
         </UIDropdown>
       ),
       width: 36

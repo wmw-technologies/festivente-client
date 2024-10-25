@@ -54,11 +54,11 @@
       &.gray {
         color: var(--f-primary);
       }
-  
+
       &.success {
         background: var(--f-primary);
       }
-  
+
       &.black {
         background: var(--f-black);
         border-color: var(--f-black);
@@ -124,14 +124,23 @@
   justify-content: space-between;
   text-decoration: none;
   display: flex;
-  color: var(--f-black);
   outline: none;
   background: none;
   border: none;
   margin: -0.375rem;
   cursor: pointer;
 
-  &:hover {
-    background-color: var(--f-gray-300);
+  &.primary {
+    background: var(--f-primary);
+    color: var(--f-white);
+  }
+
+  &.gray {
+    background: none;
+    color: var(--f-black);
+
+    &:hover {
+      background-color: var(--f-gray-300);
+    }
   }
 }

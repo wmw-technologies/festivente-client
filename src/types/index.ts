@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import * as Icons from '@heroicons/react/24/solid';
+import Permissions from '@/src/permissions';
 
 export type Icon = keyof typeof Icons;
 
@@ -7,6 +8,7 @@ export interface SitemapItem {
   name: string;
   path: string;
   icon?: Icon;
+  permissions?: Array<Permissions>;
   children?: Array<SitemapItem>;
 }
 

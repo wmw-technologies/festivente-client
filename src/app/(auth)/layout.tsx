@@ -1,10 +1,10 @@
 import { ReactNode } from 'react';
 import styles from './layout.module.scss';
 
-export default function AuthLayout({
-  children
-}: Readonly<{
+type AuthLayoutProps = {
   children: ReactNode;
-}>) {
+};
+
+export default function AuthLayout({ children }: AuthLayoutProps) {
   return <div className={`${styles.mainContainer} container`}>{children}</div>;
 }

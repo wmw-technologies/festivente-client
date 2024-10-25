@@ -3,13 +3,14 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import Permissions from '@/src/permissions';
 import styles from './page.module.scss';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
 import UICard from '@/src/components/UI/Card';
 import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
-// import UISelect from '@/src/components/UI/Select';
+import UIAccordion from '@/src/components/UI/Accordion';
 
 const schema = z.object({
   name: z.string().min(3).max(64)
@@ -54,42 +55,47 @@ export default function Form({ isEdit, data }: FormProps) {
         </UIPanel>
       }
     >
-      <form id="role-form" className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <UIGroup header="Nazwa roli" error={errors.name} required>
+      <form id="role-form" onSubmit={handleSubmit(onSubmit)}>
+        <div className="row">
+          <UIGroup header="Nazwa roli" error={errors.name} required className="col-4">
             <UIInput placeholder="Wprowadź nazwę roli" autocomplete="name" {...register('name')} />
           </UIGroup>
-          {/* <UIGroup header="Nazwisko" error={errors.lastName} required>
-            <UIInput placeholder="Wprowadź nazwisko" autocomplete="family-name" {...register('lastName')} />
-          </UIGroup>
-          <UIGroup header="Email" error={errors.email} required>
-            <UIInput placeholder="Wprowadź email" autocomplete="email" {...register('email')} />
-          </UIGroup>
-          <UIGroup header="Numer telefonu" error={errors.phone}>
-            <UIInput placeholder="Wprowadź numer telefonu" autocomplete="tel" {...register('phone')} />
-          </UIGroup>
-          <UIGroup header="Rola" nospace error={errors.role} required>
-            <UISelect placeholder="Wybierz rolę" options={roles} {...register('role')} />
-          </UIGroup> */}
         </div>
-        {/* <div>
-          <UIGroup header="Hasło" error={errors.password} required>
-            <UIInput
-              placeholder="Wprowadź hasło"
-              type="password"
-              autocomplete="new-password"
-              {...register('password')}
-            />
-          </UIGroup>
-          <UIGroup header="Powtórz hasło" error={errors.repeatPassword} required>
-            <UIInput
-              placeholder="Wprowadź powtórz hasło"
-              type="password"
-              autocomplete="new-password"
-              {...register('repeatPassword')}
-            />
-          </UIGroup>
-        </div> */}
+        {Object.entries(Permissions).map(([key, permission]: [string, any], index) => (
+          <div key={key} className="row">
+            <div className="col-12 mb-3">
+              <UIAccordion
+                variant={index === 0 ? 'primary' : 'gray'}
+                header={
+                  <>
+                    <strong>{permission.NAME}</strong>
+                    <span className="small">
+                      Przypisane uprawnienia: 0/
+                      {Object.entries(permission).filter(([subKey]) => subKey !== 'NAME' && subKey !== 'KEY').length}
+                    </span>
+                  </>
+                }
+              >
+                <div className={styles.permissions}>
+                  {Object.entries(permission)
+                    .filter(([subKey]) => subKey !== 'NAME' && subKey !== 'KEY')
+                    .map(([subKey, subPermission]: [string, any]) => (
+                      <div key={subKey} className={styles.permission}>
+                        <div className={styles.permissionHeader}>
+                          <span className={styles.name}>{subPermission.NAME}</span>
+                          <span className={styles.key}>{subPermission.KEY}</span>
+                        </div>
+                        <div className={styles.permissionButtons}>
+                          <UIButton icon="PlusIcon" variant="black" />
+                          <UIButton icon="MinusIcon" variant="black" />
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </UIAccordion>
+            </div>
+          </div>
+        ))}
       </form>
     </UICard>
   );

@@ -37,7 +37,7 @@ function UIButton({ href, type = 'button', icon, variant, disabled, form, childr
       onClick={onClick}
     >
       {icon && <UIIcon name={icon} smaller />}
-      <span>{children}</span>
+      {children && <span>{children}</span>}
     </button>
   );
 }
@@ -66,18 +66,27 @@ function UIActionButton({ icon, variant = 'black', active, disabled, smaller, on
 }
 
 type UIToggleButtonProps = {
+  variant?: 'primary' | 'gray';
   isOpened: boolean;
-  onClick: () => void;
+  onClick?: () => void;
 };
 
-function UIToggleButton({ isOpened, onClick }: UIToggleButtonProps) {
+function UIToggleButton({ variant = 'gray', isOpened, onClick }: UIToggleButtonProps) {
+  const variantClass = variant === 'gray' ? styles.gray : styles.primary;
+
   function handleOnClick(e: MouseEvent<HTMLElement>) {
     e.preventDefault();
     e.stopPropagation();
-    onClick();
+    onClick && onClick();
   }
+
   return (
-    <button type="button" title={isOpened ? 'Zwiń' : 'Rozwiń'} className={styles.toggleButton} onClick={handleOnClick}>
+    <button
+      type="button"
+      title={isOpened ? 'Zwiń' : 'Rozwiń'}
+      className={`${styles.toggleButton} ${variantClass}`}
+      onClick={handleOnClick}
+    >
       <UIIcon name={isOpened ? 'MinusIcon' : 'PlusIcon'} />
     </button>
   );

@@ -20,11 +20,11 @@ export const viewport: Viewport = {
   userScalable: false
 };
 
-export default function RootLayout({
-  children
-}: Readonly<{
+type RootLayoutProps = {
   children: ReactNode;
-}>) {
+};
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="pl">
       <body className={inter.className}>

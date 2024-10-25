@@ -1,4 +1,5 @@
 import { SitemapItem } from '@/src/types';
+import Permissions from '@/src/permissions';
 
 export const SITEMAP: Array<SitemapItem> = [
   {
@@ -51,7 +52,8 @@ export const SITEMAP: Array<SitemapItem> = [
   {
     name: 'Magazyn',
     icon: 'CubeIcon',
-    path: '/warehouse'
+    path: '/warehouse',
+    permissions: [Permissions.WAREHOUSE.ACCESS.KEY]
   },
   {
     name: 'Wypożyczenia',
