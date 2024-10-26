@@ -60,7 +60,7 @@ export default function Warehouse() {
       id: 9,
       header: '',
       item: (item: any) => (
-        <UIDropdown icon="EllipsisVerticalIcon" smaller>
+        <UIDropdown icon="EllipsisHorizontalIcon" smaller>
           <UIDropdownItem onClick={() => handleEdit(item.id)}>Edytuj</UIDropdownItem>
         </UIDropdown>
       ),

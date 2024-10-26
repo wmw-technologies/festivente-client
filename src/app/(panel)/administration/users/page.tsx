@@ -6,6 +6,7 @@ import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
 import UITable from '@/src/components/UI/Table';
 import UIBadge from '@/src/components/UI/Badge';
+import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 
 async function fetchData() {
   const url = process.env.NEXT_PUBLIC_API_URL;
@@ -55,6 +56,16 @@ export default async function AdministrationUsers() {
       id: 5,
       header: 'Rola',
       item: (item: any) => <UIBadge>{(item as User).role?.name || '-'}</UIBadge>
+    },
+    {
+      id: 6,
+      header: '',
+      item: (item: any) => (
+        <UIDropdown icon="EllipsisHorizontalIcon" smaller>
+          <UIDropdownItem href={`/administration/users/${item._id}`}>Edytuj</UIDropdownItem>
+        </UIDropdown>
+      ),
+      width: 36
     }
   ];
 

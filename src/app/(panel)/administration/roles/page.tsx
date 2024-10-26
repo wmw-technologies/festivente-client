@@ -24,7 +24,9 @@ async function fetchData() {
 
   const data: Response<Role[]> = await response.json();
 
-  return data.data;
+  console.log('Data roles feched');
+
+  return data.data || [];
 }
 
 export default async function AdministrationRoles() {
@@ -41,7 +43,7 @@ export default async function AdministrationRoles() {
       id: 2,
       header: '',
       item: (item: any) => (
-        <UIDropdown icon="EllipsisVerticalIcon" smaller>
+        <UIDropdown icon="EllipsisHorizontalIcon" smaller>
           <UIDropdownItem href={`/administration/roles/${item._id}`}>Edytuj</UIDropdownItem>
         </UIDropdown>
       ),

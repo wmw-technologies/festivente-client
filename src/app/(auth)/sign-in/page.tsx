@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { signIn } from '@/src/actions/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import toast from 'react-hot-toast';
 import Image from 'next/image';
 import logo from '@/public/logo.svg';
 import styles from './page.module.scss';
@@ -18,12 +19,12 @@ const schema = z.object({
   password: z.string().min(8)
 });
 
-type Schema = z.infer<typeof schema>;
+export type Schema = z.infer<typeof schema>;
 
 export default function SignIn() {
   const {
     register,
-    formState: { errors, isValid, isSubmitted },
+    formState: { errors, isValid, isSubmitting, isSubmitted },
     setError,
     handleSubmit
   } = useForm<Schema>({
@@ -35,9 +36,8 @@ export default function SignIn() {
   async function onSubmit(form: Schema) {
     const response = await signIn(form);
 
-    if (!response) return;
-
     if (response.ok) {
+      toast.success(response.message);
       router.push('/dashboard');
     } else {
       setError('root', { type: 'validate', message: response.message });
@@ -63,7 +63,7 @@ export default function SignIn() {
               {...register('password')}
             />
           </UIGroup>
-          <UIButton type="submit" disabled={!isValid && isSubmitted} icon="ArrowRightOnRectangleIcon">
+          <UIButton type="submit" disabled={(!isValid && isSubmitted) || isSubmitting} icon="ArrowRightOnRectangleIcon">
             Zaloguj się
           </UIButton>
         </form>

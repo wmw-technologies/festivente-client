@@ -1,8 +1,9 @@
 'use server';
 
 import { cookies } from 'next/headers';
+import { Schema } from '@/src/app/(auth)/sign-in/page';
 
-export async function signIn(form: any) {
+export async function signIn(form: Schema) {
   try {
     const url = process.env.NEXT_PUBLIC_API_URL;
     const response = await fetch(`${url}/auth/sign-in`, {
@@ -24,7 +25,7 @@ export async function signIn(form: any) {
     }
 
     return {
-      message: json.message,
+      ...json,
       status: response.status,
       ok: response.ok
     };

@@ -3,8 +3,8 @@ import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import '@/src/styles/styles.scss';
 import styles from './layout.module.scss';
+import { Toaster, DefaultToastOptions } from 'react-hot-toast';
 import HolyLoader from 'holy-loader';
-// import SystemBanner from '@/src/components/System/Banner';
 import SystemFooter from '@/src/components/System/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -24,13 +24,43 @@ type RootLayoutProps = {
   children: ReactNode;
 };
 
+const toastOptions: DefaultToastOptions = {
+  duration: 5000,
+  success: {
+    iconTheme: {
+      primary: 'var(--f-green)',
+      secondary: '#fff'
+    },
+    style: {
+      borderRadius: '9999px',
+      padding: '10px 20px',
+      background: 'var(--f-green)',
+      color: '#fff',
+      boxShadow: 'none'
+    }
+  },
+  error: {
+    iconTheme: {
+      primary: 'var(--f-red)',
+      secondary: '#fff'
+    },
+    style: {
+      borderRadius: '9999px',
+      padding: '10px 16px',
+      background: 'var(--f-red)',
+      color: '#fff',
+      boxShadow: 'none'
+    }
+  }
+};
+
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="pl">
       <body className={inter.className}>
         <HolyLoader color="#812538" />
+        <Toaster toastOptions={toastOptions} />
         <main className={styles.main}>
-          {/* <SystemBanner /> */}
           {children}
           <SystemFooter />
         </main>

@@ -91,6 +91,11 @@
       background-color: var(--f-primary);
       border-color: var(--f-primary);
     }
+
+    &.active {
+      background-color: var(--f-primary);
+      border-color: var(--f-primary);
+    }
   }
 
   &.gray {
@@ -106,10 +111,6 @@
   &.smaller {
     width: 2.125rem;
     height: 2.125rem;
-  }
-
-  &.active {
-    background-color: var(--f-primary);
   }
 }
 

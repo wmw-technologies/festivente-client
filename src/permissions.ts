@@ -1,5 +1,7 @@
+import { Permission } from '@/src/types';
+
 export default class Permissions {
-  static readonly ADMINISTRATION = {
+  static readonly ADMINISTRATION: Permission = {
     NAME: 'Administracja',
     ACCESS: {
       NAME: 'Dostęp do administracji',
@@ -7,15 +9,19 @@ export default class Permissions {
     }
   };
 
-  static readonly WAREHOUSE = {
+  static readonly WAREHOUSE: Permission = {
     NAME: 'Magazyn',
     ACCESS: {
       NAME: 'Dostęp do magazynu',
       KEY: 'warehouse.access'
+    },
+    ADD: {
+      NAME: 'Dodawanie do magazynu',
+      KEY: 'warehouse.add'
     }
   };
 
-  static readonly RENTALS = {
+  static readonly RENTALS: Permission = {
     NAME: 'Wypożyczenia',
     ACCESS: {
       NAME: 'Dostęp do wypożyczeń',
@@ -23,7 +29,7 @@ export default class Permissions {
     }
   };
 
-  static readonly EMPLOYEES = {
+  static readonly EMPLOYEES: Permission = {
     NAME: 'Pracownicy',
     ACCESS: {
       NAME: 'Dostęp do pracowników',
@@ -31,7 +37,7 @@ export default class Permissions {
     }
   };
 
-  static readonly EVENTS = {
+  static readonly EVENTS: Permission = {
     NAME: 'Imprezy',
     ACCESS: {
       NAME: 'Dostęp do imprez',
@@ -39,7 +45,7 @@ export default class Permissions {
     }
   };
 
-  static readonly TRANSPORT = {
+  static readonly TRANSPORT: Permission = {
     NAME: 'Transport',
     ACCESS: {
       NAME: 'Dostęp do transportu',
@@ -47,7 +53,7 @@ export default class Permissions {
     }
   };
 
-  static readonly SERVICE = {
+  static readonly SERVICE: Permission = {
     NAME: 'Serwis',
     ACCESS: {
       NAME: 'Dostęp do serwisu',

@@ -23,6 +23,7 @@ export interface Column {
 export interface Response<T> {
   data: T;
   message: string;
+  errors: Record<string, string>;
 }
 
 export interface User {
@@ -43,4 +44,10 @@ export interface Role {
 export interface Option {
   text: string;
   value: string;
+}
+
+export interface Permission {
+  NAME?: string;
+  KEY?: string;
+  [key: string]: string | undefined | Permission;
 }
