@@ -16,6 +16,7 @@ export const SITEMAP: Array<SitemapItem> = [
     name: 'Administracja',
     icon: 'CommandLineIcon',
     path: '/administration',
+    permissions: [Permissions.ADMINISTRATION.ACCESS],
     children: [
       {
         name: 'Użytkownicy',
@@ -53,31 +54,36 @@ export const SITEMAP: Array<SitemapItem> = [
     name: 'Magazyn',
     icon: 'CubeIcon',
     path: '/warehouse',
-    permissions: [Permissions.WAREHOUSE.ACCESS.KEY]
+    permissions: [Permissions.WAREHOUSE.ACCESS]
   },
   {
     name: 'Wypożyczenia',
     icon: 'ArrowsRightLeftIcon',
-    path: '/rentals'
+    path: '/rentals',
+    permissions: [Permissions.RENTALS.ACCESS]
   },
   {
     name: 'Pracownicy',
     icon: 'UsersIcon',
-    path: '/employees'
+    path: '/employees',
+    permissions: [Permissions.EMPLOYEES.ACCESS]
   },
   {
     name: 'Imprezy',
     icon: 'StarIcon',
-    path: '/events'
+    path: '/events',
+    permissions: [Permissions.EVENTS.ACCESS]
   },
   {
     name: 'Transport',
     icon: 'TruckIcon',
-    path: '/transport'
+    path: '/transport',
+    permissions: [Permissions.TRANSPORT.ACCESS]
   },
   {
     name: 'Serwis',
     icon: 'Cog6ToothIcon',
-    path: '/service'
+    path: '/service',
+    permissions: [Permissions.SERVICE.ACCESS]
   }
 ];

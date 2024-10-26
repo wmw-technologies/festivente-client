@@ -1,4 +1,5 @@
-// import { cookies } from 'next/headers';
+import { cookies } from 'next/headers';
+import { ResponseAPI, User } from '@/src/types';
 import Form from './form';
 
 type AdministrationUsersFormProps = {
@@ -8,24 +9,22 @@ type AdministrationUsersFormProps = {
 };
 
 async function fetchData(id: string) {
-  try {
-    // const url = process.env.NEXT_PUBLIC_API_URL;
-    // const authCookie = cookies().get('auth')?.value;
-    // if (!authCookie) return null;
-    // const accessToken = JSON.parse(authCookie).accessToken;
-    // const response = await fetch(`${url}/user/me`, {
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: 'Bearer ' + accessToken
-    //   }
-    // });
-    // if (!response.ok) return null;
-    // const data: any = await response.json();
-    // // console.log('data', data);
-    // return data;
-  } catch {
-    return null;
-  }
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  const authCookie = cookies().get('auth')?.value;
+  if (!authCookie) return null;
+
+  const accessToken = JSON.parse(authCookie).accessToken;
+  const response = await fetch(`${url}/user/${id}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + accessToken
+    }
+  });
+
+  if (!response.ok) return null;
+
+  const data: ResponseAPI<User> = await response.json();
+  return data.data ?? null;
 }
 
 export default async function AdministrationUsersForm({ params }: AdministrationUsersFormProps) {
@@ -33,5 +32,5 @@ export default async function AdministrationUsersForm({ params }: Administration
   const isEdit = id !== 'add';
   const data = isEdit ? await fetchData(id) : null;
 
-  return <Form isEdit={isEdit} data={data} />;
+  return <Form id={id} isEdit={isEdit} data={data} />;
 }

@@ -11,7 +11,6 @@ export function middleware(request: NextRequest) {
   const isPublicRoute = PUBLIC_ROUTES.includes(nextUrl.pathname);
 
   if (isPublicRoute && isAuthenticated) return NextResponse.redirect(new URL(PANEL_ROUTE, nextUrl));
-
   if (!isAuthenticated && !isPublicRoute) return NextResponse.redirect(new URL(AUTH_ROUTE, nextUrl));
 
   return NextResponse.next();

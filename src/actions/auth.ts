@@ -2,6 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { Schema } from '@/src/app/(auth)/sign-in/page';
+import { ResponseAPI } from '../types';
 
 export async function signIn(form: Schema) {
   try {
@@ -14,7 +15,7 @@ export async function signIn(form: Schema) {
       body: JSON.stringify(form)
     });
 
-    const json = await response.json();
+    const json: ResponseAPI<any> = await response.json();
 
     if (response.ok) {
       const accessToken = json.data.access_token;

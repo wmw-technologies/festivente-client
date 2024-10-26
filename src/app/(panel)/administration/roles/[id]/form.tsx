@@ -43,6 +43,76 @@ interface PermissionsAction {
 
 type PermissionsState = string[];
 
+const permissions = [
+  {
+    name: 'Administracja',
+    children: [
+      {
+        name: 'Dostęp do administracji',
+        key: Permissions.ADMINISTRATION.ACCESS
+      }
+    ]
+  },
+  {
+    name: 'Magazyn',
+    children: [
+      {
+        name: 'Dostęp do magazynu',
+        key: Permissions.WAREHOUSE.ACCESS
+      },
+      {
+        name: 'Dodawanie do magazynu',
+        key: Permissions.WAREHOUSE.ADD
+      }
+    ]
+  },
+  {
+    name: 'Wypożyczenia',
+    children: [
+      {
+        name: 'Dostęp do wypożyczeń',
+        key: Permissions.RENTALS.ACCESS
+      }
+    ]
+  },
+  {
+    name: 'Pracownicy',
+    children: [
+      {
+        name: 'Dostęp do pracowników',
+        key: Permissions.EMPLOYEES.ACCESS
+      }
+    ]
+  },
+  {
+    name: 'Imprezy',
+    children: [
+      {
+        name: 'Dostęp do imprez',
+        key: Permissions.EVENTS.ACCESS
+      }
+    ]
+  },
+  {
+    name: 'Transport',
+    children: [
+      {
+        name: 'Dostęp do transportu',
+        key: Permissions.TRANSPORT.ACCESS
+      }
+    ]
+  },
+  {
+    name: 'Serwis',
+    children: [
+      {
+        name: 'Dostęp do serwisu',
+        key: Permissions.SERVICE.ACCESS
+      }
+    ]
+  }
+];
+
 function permissionsReducer(state: PermissionsState, action: PermissionsAction): PermissionsState {
   switch (action.type) {
     case PermissionsActionKind.ADD_PERMISSION: {
@@ -65,8 +135,9 @@ export default function Form({ id, isEdit, data }: FormProps) {
 
   const {
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid, isSubmitted },
     setValue,
+    setError,
     handleSubmit
   } = useForm<Schema>({
     resolver: zodResolver(schema)
@@ -80,33 +151,24 @@ export default function Form({ id, isEdit, data }: FormProps) {
     dispatch({ type: PermissionsActionKind.REMOVE_PERMISSION, payload: permission });
   }
 
-  function assignedPermissionLengthByGroup(permission: Permission) {
-    const permissions = Object.entries(permission)
-      .filter(([subKey]) => subKey !== 'NAME' && subKey !== 'KEY')
-      .map(([_, subPermission]) => (subPermission as Permission).KEY);
-
-    return state.filter((permission: string) => permissions.includes(permission)).length;
-  }
-
-  function allPermissionsLengthByGroup(permission: Permission) {
-    return Object.entries(permission).filter(([subKey]) => subKey !== 'NAME' && subKey !== 'KEY').length;
+  function assignedPermissionLengthByGroup(group: Record<string, any>) {
+    return state.filter((permission: string) =>
+      group.children.map((permission: Permission) => permission.key).includes(permission)
+    ).length;
   }
 
   async function onSubmit(form: Schema) {
     try {
-      if (!isEdit) {
-        const response = await create({ ...form, permissions: state });
-        toast.success(response?.message);
+      const response = !isEdit
+        ? await create({ ...form, permissions: state })
+        : await update(id, { ...form, permissions: state });
 
-        console.log('response created', response);
+      if (response?.ok) {
+        router.push('/administration/roles');
+        toast.success(response?.message);
       } else {
-        const response = await update(id, { ...form, permissions: state });
-        toast.success(response?.message);
-
-        console.log('response updated', response);
+        setError('name', { message: response?.message });
       }
-
-      router.push('/administration/roles');
     } catch (error) {
       toast.error('Wystąpił błąd podczas zapisywania roli');
     }
@@ -130,7 +192,13 @@ export default function Form({ id, isEdit, data }: FormProps) {
           <UIButton href="/administration/roles" icon="ArrowLongLeftIcon" variant="gray">
             Powrót
           </UIButton>
-          <UIButton type="submit" form="role-form" disabled={isSubmitting} icon="CheckCircleIcon" variant="black">
+          <UIButton
+            type="submit"
+            form="role-form"
+            disabled={(!isValid && isSubmitted) || isSubmitting}
+            icon="CheckCircleIcon"
+            variant="black"
+          >
             Zapisz
           </UIButton>
         </UIPanel>
@@ -142,48 +210,46 @@ export default function Form({ id, isEdit, data }: FormProps) {
             <UIInput placeholder="Wprowadź nazwę roli" autocomplete="name" {...register('name')} />
           </UIGroup>
         </div>
-        {Object.entries(Permissions).map(([key, permission]: [string, Permission], index) => (
-          <div key={key} className="row">
+        {permissions.map((group, index) => (
+          <div key={group.name} className="row">
             <div className="col-12 mb-3">
               <UIAccordion
                 variant={index === 0 ? 'primary' : 'gray'}
                 header={
                   <>
-                    <strong>{permission.NAME}</strong>
+                    <strong>{group.name}</strong>
                     <span className="small">
                       <span>Przypisane uprawnienia: </span>
-                      {assignedPermissionLengthByGroup(permission)}/{allPermissionsLengthByGroup(permission)}
+                      {assignedPermissionLengthByGroup(group)}/{group.children.length}
                     </span>
                   </>
                 }
               >
                 <div className={styles.permissions}>
-                  {Object.entries(permission)
-                    .filter(([subKey]) => subKey !== 'NAME' && subKey !== 'KEY')
-                    .map(([subKey, subPermission]: [string, any]) => (
-                      <div key={subKey} className={styles.permission}>
-                        <div className={styles.permissionHeader}>
-                          <span className={styles.name}>{subPermission.NAME}</span>
-                          <span className={styles.key}>{subPermission.KEY}</span>
-                        </div>
-                        <div className={styles.permissionButtons}>
-                          <UIButton.Action
-                            icon="PlusIcon"
-                            variant="black"
-                            smaller
-                            active={state.includes(subPermission.KEY)}
-                            onClick={() => handleAddPermission(subPermission.KEY)}
-                          />
-                          <UIButton.Action
-                            icon="MinusIcon"
-                            variant="black"
-                            smaller
-                            active={!state.includes(subPermission.KEY)}
-                            onClick={() => handleRemovePermission(subPermission.KEY)}
-                          />
-                        </div>
+                  {group.children.map((permission) => (
+                    <div key={permission.key} className={styles.permission}>
+                      <div className={styles.permissionHeader}>
+                        <span className={styles.name}>{permission.name}</span>
+                        <span className={styles.key}>{permission.key}</span>
                       </div>
-                    ))}
+                      <div className={styles.permissionButtons}>
+                        <UIButton.Action
+                          icon="PlusIcon"
+                          variant="black"
+                          smaller
+                          active={state.includes(permission.key)}
+                          onClick={() => handleAddPermission(permission.key)}
+                        />
+                        <UIButton.Action
+                          icon="MinusIcon"
+                          variant="black"
+                          smaller
+                          active={!state.includes(permission.key)}
+                          onClick={() => handleRemovePermission(permission.key)}
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </UIAccordion>
             </div>

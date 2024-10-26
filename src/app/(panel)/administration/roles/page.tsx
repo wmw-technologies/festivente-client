@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { Column } from '@/src/types';
-import { Response, Role } from '@/src/types';
+import { ResponseAPI, Role } from '@/src/types';
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
@@ -22,11 +22,9 @@ async function fetchData() {
 
   if (!response.ok) return [];
 
-  const data: Response<Role[]> = await response.json();
+  const data: ResponseAPI<Role[]> = await response.json();
 
-  console.log('Data roles feched');
-
-  return data.data || [];
+  return data.data ?? [];
 }
 
 export default async function AdministrationRoles() {

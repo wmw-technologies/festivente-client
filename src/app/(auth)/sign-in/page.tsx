@@ -36,11 +36,11 @@ export default function SignIn() {
   async function onSubmit(form: Schema) {
     const response = await signIn(form);
 
-    if (response.ok) {
+    if (response?.ok) {
       toast.success(response.message);
       router.push('/dashboard');
     } else {
-      setError('root', { type: 'validate', message: response.message });
+      setError('root', { type: 'validate', message: response?.message });
     }
   }
 

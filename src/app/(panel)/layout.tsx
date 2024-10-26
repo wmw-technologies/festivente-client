@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { cookies } from 'next/headers';
 import { AuthProvider } from '@/src/context/auth';
-import { Response, User } from '@/src/types';
+import { ResponseAPI, User } from '@/src/types';
 import styles from './layout.module.scss';
 import SystemHeader from '@/src/components/System/Header';
 import SytemMenu from '@/src/components/System/Menu';
@@ -26,7 +26,7 @@ async function fetchData() {
 
   if (!response.ok) return null;
 
-  const data: Response<User> = await response.json();
+  const data: ResponseAPI<User> = await response.json();
 
   return data;
 }

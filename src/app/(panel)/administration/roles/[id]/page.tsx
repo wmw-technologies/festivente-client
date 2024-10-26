@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { Response, Role } from '@/src/types';
+import { ResponseAPI, Role } from '@/src/types';
 import Form from './form';
 
 type AdministrationUsersFormProps = {
@@ -23,8 +23,8 @@ async function fetchData(id: string) {
 
   if (!response.ok) return null;
 
-  const data: Response<Role> = await response.json();
-  return data.data;
+  const data: ResponseAPI<Role> = await response.json();
+  return data.data ?? null;
 }
 
 export default async function AdministrationUsersForm({ params }: AdministrationUsersFormProps) {

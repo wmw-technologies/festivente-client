@@ -8,7 +8,7 @@ export interface SitemapItem {
   name: string;
   path: string;
   icon?: Icon;
-  permissions?: Array<Permissions>;
+  permissions?: Array<string>;
   children?: Array<SitemapItem>;
 }
 
@@ -20,10 +20,10 @@ export interface Column {
   sortable?: boolean;
 }
 
-export interface Response<T> {
-  data: T;
+export interface ResponseAPI<T> {
   message: string;
-  errors: Record<string, string>;
+  data?: T;
+  errors?: Record<string, string>;
 }
 
 export interface User {

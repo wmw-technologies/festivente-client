@@ -1,4 +1,4 @@
-import { Response, User } from '@/src/types';
+import { ResponseAPI, User } from '@/src/types';
 import { cookies } from 'next/headers';
 import { Column } from '@/src/types';
 import UICard from '@/src/components/UI/Card';
@@ -23,9 +23,9 @@ async function fetchData() {
 
   if (!response.ok) return [];
 
-  const data: Response<User[]> = await response.json();
+  const data: ResponseAPI<User[]> = await response.json();
 
-  return data.data;
+  return data.data ?? [];
 }
 
 export default async function AdministrationUsers() {

@@ -1,8 +1,10 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { User } from '@/src/types';
 import styles from './page.module.scss';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
@@ -26,7 +28,8 @@ type Schema = z.infer<typeof schema>;
 
 type FormProps = {
   isEdit: boolean;
-  data: any;
+  data: User | null;
+  id: string;
 };
 
 const roles = [
@@ -34,7 +37,7 @@ const roles = [
   { text: 'Administrator', value: 'admin' }
 ];
 
-export default function Form({ isEdit, data }: FormProps) {
+export default function Form({ id, isEdit, data }: FormProps) {
   const title = isEdit ? 'Formularz edycji użytkownika' : 'Formularz dodawania użytkownika';
 
   const {
@@ -53,6 +56,16 @@ export default function Form({ isEdit, data }: FormProps) {
       console.log('error', error);
     }
   }
+
+  function init() {
+    if (!data) return;
+    // setValue('firstName', data?.name);
+  }
+
+  useEffect(() => {
+    init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <UICard
