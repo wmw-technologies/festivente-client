@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import * as Icons from '@heroicons/react/24/solid';
-import Permissions from '@/src/permissions';
 
 export type Icon = keyof typeof Icons;
 
@@ -44,10 +43,4 @@ export interface Role {
 export interface Option {
   text: string;
   value: string;
-}
-
-export interface Permission {
-  NAME?: string;
-  KEY?: string;
-  [key: string]: string | undefined | Permission;
 }

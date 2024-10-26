@@ -1,18 +1,19 @@
 'use client';
 
-import { ChangeEventHandler, forwardRef, HTMLInputAutoCompleteAttribute } from 'react';
+import { ChangeEventHandler, forwardRef, HTMLInputAutoCompleteAttribute, HTMLInputTypeAttribute } from 'react';
 import styles from './index.module.scss';
 
 type UIInputProps = {
-  type?: 'text' | 'password' | 'email';
+  type?: HTMLInputTypeAttribute;
   name?: string;
   placeholder?: string;
+  disabled?: boolean;
   autocomplete?: HTMLInputAutoCompleteAttribute;
   onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
 };
 
 const UIInput = forwardRef<HTMLInputElement, UIInputProps>(function UIInput(
-  { type = 'text', name, placeholder, autocomplete, onChange },
+  { type = 'text', name, placeholder, disabled, autocomplete, onChange },
   ref
 ) {
   return (
@@ -21,6 +22,7 @@ const UIInput = forwardRef<HTMLInputElement, UIInputProps>(function UIInput(
       ref={ref}
       type={type}
       placeholder={placeholder}
+      disabled={disabled}
       autoComplete={autocomplete}
       className={styles.input}
       onChange={onChange}

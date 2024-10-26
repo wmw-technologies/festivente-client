@@ -7,7 +7,6 @@ import { Role } from '@/src/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import Permissions from '@/src/permissions';
-import { Permission } from '@/src/types';
 import { create, update } from './actions';
 import styles from './form.module.scss';
 import toast from 'react-hot-toast';
@@ -153,7 +152,7 @@ export default function Form({ id, isEdit, data }: FormProps) {
 
   function assignedPermissionLengthByGroup(group: Record<string, any>) {
     return state.filter((permission: string) =>
-      group.children.map((permission: Permission) => permission.key).includes(permission)
+      group.children.map((permission: any) => permission.key).includes(permission)
     ).length;
   }
 
