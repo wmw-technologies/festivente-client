@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Pager from '@/src/utils/pager';
-import { Column } from '@/src/types';
+import { Column, WarehouseItem } from '@/src/types';
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
@@ -18,173 +18,247 @@ export default function Warehouse() {
   const columns: Array<Column> = [
     {
       id: 1,
-      header: 'ID',
-      item: (item: any) => <span>{item.id}</span>
-    },
-    {
-      id: 2,
       header: 'Name',
       item: (item: any) => <span>{item.name}</span>
     },
     {
+      id: 2,
+      header: 'Producent',
+      item: (item: any) => <span>{item.manufacturer}</span>
+    },
+    {
       id: 3,
-      header: 'Producer',
-      item: (item: any) => <span>{item.producer}</span>
+      header: 'SKU',
+      item: (item: any) => <span>{item.skuNumber}</span>
     },
     {
       id: 4,
-      header: 'Serial number',
-      item: (item: any) => <span>{item.serialNumber}</span>
-    },
-    {
-      id: 5,
-      header: 'Add date',
-      item: (item: any) => <span>{item.addDate || '-'}</span>
-    },
-    {
-      id: 6,
-      header: 'Category',
+      header: 'Kategoria',
       item: (item: any) => <span>{item.category}</span>
     },
     {
-      id: 7,
-      header: 'Quantity',
+      id: 5,
+      header: 'Ilość',
       item: (item: any) => <span>{item.quantity}</span>
     },
     {
-      id: 8,
-      header: 'Value',
-      item: (item: any) => <span>{item.value}</span>
+      id: 6,
+      header: 'Wartość wynajmu',
+      item: (item: any) => <span>{item.rentalValue}</span>
     },
     {
-      id: 9,
+      id: 7,
+      header: 'Lokalizacja',
+      item: (item: any) => <span>{item.location}</span>
+    },
+    {
+      id: 8,
       header: '',
       item: (item: any) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>
-          <UIDropdownItem onClick={() => handleEdit(item.id)}>Edytuj</UIDropdownItem>
+          <UIDropdownItem onClick={() => handleEditItem(item._id)}>Edytuj</UIDropdownItem>
         </UIDropdown>
       ),
       width: 36
     }
   ];
 
-  const data = [
+  const warehouseData: WarehouseItem[] = [
     {
-      id: 1,
-      name: 'Lampa',
-      producer: 'Philips',
-      serialNumber: '123123',
-      addDate: '12.12.2021',
-      category: 'Oświetlenie',
-      quantity: 10,
-      value: '100 PLN'
-    },
-    {
-      id: 2,
-      name: 'Głośnik',
-      producer: 'Sony',
-      serialNumber: '456456',
-      addDate: '15.01.2022',
-      category: 'Nagłośnienie',
-      quantity: 5,
-      value: '500 PLN'
-    },
-    {
-      id: 3,
+      _id: '1',
       name: 'Projektor',
-      producer: 'Epson',
-      serialNumber: '789789',
-      addDate: '20.02.2022',
-      category: 'Projektory',
+      manufacturer: 'Epson',
+      model: 'EB-X41',
       quantity: 3,
-      value: '1500 PLN'
+      serialNumbers: ['SN123456', 'SN123457', 'SN123458'],
+      skuNumber: 'PROJ-EPX41',
+      rentalValue: 1500,
+      location: 'Magazyn A',
+      warrantyEndDate: new Date('15-12-2023'),
+      category: 'Elektronika',
+      description: 'Projektor multimedialny do prezentacji i projekcji filmów',
+      status: 'Dosępny',
+      addedBy: '671a8fc05ba1b74ebde742b9',
+      insertionDate: new Date('15-01-2022'),
+      modificationDate: new Date('20-06-2022')
     },
     {
-      id: 4,
-      name: 'Mikrofon',
-      producer: 'Shure',
-      serialNumber: '101112',
-      addDate: '05.03.2022',
-      category: 'Nagłośnienie',
-      quantity: 15,
-      value: '200 PLN'
-    },
-    {
-      id: 5,
-      name: 'Kamera',
-      producer: 'Canon',
-      serialNumber: '131415',
-      addDate: '10.04.2022',
-      category: 'Kamery',
-      quantity: 7,
-      value: '2500 PLN'
-    },
-    {
-      id: 6,
-      name: 'Statyw',
-      producer: 'Manfrotto',
-      serialNumber: '161718',
-      addDate: '20.05.2022',
-      category: 'Akcesoria',
-      quantity: 20,
-      value: '300 PLN'
-    },
-    {
-      id: 7,
-      name: 'Ekran projekcyjny',
-      producer: 'Elite Screens',
-      serialNumber: '192021',
-      addDate: '25.06.2022',
-      category: 'Projektory',
+      _id: '2',
+      name: 'Laptop',
+      manufacturer: 'Dell',
+      model: 'XPS 15',
       quantity: 5,
-      value: '800 PLN'
+      serialNumbers: ['SN223456', 'SN223457', 'SN223458', 'SN223459', 'SN223460'],
+      skuNumber: 'LAP-DXPS15',
+      rentalValue: 2500,
+      location: 'Magazyn B',
+      warrantyEndDate: new Date('2024-05-15'),
+      category: 'Elektronika',
+      description: '',
+      status: 'Dostępny',
+      addedBy: '671a8fc05ba1b74ebde742b9',
+      insertionDate: new Date('2022-02-10'),
+      modificationDate: new Date('2022-07-15')
     },
     {
-      id: 8,
-      name: 'Mikser dźwięku',
-      producer: 'Yamaha',
-      serialNumber: '222324',
-      addDate: '30.07.2022',
-      category: 'Nagłośnienie',
-      quantity: 2,
-      value: '3500 PLN'
+      _id: '3',
+      name: 'Krzesło',
+      manufacturer: 'Herman Miller',
+      model: 'Aeron',
+      quantity: 10,
+      serialNumbers: [],
+      skuNumber: 'CHAIR-HMAERON',
+      rentalValue: 500,
+      location: 'Magazyn C',
+      warrantyEndDate: new Date('2025-01-01'),
+      category: 'Meble',
+      description: 'Fotel biurowy ergonomiczny z regulacją wysokości i podłokietnikami',
+      status: 'Dostępny',
+      addedBy: '671a8fc05ba1b74ebde742b9',
+      insertionDate: new Date('2022-03-05'),
+      modificationDate: new Date('2022-08-10')
     },
     {
-      id: 9,
-      name: 'Reflektor sceniczny',
-      producer: 'Chauvet',
-      serialNumber: '252627',
-      addDate: '15.08.2022',
-      category: 'Oświetlenie',
+      _id: '4',
+      name: 'Kamera',
+      manufacturer: 'Canon',
+      model: 'EOS 5D Mark IV',
+      quantity: 4,
+      serialNumbers: ['SN323456', 'SN323457', 'SN323458', 'SN323459'],
+      skuNumber: 'CAM-CAN5D4',
+      rentalValue: 3000,
+      location: 'Magazyn D',
+      warrantyEndDate: new Date('2023-11-20'),
+      category: 'Sprzęt fotograficzny',
+      description: 'Profesjonalna lustrzanka cyfrowa do zdjęć i filmów w jakości 4K',
+      status: 'Dostępny',
+      addedBy: '671a8fc05ba1b74ebde742b9',
+      insertionDate: new Date('2022-04-01'),
+      modificationDate: new Date('2022-09-15')
+    },
+    {
+      _id: '5',
+      name: 'Mikrofon',
+      manufacturer: 'Shure',
+      model: 'SM58',
+      quantity: 20,
+      serialNumbers: [],
+      skuNumber: 'MIC-SHSM58',
+      rentalValue: 100,
+      location: 'Magazyn E',
+      warrantyEndDate: new Date('2024-07-10'),
+      category: 'Audio',
+      description: 'Dynamiczny mikrofon wokalowy do występów na żywo i nagrywania',
+      status: 'Dostępny',
+      addedBy: '671a8fc05ba1b74ebde742b9',
+      insertionDate: new Date('2022-05-12'),
+      modificationDate: new Date('2022-10-20')
+    },
+    {
+      _id: '6',
+      name: 'Głośnik',
+      manufacturer: 'Bose',
+      model: 'L1 Compact',
+      quantity: 6,
+      serialNumbers: ['SN423456', 'SN423457', 'SN423458', 'SN423459', 'SN423460', 'SN423461'],
+      skuNumber: 'SPK-BOL1C',
+      rentalValue: 1200,
+      location: 'Magazyn F',
+      warrantyEndDate: new Date('2023-09-30'),
+      category: 'Audio',
+      description: 'System nagłośnieniowy z głośnikiem liniowym i mikserem audio',
+      status: 'Dostępny',
+      addedBy: '671a8fc05ba1b74ebde742b9',
+      insertionDate: new Date('2022-06-18'),
+      modificationDate: new Date('2022-11-25')
+    },
+    {
+      _id: '7',
+      name: 'Oświetlenie LED',
+      manufacturer: 'Neewer',
+      model: 'LED Softbox',
       quantity: 8,
-      value: '1200 PLN'
+      serialNumbers: ['SN523456', 'SN523457', 'SN523458', 'SN523459', 'SN523460', 'SN523461', 'SN523462', 'SN523463'],
+      skuNumber: 'LIGHT-NEELED',
+      rentalValue: 800,
+      location: 'Magazyn G',
+      warrantyEndDate: new Date('2024-03-15'),
+      category: 'Sprzęt oświetleniowy',
+      description: 'Zestaw oświetleniowy LED z regulacją temperatury barwowej i mocy światła',
+      status: 'Dostępny',
+      addedBy: '671a8fc05ba1b74ebde742b9',
+      insertionDate: new Date('2022-07-22'),
+      modificationDate: new Date('2022-12-30')
     },
     {
-      id: 10,
-      name: 'Mikser wideo',
-      producer: 'Blackmagic Design',
-      serialNumber: '282930',
-      addDate: '01.09.2022',
-      category: 'Wideo',
-      quantity: 3,
-      value: '4000 PLN'
+      _id: '8',
+      name: 'Tripod',
+      manufacturer: 'Manfrotto',
+      model: 'MT190XPRO4',
+      quantity: 15,
+      serialNumbers: [
+        'SN623456',
+        'SN623457',
+        'SN623458',
+        'SN623459',
+        'SN623460',
+        'SN623461',
+        'SN623462',
+        'SN623463',
+        'SN623464',
+        'SN623465',
+        'SN623466',
+        'SN623467',
+        'SN623468',
+        'SN623469',
+        'SN623470'
+      ],
+      skuNumber: 'TRIP-MT190',
+      rentalValue: 200,
+      location: 'Magazyn H',
+      warrantyEndDate: new Date('2023-08-25'),
+      category: 'Sprzęt fotograficzny',
+      description: 'Professional tripod for cameras and camcorders',
+      status: 'Dostępny',
+      addedBy: '671a8fc05ba1b74ebde742b9',
+      insertionDate: new Date('2022-08-30'),
+      modificationDate: new Date('2023-01-10')
+    },
+    {
+      _id: '9',
+      name: 'Mikser dźwięku',
+      manufacturer: 'Yamaha',
+      model: 'MG10XU',
+      quantity: 7,
+      serialNumbers: ['SN723456', 'SN723457', 'SN723458', 'SN723459', 'SN723460', 'SN723461', 'SN723462'],
+      skuNumber: 'MIX-YAMG10',
+      rentalValue: 600,
+      location: 'Magazyn I',
+      warrantyEndDate: new Date('2024-02-20'),
+      category: 'Audio',
+      description: 'Kompaktowy mikser dźwięku z interfejsem USB i efektami cyfrowymi',
+      status: 'Dostępny',
+      addedBy: '671a8fc05ba1b74ebde742b9',
+      insertionDate: new Date('2022-09-15'),
+      modificationDate: new Date('2023-02-05')
     }
   ];
-  pager.setTotal(data.length);
+  pager.setTotal(warehouseData.length);
 
-  function handleAddUser() {
-    router.push('/administration/users/add');
+  function handleAddItem() {
+    router.push('/warehouse/add');
   }
 
-  function handleEdit(id: number) {
-    router.push(`/administration/users/${id}`);
+  function handleEditItem(id: number) {
+    console.log(id);
+    router.push(`/warehouse/${id}`);
   }
 
   return (
     <UICard
       header={
         <UIPanel header="Magazyn">
-          <UIButton icon="PlusIcon" onClick={handleAddUser}>
+          <UIButton icon="PlusIcon" onClick={handleAddItem}>
             Dodaj urządzenie
           </UIButton>
         </UIPanel>
@@ -194,7 +268,7 @@ export default function Warehouse() {
     >
       <UITable
         columns={columns}
-        data={data.slice((pager.getPage() - 1) * pager.getPerPage(), pager.getPage() * pager.getPerPage())}
+        data={warehouseData.slice((pager.getPage() - 1) * pager.getPerPage(), pager.getPage() * pager.getPerPage())}
       />
     </UICard>
   );

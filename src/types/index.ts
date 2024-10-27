@@ -44,3 +44,23 @@ export interface Option {
   text: string;
   value: string;
 }
+
+export interface WarehouseItem {
+  _id: string;
+  name: string;
+  manufacturer?: string;
+  model?: string;
+  quantity: number;
+  serialNumbers: string[];
+  skuNumber: string; // SKU number (identifier for managing the item)
+  rentalValue: number;
+  location: string;
+  warrantyEndDate?: Date;
+  category?: string;
+  description?: string;
+  // Fields added automatically
+  status?: string; // Status of the item (e.g. available, rented)
+  addedBy: string; // User ID
+  insertionDate: Date;
+  modificationDate: Date;
+}
