@@ -194,7 +194,8 @@ export default function Form({ id, isEdit, data }: FormProps) {
           <UIButton
             type="submit"
             form="role-form"
-            disabled={(!isValid && isSubmitted) || isSubmitting}
+            loading={isSubmitting}
+            disabled={!isValid && isSubmitted}
             icon="CheckCircleIcon"
             variant="black"
           >

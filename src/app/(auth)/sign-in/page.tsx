@@ -63,7 +63,12 @@ export default function SignIn() {
               {...register('password')}
             />
           </UIGroup>
-          <UIButton type="submit" disabled={(!isValid && isSubmitted) || isSubmitting} icon="ArrowRightOnRectangleIcon">
+          <UIButton
+            type="submit"
+            disabled={!isValid && isSubmitted}
+            loading={isSubmitting}
+            icon="ArrowRightOnRectangleIcon"
+          >
             Zaloguj się
           </UIButton>
         </form>

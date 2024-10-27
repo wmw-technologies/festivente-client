@@ -69,7 +69,8 @@ export default function AdministrationUsersChangePassword({ params }: Administra
           <UIButton
             type="submit"
             form="user-change-password-form"
-            disabled={(!isValid && isSubmitted) || isSubmitting}
+            loading={isSubmitting}
+            disabled={!isValid && isSubmitted}
             icon="CheckCircleIcon"
             variant="black"
           >

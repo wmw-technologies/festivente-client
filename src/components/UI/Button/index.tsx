@@ -11,14 +11,16 @@ type UIButtonProps = {
   icon?: Icon;
   variant?: 'gray' | 'black' | 'success';
   type?: 'button' | 'submit' | 'reset';
+  loading?: boolean;
   disabled?: boolean;
   form?: string;
   children?: ReactNode;
   onClick?: () => void;
 };
 
-function UIButton({ href, type = 'button', icon, variant, disabled, form, children, onClick }: UIButtonProps) {
+function UIButton({ href, type = 'button', loading, icon, variant, disabled, form, children, onClick }: UIButtonProps) {
   const variantClass = variant === 'gray' ? styles.gray : variant === 'success' ? styles.success : styles.black;
+  const loadingClass = loading ? styles.loading : '';
 
   if (href)
     return (
@@ -32,11 +34,11 @@ function UIButton({ href, type = 'button', icon, variant, disabled, form, childr
     <button
       type={type}
       form={form}
-      className={`${styles.button} ${variantClass}`}
+      className={`${styles.button} ${variantClass} ${loadingClass}`}
       disabled={disabled}
       onClick={onClick}
     >
-      {icon && <UIIcon name={icon} smaller />}
+      {icon && (loading ? <span className={styles.loader}></span> : <UIIcon name={icon} smaller />)}
       {children && <span>{children}</span>}
     </button>
   );
