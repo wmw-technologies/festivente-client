@@ -30,6 +30,10 @@ export const SITEMAP: Array<SitemapItem> = [
           {
             name: 'Edytuj użytkownika',
             path: '/administration/users/:id'
+          },
+          {
+            name: 'Zmiana hasła',
+            path: '/administration/users/:id/change-password'
           }
         ]
       },

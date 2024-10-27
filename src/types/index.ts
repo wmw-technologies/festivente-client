@@ -19,7 +19,7 @@ export interface Column {
   sortable?: boolean;
 }
 
-export interface ResponseAPI<T> {
+export interface ResponseAPI<T = undefined> {
   message: string;
   data?: T;
   errors?: Record<string, string>;

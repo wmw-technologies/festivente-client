@@ -63,6 +63,7 @@ export default async function AdministrationUsers() {
       item: (item: any) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>
           <UIDropdownItem href={`/administration/users/${item._id}`}>Edytuj</UIDropdownItem>
+          <UIDropdownItem href={`/administration/users/${item._id}/change-password`}>Zmień hasło</UIDropdownItem>
         </UIDropdown>
       ),
       width: 36

@@ -130,7 +130,7 @@ function permissionsReducer(state: PermissionsState, action: PermissionsAction):
 export default function Form({ id, isEdit, data }: FormProps) {
   const [state, dispatch] = useReducer(permissionsReducer, []);
   const router = useRouter();
-  const title = isEdit ? 'Formularz edycji roli' : 'Formularz dodawania roli';
+  const title = isEdit ? `Formularz edycji roli: ${data?.name}` : 'Formularz dodawania roli';
 
   const {
     register,

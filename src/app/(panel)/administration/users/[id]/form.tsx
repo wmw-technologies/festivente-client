@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { User } from '@/src/types';
+import { User, Option } from '@/src/types';
 import toast from 'react-hot-toast';
 import { create, update } from './actions';
 import UIPanel from '@/src/components/UI/Panel';
@@ -20,9 +20,9 @@ const schema = z.object({
   last_name: z.string().min(3).max(64),
   email: z.string().email().trim(),
   phone: z.string().min(9).max(16).optional(),
+  role: z.string({ message: 'Wybierz rolę' }),
   password: z.string().min(8),
-  confirm_password: z.string().min(8),
-  role: z.string().min(1, { message: 'Wybierz rolę' })
+  confirm_password: z.string().min(8)
 });
 
 export type Schema = z.infer<typeof schema>;
@@ -31,21 +31,23 @@ type FormProps = {
   id: string;
   isEdit: boolean;
   data: User | null;
-  roles: any;
+  roles: Array<Option>;
 };
 
 export default function Form({ id, isEdit, data, roles }: FormProps) {
   const router = useRouter();
-  const title = isEdit ? 'Formularz edycji użytkownika' : 'Formularz dodawania użytkownika';
+  const userSchema = isEdit ? schema.omit({ password: true, confirm_password: true }) : schema;
+  const title = isEdit ? `Formularz edycji użytkownika: ${data?.email}` : 'Formularz dodawania użytkownika';
 
   const {
     register,
+    control,
     formState: { errors, isSubmitting, isValid, isSubmitted },
     setValue,
     setError,
     handleSubmit
   } = useForm<Schema>({
-    resolver: zodResolver(schema)
+    resolver: zodResolver(userSchema)
   });
 
   async function onSubmit(form: Schema) {
@@ -116,27 +118,29 @@ export default function Form({ id, isEdit, data, roles }: FormProps) {
               <UIInput type="tel" placeholder="Wprowadź numer telefonu" autocomplete="tel" {...register('phone')} />
             </UIGroup>
             <UIGroup header="Rola" nospace error={errors.role} required>
-              <UISelect placeholder="Wybierz rolę" options={roles} {...register('role')} />
+              <UISelect name="role" placeholder="Wybierz rolę" options={roles} control={control} />
             </UIGroup>
           </div>
-          <div className="col-4">
-            <UIGroup header="Hasło" error={errors.password} required>
-              <UIInput
-                placeholder="Wprowadź hasło"
-                type="password"
-                autocomplete="new-password"
-                {...register('password')}
-              />
-            </UIGroup>
-            <UIGroup header="Powtórz hasło" error={errors.confirm_password} required>
-              <UIInput
-                placeholder="Wprowadź powtórz hasło"
-                type="password"
-                autocomplete="new-password"
-                {...register('confirm_password')}
-              />
-            </UIGroup>
-          </div>
+          {!isEdit ? (
+            <div className="col-4">
+              <UIGroup header="Hasło" error={errors.password} required>
+                <UIInput
+                  placeholder="Wprowadź hasło"
+                  type="password"
+                  autocomplete="new-password"
+                  {...register('password')}
+                />
+              </UIGroup>
+              <UIGroup header="Powtórz hasło" error={errors.confirm_password} required>
+                <UIInput
+                  placeholder="Wprowadź powtórz hasło"
+                  type="password"
+                  autocomplete="new-password"
+                  {...register('confirm_password')}
+                />
+              </UIGroup>
+            </div>
+          ) : null}
         </div>
       </form>
     </UICard>
