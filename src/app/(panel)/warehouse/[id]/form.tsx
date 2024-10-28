@@ -19,12 +19,12 @@ const schema = z.object({
   name: z.string().min(3).max(64),
   manufacturer: z.string().optional(),
   model: z.string().optional(),
-  quantity: z.number().min(1),
-  serialNumbers: z.array(z.string()),
+  // quantity: z.number().min(1),
+  // serialNumbers: z.array(z.string()),
   skuNumber: z.string().min(1),
   rentalValue: z.number().min(0),
-  location: z.string().min(1),
-  warrantyEndDate: z.date().optional(),
+  // location: z.string().min(1),
+  // warrantyEndDate: z.date().optional(),
   category: z.string().optional(),
   description: z.string().optional()
 });
@@ -55,12 +55,12 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
     resolver: zodResolver(itemSchema)
   });
 
-  const quantity = watch('quantity', data?.quantity || 1);
-  const [serialNumbers, setSerialNumbers] = useState<string[]>(Array(quantity).fill(''));
+  // const quantity = watch('quantity', data?.quantity || 1);
+  // const [serialNumbers, setSerialNumbers] = useState<string[]>(Array(quantity).fill(''));
 
-  useEffect(() => {
-    setSerialNumbers(Array(quantity).fill(''));
-  }, [quantity]);
+  // useEffect(() => {
+  //   setSerialNumbers(Array(quantity).fill(''));
+  // }, [quantity]);
 
   async function onSubmit(form: Schema) {
     try {
@@ -86,12 +86,12 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
     setValue('name', data?.name);
     setValue('manufacturer', data?.manufacturer);
     setValue('model', data?.model);
-    setValue('quantity', data?.quantity);
-    setValue('serialNumbers', data.serialNumbers);
+    // setValue('quantity', data?.quantity);
+    // setValue('serialNumbers', data.serialNumbers);
     setValue('skuNumber', data?.skuNumber);
     setValue('rentalValue', data?.rentalValue);
-    setValue('location', data?.location);
-    setValue('warrantyEndDate', data?.warrantyEndDate);
+    // setValue('location', data?.location);
+    // setValue('warrantyEndDate', data?.warrantyEndDate);
     setValue('category', data?.category);
     setValue('description', data?.description);
   }
@@ -131,26 +131,26 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
             <UIGroup header="Model" error={errors.model}>
               <UIInput placeholder="Wprowadź model" {...register('model')} />
             </UIGroup>
-            <UIGroup header="Ilość" error={errors.quantity} required>
+            {/* <UIGroup header="Ilość" error={errors.quantity} required>
               <UIInput type="number" placeholder="Wprowadź ilość" {...register('quantity')} />
-            </UIGroup>
+            </UIGroup> */}
             <UIGroup header="Numer SKU" error={errors.skuNumber} required>
               <UIInput placeholder="Wprowadź numer SKU" {...register('skuNumber')} />
             </UIGroup>
-            {Array.from({ length: quantity }).map((_, index) => (
+            {/* {Array.from({ length: quantity }).map((_, index) => (
               <UIGroup key={index} header={`Numer seryjny ${index + 1}`} error={errors.serialNumbers?.[index]} required>
                 <UIInput placeholder={`Wprowadź numer seryjny ${index + 1}`} {...register(`serialNumbers.${index}`)} />
               </UIGroup>
-            ))}
+            ))} */}
             <UIGroup header="Wartość wynajmu" error={errors.rentalValue} required>
               <UIInput type="number" placeholder="Wprowadź wartość wynajmu" {...register('rentalValue')} />
             </UIGroup>
-            <UIGroup header="Lokalizacja" error={errors.location} required>
+            {/* <UIGroup header="Lokalizacja" error={errors.location} required>
               <UIInput placeholder="Wprowadź lokalizację" {...register('location')} />
-            </UIGroup>
-            <UIGroup header="Data końca gwarancji" error={errors.warrantyEndDate}>
+            </UIGroup> */}
+            {/* <UIGroup header="Data końca gwarancji" error={errors.warrantyEndDate}>
               <UIInput type="date" placeholder="Wprowadź datę końca gwarancji" {...register('warrantyEndDate')} />
-            </UIGroup>
+            </UIGroup> */}
             <UIGroup header="Kategoria" error={errors.category}>
               <UISelect name="category" placeholder="Wybierz kategorię" options={categories} control={control} />
             </UIGroup>
