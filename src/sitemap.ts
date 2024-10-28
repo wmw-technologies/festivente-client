@@ -25,15 +25,18 @@ export const SITEMAP: Array<SitemapItem> = [
         children: [
           {
             name: 'Dodaj użytkownika',
-            path: '/administration/users/add'
+            path: '/administration/users/add',
+            visible: false
           },
           {
             name: 'Edytuj użytkownika',
-            path: '/administration/users/:id'
+            path: '/administration/users/:id',
+            visible: false
           },
           {
             name: 'Zmiana hasła',
-            path: '/administration/users/:id/change-password'
+            path: '/administration/users/:id/change-password',
+            visible: false
           }
         ]
       },
@@ -44,11 +47,13 @@ export const SITEMAP: Array<SitemapItem> = [
         children: [
           {
             name: 'Dodaj rolę',
-            path: '/administration/roles/add'
+            path: '/administration/roles/add',
+            visible: false
           },
           {
             name: 'Edytuj rolę',
-            path: '/administration/roles/:id'
+            path: '/administration/roles/:id',
+            visible: false
           }
         ]
       }
@@ -76,7 +81,19 @@ export const SITEMAP: Array<SitemapItem> = [
     name: 'Imprezy',
     icon: 'StarIcon',
     path: '/events',
-    permissions: [Permissions.EVENTS.ACCESS]
+    permissions: [Permissions.EVENTS.ACCESS],
+    children: [
+      {
+        name: 'Dodaj wydarzenie',
+        path: '/events/add',
+        visible: false
+      },
+      {
+        name: 'Edytuj wydarzenie',
+        path: '/events/:id',
+        visible: false
+      }
+    ]
   },
   {
     name: 'Transport',

@@ -8,6 +8,7 @@ export interface SitemapItem {
   path: string;
   icon?: Icon;
   permissions?: Array<string>;
+  visible?: boolean;
   children?: Array<SitemapItem>;
 }
 
