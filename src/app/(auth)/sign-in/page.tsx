@@ -40,7 +40,11 @@ export default function SignIn() {
       toast.success(response.message);
       router.push('/dashboard');
     } else {
-      setError('root', { type: 'validate', message: response?.message });
+      if (response?.errors) {
+        for (const error in response.errors) {
+          setError(error as keyof Schema, { type: 'validate', message: response.errors[error] });
+        }
+      }
     }
   }
 
