@@ -18,7 +18,7 @@ export default function Warehouse() {
   const columns: Array<Column> = [
     {
       id: 1,
-      header: 'Name',
+      header: 'Nazwa',
       item: (item: any) => <span>{item.name}</span>
     },
     {

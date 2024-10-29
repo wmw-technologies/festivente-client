@@ -86,7 +86,19 @@ export const SITEMAP: Array<SitemapItem> = [
     name: 'Wypożyczenia',
     icon: 'ArrowsRightLeftIcon',
     path: '/rentals',
-    permissions: [Permissions.RENTALS.ACCESS]
+    permissions: [Permissions.RENTALS.ACCESS],
+    children: [
+      {
+        name: 'Dodaj wypożyczenie',
+        path: '/rentals/add',
+        visible: false
+      },
+      {
+        name: 'Edytuj wypożyczenie',
+        path: '/rentals/:id',
+        visible: false
+      }
+    ]
   },
   {
     name: 'Pracownicy',
