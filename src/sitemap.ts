@@ -99,12 +99,36 @@ export const SITEMAP: Array<SitemapItem> = [
     name: 'Transport',
     icon: 'TruckIcon',
     path: '/transport',
-    permissions: [Permissions.TRANSPORT.ACCESS]
+    permissions: [Permissions.TRANSPORT.ACCESS],
+    children: [
+      {
+        name: 'Dodaj transport',
+        path: '/transport/add',
+        visible: false
+      },
+      {
+        name: 'Edytuj transport',
+        path: '/transport/:id',
+        visible: false
+      }
+    ]
   },
   {
     name: 'Serwis',
     icon: 'Cog6ToothIcon',
     path: '/service',
-    permissions: [Permissions.SERVICE.ACCESS]
+    permissions: [Permissions.SERVICE.ACCESS],
+    children: [
+      {
+        name: 'Dodaj urządzenie do serwisu',
+        path: '/service/add',
+        visible: false
+      },
+      {
+        name: 'Edytuj urządzenie w serwisie',
+        path: '/service/:id',
+        visible: false
+      }
+    ]
   }
 ];

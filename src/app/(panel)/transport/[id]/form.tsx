@@ -72,12 +72,12 @@ export default function Form({ id, isEdit, data }: FormProps) {
     <UICard
       header={
         <UIPanel header={title}>
-          <UIButton href="/events" icon="ArrowLongLeftIcon" variant="gray">
+          <UIButton href="/transport" icon="ArrowLongLeftIcon" variant="gray">
             Powrót
           </UIButton>
           <UIButton
             type="submit"
-            form="events-form"
+            form="transport-form"
             loading={isSubmitting}
             disabled={!isValid && isSubmitted}
             icon="CheckCircleIcon"
@@ -88,7 +88,7 @@ export default function Form({ id, isEdit, data }: FormProps) {
         </UIPanel>
       }
     >
-      <form id="events-form" onSubmit={handleSubmit(onSubmit)}>
+      <form id="transport-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
           <UIGroup header="Nazwa" error={errors.name} required className="col-4">
             <UIInput placeholder="Wprowadź nazwę" autocomplete="name" {...register('name')} />
