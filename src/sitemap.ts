@@ -63,7 +63,24 @@ export const SITEMAP: Array<SitemapItem> = [
     name: 'Magazyn',
     icon: 'CubeIcon',
     path: '/warehouse',
-    permissions: [Permissions.WAREHOUSE.ACCESS]
+    permissions: [Permissions.WAREHOUSE.ACCESS],
+    children: [
+      {
+        name: 'Dodaj urządzenie',
+        path: '/warehouse/add',
+        visible: false
+      },
+      {
+        name: 'Edytuj urządzenie',
+        path: '/warehouse/:id',
+        visible: false
+      },
+      {
+        name: 'Lista urządzeń',
+        path: '/warehouse/:id/items-list',
+        visible: false
+      }
+    ]
   },
   {
     name: 'Wypożyczenia',

@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import toast from 'react-hot-toast';
+import { Option, WarehouseItem } from '@/src/types';
 import { create, update } from './actions';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
@@ -13,7 +14,7 @@ import UICard from '@/src/components/UI/Card';
 import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
 import UISelect from '@/src/components/UI/Select';
-import { Option, WarehouseItem } from '@/src/types';
+import UITextarea from '@/src/components/UI/Textarea';
 
 const schema = z.object({
   name: z.string().min(3).max(64),
@@ -155,7 +156,7 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
               <UISelect name="category" placeholder="Wybierz kategorię" options={categories} control={control} />
             </UIGroup>
             <UIGroup header="Opis" error={errors.description}>
-              <UIInput placeholder="Wprowadź opis" {...register('description')} />
+              <UITextarea placeholder="Wprowadź opis" {...register('description')} />
             </UIGroup>
           </div>
         </div>
