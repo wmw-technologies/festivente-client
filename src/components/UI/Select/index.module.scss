@@ -13,6 +13,7 @@
     .placeholder {
       color: var(--f-gray-400);
       font-size: 0.8125rem;
+      margin-top: 1px;
     }
 
     .buttons {
@@ -53,6 +54,7 @@
   border: 1px solid var(--f-gray-300);
   background: var(--f-white);
   min-width: 196px;
+  max-height: 200px;
 
   .selectDropdownItem {
     padding: 0.5rem 1rem;

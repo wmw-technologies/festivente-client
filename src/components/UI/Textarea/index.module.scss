@@ -1,0 +1,30 @@
+.textarea {
+  outline: none;
+  border: none;
+  border-radius: 0;
+  -webkit-appearance: none;
+  -webkit-border-radius: 0;
+  border-bottom: 1px solid var(--f-black);
+  order: 2;
+  transition:
+    color,
+    background-color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: transparent;
+  padding: 0.375rem 0;
+  width: 100%;
+  line-height: 1.5;
+  resize: vertical;
+
+  &::placeholder {
+    color: var(--f-gray-400);
+    font-size: 0.8125rem;
+  }
+
+  &:focus {
+    border-color: var(--f-primary);
+  }
+
+  &:autofill {
+    background-color: var(--f-gray-400) !important;
+  }
+}

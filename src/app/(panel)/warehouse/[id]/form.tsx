@@ -7,7 +7,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import toast from 'react-hot-toast';
 import { create, update } from './actions';
-import { Option } from '@/src/types';
 import Table from './table';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
@@ -16,6 +15,8 @@ import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
 import UISelect from '@/src/components/UI/Select';
 import UICheckbox from '@/src/components/UI/Checkbox';
+import UITextarea from '@/src/components/UI/Textarea';
+import { Option } from '@/src/types';
 
 const schema = z.object({
   name: z.string().min(3).max(64),
@@ -161,7 +162,7 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
               <UISelect name="category" placeholder="Wybierz kategorię" options={categories} control={control} />
             </UIGroup>
             <UIGroup header="Opis" error={errors.description}>
-              <UIInput placeholder="Wprowadź opis" {...register('description')} />
+              <UITextarea placeholder="Wprowadź opis" {...register('description')} />
             </UIGroup>
             <UIGroup header="Występowanie numerów seryjnych" error={errors.isSerialTracked}>
               <UICheckbox />

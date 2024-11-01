@@ -39,7 +39,7 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    transition: background-color 5000000s ease-in-out 0s;
+  transition: background-color 5000000s ease-in-out 0s;
 }
 
 .container {
@@ -53,6 +53,28 @@ input:-webkit-autofill:active {
 
   @include breakpoint(xl) {
     max-width: 1024px;
+  }
+}
+
+.scroll-y {
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 6px;
+    background: var(--f-white);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 6px;
+    background: var(--f-gray-400);
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--f-primary);
   }
 }
 

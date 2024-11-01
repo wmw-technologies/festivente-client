@@ -10,6 +10,8 @@ import Link from 'next/link';
 import UIIcon from '@/src/components/UI/Icon';
 import UIButton from '@/src/components/UI/Button';
 
+const SITEMAP_COPY = JSON.parse(JSON.stringify(SITEMAP));
+
 export default function SystemMenu() {
   const [openedTab, setOpenedTab] = useState<string | null>(null);
   const pathName = usePathname();
@@ -24,6 +26,8 @@ export default function SystemMenu() {
 
     return sitemap.filter((item) => {
       const node = item;
+
+      if (node.visible === false) return false;
 
       if (node.children) {
         node.children = available(node.children);
@@ -55,7 +59,7 @@ export default function SystemMenu() {
       <div className="flex flex-col whitespace-nowrap">
         <nav className={styles.nav}>
           <ul className={styles.levelone}>
-            {available(SITEMAP).map((item) => (
+            {available(SITEMAP_COPY).map((item) => (
               <li key={item.path}>
                 <Link
                   href={item.path}

@@ -52,7 +52,7 @@ export default function UISelect({ name, placeholder, options = [], control }: U
         visible={visible}
         offset={[0, 6]}
         render={(attrs) => (
-          <div className={styles.selectDropdown} tabIndex={-1} {...attrs}>
+          <div className={`${styles.selectDropdown} scroll-y`} tabIndex={-1} {...attrs}>
             {options.map((item, index) => (
               <div
                 key={index}

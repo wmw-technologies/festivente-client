@@ -40,7 +40,11 @@ export default function SignIn() {
       toast.success(response.message);
       router.push('/dashboard');
     } else {
-      setError('root', { type: 'validate', message: response?.message });
+      if (response?.errors) {
+        for (const error in response.errors) {
+          setError(error as keyof Schema, { type: 'validate', message: response.errors[error] });
+        }
+      }
     }
   }
 
@@ -63,7 +67,12 @@ export default function SignIn() {
               {...register('password')}
             />
           </UIGroup>
-          <UIButton type="submit" disabled={(!isValid && isSubmitted) || isSubmitting} icon="ArrowRightOnRectangleIcon">
+          <UIButton
+            type="submit"
+            disabled={!isValid && isSubmitted}
+            loading={isSubmitting}
+            icon="ArrowRightOnRectangleIcon"
+          >
             Zaloguj się
           </UIButton>
         </form>
