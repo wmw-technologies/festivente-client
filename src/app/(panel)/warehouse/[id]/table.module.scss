@@ -1,0 +1,38 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  .thead {
+    width: 100%;
+
+    tr {
+      color: var(--f-primary);
+
+      th {
+        padding: 0.625rem 0.75rem 0.625rem 1.25rem;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .tbody {
+    border-top: 1px solid var(--f-gray-300);
+    tr {
+      border-bottom: 1px solid var(--f-gray-300);
+      height: 52px;
+
+      &:hover {
+        background-color: var(--f-gray-100);
+      }
+      td {
+        padding: 0.5rem 0.75rem 0.5rem 1.25rem;
+
+        &.empty {
+          text-align: center;
+          color: var(--f-gray-400);
+        }
+      }
+    }
+  }
+}

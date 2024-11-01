@@ -45,35 +45,28 @@ export interface Option {
   value: string;
 }
 
-export interface IndyvidualItem {
+export type WarehouseGroupType = {
   _id: string;
   name: string;
-  serialNumber?: string;
-  skuNumber: string;
-  rentalValue: number;
-  location: string;
-  warrantyEndDate?: Date;
-  status: string;
-  addedBy: string;
-  insertionDate: Date;
-  modificationDate: Date;
-  warehouseItemID: string; // reference to the warehouse item
-}
-
-export interface WarehouseItem {
-  _id: string;
-  name: string;
-  manufacturer?: string;
-  model?: string;
+  SKU: string;
   quantity: number;
-  skuNumber: string; // SKU number (identifier for managing the item)
   rentalValue: number;
-  category?: string;
-  description?: string;
-  // Fields added automatically
-  status?: string; // Status of the item (e.g. available, rented)
-  addedBy: string; // User ID
-  insertionDate: Date;
-  modificationDate: Date;
-  indyvidualItems?: IndyvidualItem[];
-}
+  category?: string | undefined;
+  description?: string | undefined;
+  addedBy?: string | undefined;
+  manufacturer?: string | undefined;
+  isSerialTracked?: boolean | undefined;
+  updatedAt?: Date | undefined;
+  createdAt?: Date | undefined;
+};
+
+export type WarehouseItemType = {
+  _id: string;
+  description: string;
+  location: string;
+  serialNumbers?: string | undefined;
+  status?: string | undefined;
+  // addedBy?: string | undefined;
+  updatedAt?: Date | undefined;
+  createdAt?: Date | undefined;
+};

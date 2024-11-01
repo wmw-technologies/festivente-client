@@ -3,7 +3,7 @@ import { GlobalError } from 'react-hook-form';
 import styles from './index.module.scss';
 
 type UIGroupProps = {
-  header: string;
+  header?: string;
   required?: boolean;
   nospace?: boolean;
   error?: GlobalError;

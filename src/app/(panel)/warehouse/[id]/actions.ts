@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-import { ResponseAPI, WarehouseItem } from '@/src/types';
+import { ResponseAPI } from '@/src/types';
 import { Schema } from '@/src/app/(panel)/warehouse/[id]/form';
 
 export async function create(form: Schema) {
@@ -20,7 +20,7 @@ export async function create(form: Schema) {
     body: JSON.stringify(form)
   });
 
-  const json: ResponseAPI<WarehouseItem> = await response.json();
+  const json: ResponseAPI<any> = await response.json();
 
   revalidatePath('/warehouse');
 
@@ -46,7 +46,7 @@ export async function update(id: string, form: Schema) {
     body: JSON.stringify(form)
   });
 
-  const json: ResponseAPI<WarehouseItem> = await response.json();
+  const json: ResponseAPI<any> = await response.json();
 
   revalidatePath('/warehouse');
 
@@ -56,3 +56,12 @@ export async function update(id: string, form: Schema) {
     ok: response.ok
   };
 }
+
+// export async function updateInventoryItems(data: FormData) {
+//   try {
+//     console.log('Server received:', data);
+//     return { success: true };
+//   } catch (error) {
+//     return { success: false, error };
+//   }
+// }
