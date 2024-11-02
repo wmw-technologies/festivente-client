@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import toast from 'react-hot-toast';
 import { create, update } from './actions';
-import Table from './table';
+import EditableTable from './table';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
 import UICard from '@/src/components/UI/Card';
@@ -24,7 +24,12 @@ const schema = z.object({
   manufacturer: z.string().optional(),
   skuNumber: z.string().min(1),
   // rentalValue: z.number().min(0),
-  rentalValue: z.number().min(1),
+  rentalValue: z
+    .string()
+    .regex(/^\d+(\.\d{1,2})?$/, { message: 'Must be a valid PLN amount (e.g., 99 or 999.99)' })
+    .transform((val) => parseFloat(val))
+    .refine((val) => val >= 0, { message: 'Amount must be positive' })
+    .refine((val) => val <= 100000, { message: 'Amount must be less than or equal to 100,000 PLN' }),
   category: z.string().optional(),
   description: z.string().optional(),
   isSerialTracked: z.boolean().optional(),
@@ -35,10 +40,6 @@ const schema = z.object({
       description: z.string().optional()
     })
   )
-  // quantity: z.number().min(1),
-  // serialNumbers: z.array(z.string()),
-  // location: z.string().min(1),
-  // warrantyEndDate: z.date().optional(),
 });
 
 // .superRefine((data, ctx) => {
@@ -71,8 +72,7 @@ export type Schema = z.infer<typeof schema>;
 type FormProps = {
   id: string;
   isEdit: boolean;
-  // data: WarehouseItem | null;
-  data: any;
+  data: any | null;
   categories: Array<Option>;
 };
 
@@ -155,6 +155,7 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
 
   useEffect(() => {
     init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -166,8 +167,9 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
           </UIButton>
           <UIButton
             type="submit"
-            form="item-form"
-            disabled={(!isValid && isSubmitted) || isSubmitting}
+            form="warehouse-form"
+            loading={isSubmitting}
+            disabled={!isValid && isSubmitted}
             icon="CheckCircleIcon"
             variant="black"
           >
@@ -176,7 +178,7 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
         </UIPanel>
       }
     >
-      <form id="item-form" onSubmit={handleSubmit(onSubmit)}>
+      <form id="warehouse-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
           <div className="col-3">
             <UIGroup header="Nazwa" error={errors.name} required>
@@ -209,42 +211,10 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
             <UIGroup header="Występowanie numerów seryjnych" error={errors.isSerialTracked}>
               <UITogglebox {...register('isSerialTracked')} />
             </UIGroup>
-            {/* <UIGroup error={errors.quantity} required> */}
-            {/* <UIInput type="number" placeholder="Wprowadź ilość" {...register('quantity')} /> */}
-            {/* </UIGroup> */}
-            {/* <UIGroup header="Model" error={errors.model}>
-              <UIInput placeholder="Wprowadź model" {...register('model')} />
-            </UIGroup> */}
-            {/* <UIGroup header="Ilość" error={errors.quantity} required>
-              <UIInput type="number" placeholder="Wprowadź ilość" {...register('quantity')} />
-            </UIGroup> */}
-            {/* <UIGroup header="Numer SKU" error={errors.skuNumber} required>
-              <UIInput placeholder="Wprowadź numer SKU" {...register('skuNumber')} />
-            </UIGroup> */}
-            {/* {Array.from({ length: quantity }).map((_, index) => (
-              <UIGroup key={index} header={`Numer seryjny ${index + 1}`} error={errors.serialNumbers?.[index]} required>
-                <UIInput placeholder={`Wprowadź numer seryjny ${index + 1}`} {...register(`serialNumbers.${index}`)} />
-              </UIGroup>
-            ))} */}
-            {/* <UIGroup header="Wartość wynajmu" error={errors.rentalValue} required>
-              <UIInput type="number" placeholder="Wprowadź wartość wynajmu" {...register('rentalValue')} />
-            </UIGroup> */}
-            {/* <UIGroup header="Lokalizacja" error={errors.location} required>
-              <UIInput placeholder="Wprowadź lokalizację" {...register('location')} />
-            </UIGroup> */}
-            {/* <UIGroup header="Data końca gwarancji" error={errors.warrantyEndDate}>
-              <UIInput type="date" placeholder="Wprowadź datę końca gwarancji" {...register('warrantyEndDate')} />
-            </UIGroup> */}
-            {/* <UIGroup header="Kategoria" error={errors.category}>
-              <UISelect name="category" placeholder="Wybierz kategorię" options={categories} control={control} />
-            </UIGroup> */}
-            {/* <UIGroup header="Opis" error={errors.description}>
-              <UIInput placeholder="Wprowadź opis" {...register('description')} />
-            </UIGroup> */}
           </div>
           <div className="row" style={{ marginLeft: '2rem' }}>
             <div className="col-12">
-              <Table
+              <EditableTable
                 register={register}
                 setValue={setValue}
                 resetField={resetField}
