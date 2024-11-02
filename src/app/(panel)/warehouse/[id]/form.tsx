@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,19 +17,20 @@ import UISelect from '@/src/components/UI/Select';
 import UICheckbox from '@/src/components/UI/Checkbox';
 import UITextarea from '@/src/components/UI/Textarea';
 import { Option } from '@/src/types';
+import UITogglebox from '@/src/components/UI/Togglebox';
 
 const schema = z.object({
   name: z.string().min(3).max(64),
   manufacturer: z.string().optional(),
   skuNumber: z.string().min(1),
   // rentalValue: z.number().min(0),
-  rentalValue: z.string().min(0),
+  rentalValue: z.number().min(1),
   category: z.string().optional(),
   description: z.string().optional(),
   isSerialTracked: z.boolean().optional(),
   items: z.array(
     z.object({
-      serialNumber: z.string().min(1),
+      serialNumber: z.string().min(1).optional(),
       location: z.string().min(1),
       description: z.string().optional()
     })
@@ -39,6 +40,20 @@ const schema = z.object({
   // location: z.string().min(1),
   // warrantyEndDate: z.date().optional(),
 });
+
+// .superRefine((data, ctx) => {
+//   if (data.isSerialTracked) {
+//     data.items.forEach((item, index) => {
+//       if (!item.serialNumber) {
+//         ctx.addIssue({
+//           code: z.ZodIssueCode.custom,
+//           message: 'Serial number is required when serial tracking is enabled',
+//           path: ['items', index, 'serialNumber']
+//         });
+//       }
+//     });
+//   }
+// });
 
 // const defaultEmptyItem: WarehouseItemType = {
 //   _id: '',
@@ -63,8 +78,20 @@ type FormProps = {
 
 export default function Form({ id, isEdit, data, categories }: FormProps) {
   const router = useRouter();
-  const itemSchema = schema;
+  const [isSerialTracked, setIsSerialTracked] = useState<boolean | undefined>(false);
+
+  const itemSchema = !isSerialTracked
+    ? schema.omit({ items: true }).extend({
+        items: z.array(
+          z.object({
+            location: z.string().min(1),
+            description: z.string().optional()
+          })
+        )
+      })
+    : schema;
   const title = isEdit ? `Edytuj urządzenie: ${data?.name}` : 'Dodaj urządzenie';
+  console.log(isSerialTracked);
 
   const {
     register,
@@ -72,11 +99,17 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
     control,
     formState: { errors, isSubmitting, isValid, isSubmitted },
     setValue,
+    resetField,
+    trigger,
     setError,
     handleSubmit
   } = useForm<Schema>({
     resolver: zodResolver(itemSchema)
   });
+
+  useEffect(() => {
+    setIsSerialTracked(watch('isSerialTracked', data?.isSerialTracked || false));
+  }, [watch('isSerialTracked', data?.isSerialTracked || false)]);
 
   // const quantity = watch('quantity', data?.quantity || 1);
   // const [serialNumbers, setSerialNumbers] = useState<string[]>(Array(quantity).fill(''));
@@ -145,7 +178,7 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
     >
       <form id="item-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
-          <div className="col-4">
+          <div className="col-3">
             <UIGroup header="Nazwa" error={errors.name} required>
               <UIInput placeholder="Wprowadź nazwę" {...register('name')} />
             </UIGroup>
@@ -156,7 +189,13 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
               <UIInput placeholder="Wprowadź numer SKU" {...register('skuNumber')} />
             </UIGroup>
             <UIGroup header="Wartość wyjściowa (PLN)" error={errors.rentalValue} required>
-              <UIInput type="number" placeholder="Wprowadź wartość wynajmu" {...register('rentalValue')} />
+              <UIInput
+                type="number"
+                placeholder="Wprowadź wartość wynajmu"
+                {...register('rentalValue', {
+                  valueAsNumber: true
+                })}
+              />
             </UIGroup>
             <UIGroup header="Kategoria" error={errors.category}>
               <UISelect name="category" placeholder="Wybierz kategorię" options={categories} control={control} />
@@ -164,8 +203,11 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
             <UIGroup header="Opis" error={errors.description}>
               <UITextarea placeholder="Wprowadź opis" {...register('description')} />
             </UIGroup>
+            {/* <UIGroup header="Występowanie numerów seryjnych" error={errors.isSerialTracked}>
+              <UICheckbox {...register('isSerialTracked')} />
+            </UIGroup> */}
             <UIGroup header="Występowanie numerów seryjnych" error={errors.isSerialTracked}>
-              <UICheckbox />
+              <UITogglebox {...register('isSerialTracked')} />
             </UIGroup>
             {/* <UIGroup error={errors.quantity} required> */}
             {/* <UIInput type="number" placeholder="Wprowadź ilość" {...register('quantity')} /> */}
@@ -200,9 +242,17 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
               <UIInput placeholder="Wprowadź opis" {...register('description')} />
             </UIGroup> */}
           </div>
-          <div className="row">
+          <div className="row" style={{ marginLeft: '2rem' }}>
             <div className="col-12">
-              <Table register={register} errors={errors} control={control} />
+              <Table
+                register={register}
+                setValue={setValue}
+                resetField={resetField}
+                trigger={trigger}
+                errors={errors}
+                control={control}
+                isSerialTracked={isSerialTracked}
+              />
             </div>
           </div>
         </div>

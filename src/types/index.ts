@@ -54,7 +54,7 @@ export type WarehouseGroupType = {
   rentalValue: number;
   category?: string | undefined;
   description?: string | undefined;
-  addedBy?: string | undefined;
+  // addedBy?: string | undefined;
   manufacturer?: string | undefined;
   isSerialTracked?: boolean | undefined;
   updatedAt?: Date | undefined;

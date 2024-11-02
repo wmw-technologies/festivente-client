@@ -9,9 +9,18 @@ type UIGroupProps = {
   error?: GlobalError;
   className?: string;
   children: ReactNode;
+  noErrorMargin?: boolean;
 };
 
-export default function UIGroup({ header, required, nospace = false, error, className, children }: UIGroupProps) {
+export default function UIGroup({
+  header,
+  required,
+  nospace = false,
+  error,
+  className,
+  children,
+  noErrorMargin
+}: UIGroupProps) {
   return (
     <div className={`${className} ${!nospace ? 'mb-5' : ''}`}>
       <label className={styles.group}>
@@ -21,7 +30,11 @@ export default function UIGroup({ header, required, nospace = false, error, clas
           {required && <span className={styles.asterisk}>*</span>}
         </span>
       </label>
-      {error && <span className={styles.error}>{error.message}</span>}
+      {error && (
+        <span style={noErrorMargin ? { marginTop: '0px' } : {}} className={styles.error}>
+          {error.message}
+        </span>
+      )}
     </div>
   );
 }

@@ -9,7 +9,10 @@ type UICheckboxProps = {
   onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
 };
 
-const UICheckbox = forwardRef<HTMLInputElement, UICheckboxProps>(function UIInput({ name, disabled, onChange }, ref) {
+const UICheckbox = forwardRef<HTMLInputElement, UICheckboxProps>(function UICheckbox(
+  { name, disabled, onChange },
+  ref
+) {
   return (
     <input
       name={name}
