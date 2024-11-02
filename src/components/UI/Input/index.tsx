@@ -25,6 +25,7 @@ const UIInput = forwardRef<HTMLInputElement, UIInputProps>(function UIInput(
       disabled={disabled}
       autoComplete={autocomplete}
       className={styles.input}
+      step={type === 'number' ? 'any' : undefined}
       onChange={onChange}
     />
   );
