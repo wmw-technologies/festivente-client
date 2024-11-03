@@ -1,13 +1,13 @@
 'use client';
 
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import toast from 'react-hot-toast';
 import { create, update } from './actions';
-import EditableTable from './table';
+import EditableTable from './editable-table';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
 import UICard from '@/src/components/UI/Card';
@@ -23,7 +23,6 @@ const schema = z.object({
   name: z.string().min(3).max(64),
   manufacturer: z.string().optional(),
   skuNumber: z.string().min(1),
-  // rentalValue: z.number().min(0),
   rentalValue: z
     .string()
     .regex(/^\d+(\.\d{1,2})?$/, { message: 'Must be a valid PLN amount (e.g., 99 or 999.99)' })
@@ -41,31 +40,6 @@ const schema = z.object({
     })
   )
 });
-
-// .superRefine((data, ctx) => {
-//   if (data.isSerialTracked) {
-//     data.items.forEach((item, index) => {
-//       if (!item.serialNumber) {
-//         ctx.addIssue({
-//           code: z.ZodIssueCode.custom,
-//           message: 'Serial number is required when serial tracking is enabled',
-//           path: ['items', index, 'serialNumber']
-//         });
-//       }
-//     });
-//   }
-// });
-
-// const defaultEmptyItem: WarehouseItemType = {
-//   _id: '',
-//   description: '',
-//   // addedBy: '',
-//   location: '',
-//   serialNumbers: string,
-//   status: 'available',
-//   updatedAt: new Date(),
-//   createdAt: new Date()
-// };
 
 export type Schema = z.infer<typeof schema>;
 
@@ -91,14 +65,12 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
       })
     : schema;
   const title = isEdit ? `Edytuj urządzenie: ${data?.name}` : 'Dodaj urządzenie';
-  console.log(isSerialTracked);
 
   const {
     register,
     watch,
     control,
     formState: { errors, isSubmitting, isValid, isSubmitted },
-    setValue,
     resetField,
     trigger,
     setError,
@@ -110,13 +82,6 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
   useEffect(() => {
     setIsSerialTracked(watch('isSerialTracked', data?.isSerialTracked || false));
   }, [watch('isSerialTracked', data?.isSerialTracked || false)]);
-
-  // const quantity = watch('quantity', data?.quantity || 1);
-  // const [serialNumbers, setSerialNumbers] = useState<string[]>(Array(quantity).fill(''));
-
-  // useEffect(() => {
-  //   setSerialNumbers(Array(quantity).fill(''));
-  // }, [quantity]);
 
   async function onSubmit(form: Schema) {
     console.log('form', form);
@@ -180,7 +145,7 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
     >
       <form id="warehouse-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
-          <div className="col-3">
+          <div className="col-4">
             <UIGroup header="Nazwa" error={errors.name} required>
               <UIInput placeholder="Wprowadź nazwę" {...register('name')} />
             </UIGroup>
@@ -191,13 +156,7 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
               <UIInput placeholder="Wprowadź numer SKU" {...register('skuNumber')} />
             </UIGroup>
             <UIGroup header="Wartość wyjściowa (PLN)" error={errors.rentalValue} required>
-              <UIInput
-                type="number"
-                placeholder="Wprowadź wartość wynajmu"
-                {...register('rentalValue', {
-                  valueAsNumber: true
-                })}
-              />
+              <UIInput type="number" placeholder="Wprowadź wartość wynajmu" {...register('rentalValue')} />
             </UIGroup>
             <UIGroup header="Kategoria" error={errors.category}>
               <UISelect name="category" placeholder="Wybierz kategorię" options={categories} control={control} />
@@ -205,25 +164,20 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
             <UIGroup header="Opis" error={errors.description}>
               <UITextarea placeholder="Wprowadź opis" {...register('description')} />
             </UIGroup>
-            {/* <UIGroup header="Występowanie numerów seryjnych" error={errors.isSerialTracked}>
-              <UICheckbox {...register('isSerialTracked')} />
-            </UIGroup> */}
             <UIGroup header="Występowanie numerów seryjnych" error={errors.isSerialTracked}>
               <UITogglebox {...register('isSerialTracked')} />
             </UIGroup>
           </div>
-          <div className="row" style={{ marginLeft: '2rem' }}>
-            <div className="col-12">
-              <EditableTable
-                register={register}
-                setValue={setValue}
-                resetField={resetField}
-                trigger={trigger}
-                errors={errors}
-                control={control}
-                isSerialTracked={isSerialTracked}
-              />
-            </div>
+          <div className="col-8">
+            <EditableTable
+              register={register}
+              resetField={resetField}
+              trigger={trigger}
+              errors={errors}
+              control={control}
+              isSerialTracked={isSerialTracked}
+              isSubmitted={isSubmitted}
+            />
           </div>
         </div>
       </form>
