@@ -1,0 +1,39 @@
+.togglebox {
+  position: relative;
+  order: 2;
+  &__input {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+
+    &:before {
+      content: '';
+      position: absolute;
+      height: 1.5rem;
+      width: 3rem;
+      background-color: var(--f-gray-400);
+      border-radius: 1rem;
+      transition: linear 0.4s;
+    }
+
+    &:after {
+      content: '';
+      position: absolute;
+      height: 1rem;
+      width: 1rem;
+      background-color: var(--f-white);
+      border-radius: 1rem;
+      transform: translate(0.25rem, 0.25rem);
+      transition: linear 0.2s;
+    }
+
+    &:checked::after {
+      transform: translate(1.7rem, 0.25rem);
+    }
+
+    &:checked::before {
+      background-color: var(--f-primary);
+      transition: linear 0.4s;
+    }
+  }
+}

@@ -17,6 +17,7 @@ import UISelect from '@/src/components/UI/Select';
 import UICheckbox from '@/src/components/UI/Checkbox';
 import UITextarea from '@/src/components/UI/Textarea';
 import { Option } from '@/src/types';
+import UITogglebox from '@/src/components/UI/Togglebox';
 
 const schema = z.object({
   name: z.string().min(3).max(64),
@@ -33,7 +34,7 @@ const schema = z.object({
   isSerialTracked: z.boolean().optional(),
   items: z.array(
     z.object({
-      serialNumber: z.string().min(1),
+      serialNumber: z.string().min(1).optional(),
       location: z.string().min(1),
       description: z.string().optional()
     })
@@ -51,7 +52,18 @@ type FormProps = {
 
 export default function Form({ id, isEdit, data, categories }: FormProps) {
   const router = useRouter();
-  const itemSchema = schema;
+  const [isSerialTracked, setIsSerialTracked] = useState<boolean | undefined>(false);
+
+  const itemSchema = !isSerialTracked
+    ? schema.omit({ items: true }).extend({
+        items: z.array(
+          z.object({
+            location: z.string().min(1),
+            description: z.string().optional()
+          })
+        )
+      })
+    : schema;
   const title = isEdit ? `Edytuj urządzenie: ${data?.name}` : 'Dodaj urządzenie';
 
   const {
@@ -59,12 +71,17 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
     watch,
     control,
     formState: { errors, isSubmitting, isValid, isSubmitted },
-    setValue,
+    resetField,
+    trigger,
     setError,
     handleSubmit
   } = useForm<Schema>({
     resolver: zodResolver(itemSchema)
   });
+
+  useEffect(() => {
+    setIsSerialTracked(watch('isSerialTracked', data?.isSerialTracked || false));
+  }, [watch('isSerialTracked', data?.isSerialTracked || false)]);
 
   async function onSubmit(form: Schema) {
     console.log('form', form);
@@ -147,12 +164,20 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
             <UIGroup header="Opis" error={errors.description}>
               <UITextarea placeholder="Wprowadź opis" {...register('description')} />
             </UIGroup>
-            <UIGroup error={errors.isSerialTracked}>
-              <UICheckbox header="Występowanie numerów seryjnych" />
+            <UIGroup header="Występowanie numerów seryjnych" error={errors.isSerialTracked}>
+              <UITogglebox {...register('isSerialTracked')} />
             </UIGroup>
           </div>
           <div className="col-8">
-            <EditableTable register={register} errors={errors} control={control} />
+            <EditableTable
+              register={register}
+              resetField={resetField}
+              trigger={trigger}
+              errors={errors}
+              control={control}
+              isSerialTracked={isSerialTracked}
+              isSubmitted={isSubmitted}
+            />
           </div>
         </div>
       </form>
