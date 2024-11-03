@@ -1,5 +1,4 @@
 import { cookies } from 'next/headers';
-// import { ResponseAPI, Role, Option, WarehouseItem, IndyvidualItem } from '@/src/types';
 import { ResponseAPI, Role, Option } from '@/src/types';
 import Form from './form';
 

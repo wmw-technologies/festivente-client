@@ -9,6 +9,7 @@ import UIButton from '@/src/components/UI/Button';
 import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 import UIGroup from '@/src/components/UI/Group';
 import { Schema } from './form';
+import UITextarea from '@/src/components/UI/Textarea';
 
 interface EditableTableProps {
   register: UseFormRegister<Schema>;
@@ -20,20 +21,11 @@ interface EditableTableProps {
   isSubmitted: boolean;
 }
 
-// const defaultEmptyItem: WarehouseItemType = {
 const defaultEmptyItem = {
-  // _id: '',
-  // description: '',
   // // addedBy: '',
-  // location: '',
-  // serialNumbers: '',
   // status: 'available',
   // updatedAt: new Date(),
   // createdAt: new Date()
-
-  // serialNumber: z.string().min(1),
-  // location: z.string().min(1),
-  // description: z.string().optional()
   serialNumber: '',
   location: '',
   description: ''
@@ -85,19 +77,19 @@ export default function EditableTable({
             <tr key={field.id}>
               {isSerialTracked && (
                 <td>
-                  <UIGroup noErrorMargin nospace className={styles.UIGroup} error={errors.items?.[index]?.serialNumber}>
+                  <UIGroup nospace className={styles.UIGroup} error={errors.items?.[index]?.serialNumber}>
                     <UIInput type="text" {...register(`items.${index}.serialNumber`)} />
                   </UIGroup>
                 </td>
               )}
               <td>
-                <UIGroup noErrorMargin nospace className={styles.UIGroup} error={errors.items?.[index]?.location}>
+                <UIGroup nospace className={styles.UIGroup} error={errors.items?.[index]?.location}>
                   <UIInput type="text" {...register(`items.${index}.location`)} />
                 </UIGroup>
               </td>
               <td>
                 <UIGroup nospace error={errors.items?.[index]?.description}>
-                  <UIInput type="text" {...register(`items.${index}.description`)} />
+                  <UITextarea rows={1} {...register(`items.${index}.description`)} />
                 </UIGroup>
               </td>
               <td style={{ width: 64 }}>
@@ -109,7 +101,7 @@ export default function EditableTable({
           ))}
           {fields.length === 0 && (
             <tr>
-              <td colSpan={4} className={styles.empty}>
+              <td colSpan={isSerialTracked ? 4 : 3} className={styles.empty}>
                 Dodaj urządzenie, aby zobaczyć listę
               </td>
             </tr>
