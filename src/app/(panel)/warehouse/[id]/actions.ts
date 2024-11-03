@@ -56,12 +56,3 @@ export async function update(id: string, form: Schema) {
     ok: response.ok
   };
 }
-
-// export async function updateInventoryItems(data: FormData) {
-//   try {
-//     console.log('Server received:', data);
-//     return { success: true };
-//   } catch (error) {
-//     return { success: false, error };
-//   }
-// }

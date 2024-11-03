@@ -1,7 +1,4 @@
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { cookies } from 'next/headers';
-import Pager from '@/src/utils/pager';
 import { Column } from '@/src/types';
 import { ResponseAPI } from '@/src/types';
 import UICard from '@/src/components/UI/Card';
@@ -9,7 +6,6 @@ import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
 import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 import UITable from '@/src/components/UI/Table';
-import UIPagination from '@/src/components/UI/Pagination';
 
 async function fetchData() {
   const url = process.env.NEXT_PUBLIC_API_URL;
@@ -76,7 +72,6 @@ export default async function Warehouse() {
       item: (item: any) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>
           <UIDropdownItem href={`/warehouse/${item._id}`}>Edytuj</UIDropdownItem>
-          <UIDropdownItem href={`/warehouse/${item._id}/items-list`}>Lista urządzeń</UIDropdownItem>
         </UIDropdown>
       ),
       width: 36
