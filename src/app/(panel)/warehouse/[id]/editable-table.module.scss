@@ -3,6 +3,7 @@
   border-collapse: collapse;
   text-align: left;
   table-layout: fixed;
+
   .thead {
     width: 100%;
 
@@ -37,12 +38,4 @@
       }
     }
   }
-}
-
-.add-button-constainer {
-  margin-top: 1rem;
-}
-
-.UIGroup {
-  display: contents;
 }

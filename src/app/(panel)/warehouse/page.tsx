@@ -39,7 +39,7 @@ export default async function Warehouse() {
     {
       id: 2,
       header: 'Producent',
-      item: (item: any) => <span>{item.manufacturer}</span>
+      item: (item: any) => <span>{item.manufacturer || '-'}</span>
     },
     {
       id: 3,
@@ -49,23 +49,23 @@ export default async function Warehouse() {
     {
       id: 4,
       header: 'Kategoria',
-      item: (item: any) => <span>{item.category}</span>
+      item: (item: any) => <span>{item.category ?? '-'}</span>
     },
     {
       id: 5,
       header: 'Ilość',
-      item: (item: any) => <span>{item.quantity}</span>
+      item: (item: any) => <span>{item.items?.length ?? 0}</span>
     },
     {
       id: 6,
       header: 'Wartość wynajmu',
       item: (item: any) => <span>{item.rentalValue}</span>
     },
-    {
-      id: 7,
-      header: 'Status',
-      item: (item: any) => <span>{item.status}</span>
-    },
+    // {
+    //   id: 7,
+    //   header: 'Status',
+    //   item: (item: any) => <span>{item.status}</span>
+    // },
     {
       id: 8,
       header: '',

@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import toast from 'react-hot-toast';
 import { create, update } from './actions';
+import { Option } from '@/src/types';
 import EditableTable from './editable-table';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
@@ -14,9 +15,8 @@ import UICard from '@/src/components/UI/Card';
 import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
 import UISelect from '@/src/components/UI/Select';
-import UICheckbox from '@/src/components/UI/Checkbox';
+// import UICheckbox from '@/src/components/UI/Checkbox';
 import UITextarea from '@/src/components/UI/Textarea';
-import { Option } from '@/src/types';
 import UITogglebox from '@/src/components/UI/Togglebox';
 
 const schema = z.object({
@@ -79,28 +79,25 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
     resolver: zodResolver(itemSchema)
   });
 
-  useEffect(() => {
-    setIsSerialTracked(watch('isSerialTracked', data?.isSerialTracked || false));
-  }, [watch('isSerialTracked', data?.isSerialTracked || false)]);
-
   async function onSubmit(form: Schema) {
-    console.log('form', form);
-    // try {
-    //   const response = !isEdit ? await create(form) : await update(id, form);
+    try {
+      const response = !isEdit ? await create(form) : await update(id, form);
 
-    //   if (response?.ok) {
-    //     router.push('/warehouse');
-    //     toast.success(response?.message);
-    //   } else {
-    //     if (response?.errors) {
-    //       Object.keys(response?.errors).map((key) => {
-    //         setError(key as any, { message: (response?.errors as any)[key] });
-    //       });
-    //     }
-    //   }
-    // } catch (error) {
-    //   toast.error('Error saving the device');
-    // }
+      console.log('response', response);
+
+      if (response?.ok) {
+        router.push('/warehouse');
+        toast.success(response?.message);
+      } else {
+        if (response?.errors) {
+          Object.keys(response?.errors).map((key) => {
+            setError(key as any, { message: (response?.errors as any)[key] });
+          });
+        }
+      }
+    } catch (error) {
+      toast.error('Error saving the device');
+    }
   }
 
   function init() {
@@ -117,6 +114,11 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
     // setValue('category', data?.category);
     // setValue('description', data?.description);
   }
+
+  useEffect(() => {
+    setIsSerialTracked(watch('isSerialTracked', data?.isSerialTracked || false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watch('isSerialTracked', data?.isSerialTracked || false)]);
 
   useEffect(() => {
     init();

@@ -22,7 +22,7 @@ interface EditableTableProps {
 }
 
 const defaultEmptyItem = {
-  // // addedBy: '',
+  // addedBy: '',
   // status: 'available',
   // updatedAt: new Date(),
   // createdAt: new Date()
@@ -62,13 +62,12 @@ export default function EditableTable({
 
   return (
     <>
-      <table className={styles.table}>
+      <table className={`${styles.table} mb-4`}>
         <thead className={styles.thead}>
           <tr>
-            {isSerialTracked && <th>Numer seryjny</th>}
-            <th>Lokalizacja</th>
-            <th>Opis</th>
-            {/* <th>Status</th> */}
+            {isSerialTracked && <th>Numer seryjny *</th>}
+            <th>Lokalizacja *</th>
+            <th>Opis </th>
             <th style={{ width: 64 }}></th>
           </tr>
         </thead>
@@ -77,19 +76,23 @@ export default function EditableTable({
             <tr key={field.id}>
               {isSerialTracked && (
                 <td>
-                  <UIGroup nospace className={styles.UIGroup} error={errors.items?.[index]?.serialNumber}>
-                    <UIInput type="text" {...register(`items.${index}.serialNumber`)} />
+                  <UIGroup error={errors.items?.[index]?.serialNumber} nospace>
+                    <UIInput
+                      placeholder="Wprowadź numer seryjny"
+                      type="text"
+                      {...register(`items.${index}.serialNumber`)}
+                    />
                   </UIGroup>
                 </td>
               )}
               <td>
-                <UIGroup nospace className={styles.UIGroup} error={errors.items?.[index]?.location}>
-                  <UIInput type="text" {...register(`items.${index}.location`)} />
+                <UIGroup error={errors.items?.[index]?.location} nospace>
+                  <UIInput placeholder="Wprowadź lokalizację" type="text" {...register(`items.${index}.location`)} />
                 </UIGroup>
               </td>
               <td>
-                <UIGroup nospace error={errors.items?.[index]?.description}>
-                  <UITextarea rows={1} {...register(`items.${index}.description`)} />
+                <UIGroup error={errors.items?.[index]?.description} nospace>
+                  <UITextarea placeholder="Wprowadź opis" rows={1} {...register(`items.${index}.description`)} />
                 </UIGroup>
               </td>
               <td style={{ width: 64 }}>
@@ -109,11 +112,9 @@ export default function EditableTable({
         </tbody>
       </table>
 
-      <div className={styles['add-button-constainer']}>
-        <UIButton type="button" variant="black" onClick={handleAddItem}>
-          Dodaj urządzenie
-        </UIButton>
-      </div>
+      <UIButton type="button" variant="black" onClick={handleAddItem}>
+        Dodaj urządzenie
+      </UIButton>
     </>
   );
 }
