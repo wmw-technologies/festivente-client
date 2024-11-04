@@ -83,11 +83,8 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
   });
 
   async function onSubmit(form: Schema) {
-    console.log('form', form);
     try {
       const response = !isEdit ? await create(form) : await update(id, form);
-
-      console.log('response', response);
 
       if (response?.ok) {
         router.push('/warehouse');
@@ -95,7 +92,6 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
       } else {
         if (response?.errors) {
           Object.keys(response?.errors).map((key) => {
-            console.log('key', key);
             setError(key as any, { message: (response?.errors as any)[key] });
           });
         }
@@ -106,7 +102,6 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
   }
 
   function init() {
-    console.log('data', data);
     if (!data) return;
 
     setValue('name', data?.name);
