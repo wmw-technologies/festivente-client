@@ -47,6 +47,7 @@ export default function EditableTable({
         resetField(`devices.${index}.serialNumber`);
       });
     }
+
     if (isSubmitted) {
       trigger('devices');
     }

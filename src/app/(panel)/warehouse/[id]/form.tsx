@@ -53,19 +53,6 @@ type FormProps = {
 
 export default function Form({ id, isEdit, data, categories }: FormProps) {
   const router = useRouter();
-  const [isSerialTracked, setIsSerialTracked] = useState<boolean | undefined>(false);
-
-  const itemSchema = !isSerialTracked
-    ? schema.omit({ devices: true }).extend({
-        devices: z.array(
-          z.object({
-            _id: z.string().optional(),
-            location: z.string().min(1),
-            description: z.string().optional()
-          })
-        )
-      })
-    : schema;
   const title = isEdit ? `Edytuj w magazynie: ${data?.name}` : 'Dodaj do magazynu';
 
   const {
@@ -79,8 +66,10 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
     setValue,
     handleSubmit
   } = useForm<Schema>({
-    resolver: zodResolver(itemSchema)
+    resolver: zodResolver(schema)
   });
+
+  const isSerialTracked = watch('isSerialTracked', false);
 
   async function onSubmit(form: Schema) {
     try {
@@ -113,11 +102,6 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
     setValue('isSerialTracked', data?.isSerialTracked);
     setValue('devices', data?.devices);
   }
-
-  useEffect(() => {
-    setIsSerialTracked(watch('isSerialTracked', data?.isSerialTracked || false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watch('isSerialTracked', data?.isSerialTracked || false)]);
 
   useEffect(() => {
     init();
