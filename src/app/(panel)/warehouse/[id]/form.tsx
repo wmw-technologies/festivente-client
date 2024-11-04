@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import toast from 'react-hot-toast';
 import { create, update } from './actions';
-import { Option } from '@/src/types';
+import { Option, Warehouse } from '@/src/types';
 import EditableTable from './editable-table';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
@@ -15,7 +15,6 @@ import UICard from '@/src/components/UI/Card';
 import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
 import UISelect from '@/src/components/UI/Select';
-// import UICheckbox from '@/src/components/UI/Checkbox';
 import UITextarea from '@/src/components/UI/Textarea';
 import UITogglebox from '@/src/components/UI/Togglebox';
 
@@ -28,12 +27,14 @@ const schema = z.object({
     .regex(/^\d+(\.\d{1,2})?$/, { message: 'Must be a valid PLN amount (e.g., 99 or 999.99)' })
     .transform((val) => parseFloat(val))
     .refine((val) => val >= 0, { message: 'Amount must be positive' })
-    .refine((val) => val <= 100000, { message: 'Amount must be less than or equal to 100,000 PLN' }),
+    .refine((val) => val <= 100000, { message: 'Amount must be less than or equal to 100,000 PLN' })
+    .transform((val) => val.toFixed(2)),
   category: z.string().optional(),
   description: z.string().optional(),
   isSerialTracked: z.boolean().optional(),
-  items: z.array(
+  devices: z.array(
     z.object({
+      _id: z.string().optional(),
       serialNumber: z.string().min(1).optional(),
       location: z.string().min(1),
       description: z.string().optional()
@@ -46,7 +47,7 @@ export type Schema = z.infer<typeof schema>;
 type FormProps = {
   id: string;
   isEdit: boolean;
-  data: any | null;
+  data: Warehouse | null;
   categories: Array<Option>;
 };
 
@@ -55,16 +56,17 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
   const [isSerialTracked, setIsSerialTracked] = useState<boolean | undefined>(false);
 
   const itemSchema = !isSerialTracked
-    ? schema.omit({ items: true }).extend({
-        items: z.array(
+    ? schema.omit({ devices: true }).extend({
+        devices: z.array(
           z.object({
+            _id: z.string().optional(),
             location: z.string().min(1),
             description: z.string().optional()
           })
         )
       })
     : schema;
-  const title = isEdit ? `Edytuj urządzenie: ${data?.name}` : 'Dodaj urządzenie';
+  const title = isEdit ? `Edytuj w magazynie: ${data?.name}` : 'Dodaj do magazynu';
 
   const {
     register,
@@ -74,12 +76,14 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
     resetField,
     trigger,
     setError,
+    setValue,
     handleSubmit
   } = useForm<Schema>({
     resolver: zodResolver(itemSchema)
   });
 
   async function onSubmit(form: Schema) {
+    console.log('form', form);
     try {
       const response = !isEdit ? await create(form) : await update(id, form);
 
@@ -91,6 +95,7 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
       } else {
         if (response?.errors) {
           Object.keys(response?.errors).map((key) => {
+            console.log('key', key);
             setError(key as any, { message: (response?.errors as any)[key] });
           });
         }
@@ -101,18 +106,17 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
   }
 
   function init() {
+    console.log('data', data);
     if (!data) return;
-    // setValue('name', data?.name);
-    // setValue('manufacturer', data?.manufacturer);
-    // setValue('model', data?.model);
-    // // setValue('quantity', data?.quantity);
-    // // setValue('serialNumbers', data.serialNumbers);
-    // setValue('skuNumber', data?.skuNumber);
-    // setValue('rentalValue', data?.rentalValue);
-    // // setValue('location', data?.location);
-    // // setValue('warrantyEndDate', data?.warrantyEndDate);
-    // setValue('category', data?.category);
-    // setValue('description', data?.description);
+
+    setValue('name', data?.name);
+    setValue('manufacturer', data?.manufacturer);
+    setValue('skuNumber', data?.skuNumber);
+    setValue('rentalValue', data?.rentalValue.toFixed(2));
+    setValue('category', data?.category);
+    setValue('description', data?.description);
+    setValue('isSerialTracked', data?.isSerialTracked);
+    setValue('devices', data?.devices);
   }
 
   useEffect(() => {

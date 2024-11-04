@@ -87,13 +87,15 @@
   transition-property: color, background-color;
   transition-duration: 300ms;
   transition-timing-function: ease;
+  outline: none;
 
   &.black {
     border: 1px solid var(--f-black);
     background-color: var(--f-black);
     color: var(--f-white);
 
-    &:hover {
+    &:hover,
+    &:focus {
       background-color: var(--f-primary);
       border-color: var(--f-primary);
     }
@@ -109,7 +111,8 @@
     background-color: var(--f-gray-100);
     color: var(--f-black);
 
-    &:hover {
+    &:hover,
+    &:focus {
       color: var(--f-primary);
     }
   }
@@ -146,7 +149,8 @@
     background: none;
     color: var(--f-black);
 
-    &:hover {
+    &:hover,
+    &:focus {
       background-color: var(--f-gray-300);
     }
   }

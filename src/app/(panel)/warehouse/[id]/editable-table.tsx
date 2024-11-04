@@ -22,10 +22,6 @@ interface EditableTableProps {
 }
 
 const defaultEmptyItem = {
-  // addedBy: '',
-  // status: 'available',
-  // updatedAt: new Date(),
-  // createdAt: new Date()
   serialNumber: '',
   location: '',
   description: ''
@@ -42,18 +38,20 @@ export default function EditableTable({
 }: EditableTableProps) {
   const { fields, append, remove } = useFieldArray({
     control,
-    name: 'items'
+    name: 'devices'
   });
 
   useEffect(() => {
     if (!isSerialTracked) {
-      fields.forEach((field, index) => {
-        resetField(`items.${index}.serialNumber`);
+      fields.forEach((_, index) => {
+        resetField(`devices.${index}.serialNumber`);
       });
     }
     if (isSubmitted) {
-      trigger('items');
+      trigger('devices');
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSerialTracked, fields]);
 
   const handleAddItem = () => {
@@ -76,23 +74,23 @@ export default function EditableTable({
             <tr key={field.id}>
               {isSerialTracked && (
                 <td>
-                  <UIGroup error={errors.items?.[index]?.serialNumber} nospace>
+                  <UIGroup error={errors.devices?.[index]?.serialNumber} nospace>
                     <UIInput
                       placeholder="Wprowadź numer seryjny"
                       type="text"
-                      {...register(`items.${index}.serialNumber`)}
+                      {...register(`devices.${index}.serialNumber`)}
                     />
                   </UIGroup>
                 </td>
               )}
               <td>
-                <UIGroup error={errors.items?.[index]?.location} nospace>
-                  <UIInput placeholder="Wprowadź lokalizację" type="text" {...register(`items.${index}.location`)} />
+                <UIGroup error={errors.devices?.[index]?.location} nospace>
+                  <UIInput placeholder="Wprowadź lokalizację" type="text" {...register(`devices.${index}.location`)} />
                 </UIGroup>
               </td>
               <td>
-                <UIGroup error={errors.items?.[index]?.description} nospace>
-                  <UITextarea placeholder="Wprowadź opis" rows={1} {...register(`items.${index}.description`)} />
+                <UIGroup error={errors.devices?.[index]?.description} nospace>
+                  <UITextarea placeholder="Wprowadź opis" rows={1} {...register(`devices.${index}.description`)} />
                 </UIGroup>
               </td>
               <td style={{ width: 64 }}>

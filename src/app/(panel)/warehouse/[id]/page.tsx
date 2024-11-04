@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { ResponseAPI, Role, Option } from '@/src/types';
+import { ResponseAPI, Warehouse, Option } from '@/src/types';
 import Form from './form';
 
 type WarehouseItemsFormProps = {
@@ -22,7 +22,7 @@ async function fetchData(id: string) {
   });
   if (!response.ok) return null;
 
-  const data: ResponseAPI<any> = await response.json();
+  const data: ResponseAPI<Warehouse> = await response.json();
   return data.data ?? null;
 }
 

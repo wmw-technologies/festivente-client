@@ -1,11 +1,13 @@
 import { cookies } from 'next/headers';
 import { Column } from '@/src/types';
-import { ResponseAPI } from '@/src/types';
+import { ResponseAPI, Warehouse } from '@/src/types';
+import { formatCurrency, dashIfEmpty } from '@/src/utils/format';
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
 import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 import UITable from '@/src/components/UI/Table';
+import UIBadge from '@/src/components/UI/Badge';
 
 async function fetchData() {
   const url = process.env.NEXT_PUBLIC_API_URL;
@@ -22,54 +24,56 @@ async function fetchData() {
 
   if (!response.ok) return [];
 
-  const data: ResponseAPI<any[]> = await response.json();
+  const data: ResponseAPI<Warehouse[]> = await response.json();
 
   return data.data ?? [];
 }
 
-export default async function Warehouse() {
+export default async function Page() {
   const data = await fetchData();
 
   const columns: Array<Column> = [
     {
       id: 1,
       header: 'Nazwa',
-      item: (item: any) => <span>{item.name}</span>
+      item: (item: Warehouse) => <span>{dashIfEmpty(item.name)}</span>
     },
     {
       id: 2,
       header: 'Producent',
-      item: (item: any) => <span>{item.manufacturer || '-'}</span>
+      item: (item: Warehouse) => <span>{dashIfEmpty(item.manufacturer)}</span>
     },
     {
       id: 3,
       header: 'SKU',
-      item: (item: any) => <span>{item.skuNumber}</span>
+      item: (item: Warehouse) => <span>{dashIfEmpty(item.skuNumber)}</span>
     },
     {
       id: 4,
       header: 'Kategoria',
-      item: (item: any) => <span>{item.category ?? '-'}</span>
+      item: (item: Warehouse) => <span>{dashIfEmpty(item.category)}</span>
     },
     {
       id: 5,
       header: 'Ilość',
-      item: (item: any) => <span>{item.items?.length ?? 0}</span>
+      item: (item: Warehouse) => <span>{item.devices?.length ?? 0}</span>
     },
     {
       id: 6,
       header: 'Wartość wynajmu',
-      item: (item: any) => <span>{item.rentalValue}</span>
+      item: (item: Warehouse) => <span>{formatCurrency(item.rentalValue)}</span>
     },
-    // {
-    //   id: 7,
-    //   header: 'Status',
-    //   item: (item: any) => <span>{item.status}</span>
-    // },
+    {
+      id: 7,
+      header: 'Status',
+      item: (item: Warehouse) => (
+        <UIBadge variant={item.status === 'Available' ? 'success' : 'secondary'}>{item.status ?? '-'}</UIBadge>
+      )
+    },
     {
       id: 8,
       header: '',
-      item: (item: any) => (
+      item: (item: Warehouse) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>
           <UIDropdownItem href={`/warehouse/${item._id}`}>Edytuj</UIDropdownItem>
         </UIDropdown>
@@ -83,7 +87,7 @@ export default async function Warehouse() {
       header={
         <UIPanel header="Magazyn">
           <UIButton icon="PlusIcon" href="/warehouse/add">
-            Dodaj urządzenie
+            Dodaj do magazynu
           </UIButton>
         </UIPanel>
       }

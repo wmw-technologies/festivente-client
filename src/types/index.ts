@@ -15,7 +15,7 @@ export interface SitemapItem {
 export interface Column {
   id: number;
   header?: any;
-  item: (item: unknown, index: number) => ReactNode;
+  item: (item: any, index: number) => ReactNode;
   width?: number;
   sortable?: boolean;
 }
@@ -46,28 +46,25 @@ export interface Option {
   value: string;
 }
 
-export type WarehouseGroupType = {
+export interface Warehouse {
   _id: string;
   name: string;
-  SKU: string;
-  quantity: number;
-  rentalValue: number;
-  category?: string | undefined;
-  description?: string | undefined;
-  // addedBy?: string | undefined;
   manufacturer?: string | undefined;
-  isSerialTracked?: boolean | undefined;
-  updatedAt?: Date | undefined;
-  createdAt?: Date | undefined;
-};
+  skuNumber: string;
+  rentalValue: number;
+  category?: string;
+  description?: string | undefined;
+  isSerialTracked: boolean;
+  status: 'Available' | 'Out of stock';
+  createdBy: User;
+  devices: Array<Device>;
+  updatedAt: Date;
+  createdAt: Date;
+}
 
-export type WarehouseItemType = {
+export interface Device {
   _id: string;
-  description: string;
+  serialNumber?: string;
   location: string;
-  serialNumbers?: string | undefined;
-  status?: string | undefined;
-  // addedBy?: string | undefined;
-  updatedAt?: Date | undefined;
-  createdAt?: Date | undefined;
-};
+  description?: string;
+}

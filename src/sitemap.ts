@@ -66,18 +66,13 @@ export const SITEMAP: Array<SitemapItem> = [
     permissions: [Permissions.WAREHOUSE.ACCESS],
     children: [
       {
-        name: 'Dodaj urządzenie',
+        name: 'Dodaj do magazynu',
         path: '/warehouse/add',
         visible: false
       },
       {
-        name: 'Edytuj urządzenie',
+        name: 'Edytuj w magazynie',
         path: '/warehouse/:id',
-        visible: false
-      },
-      {
-        name: 'Lista urządzeń',
-        path: '/warehouse/:id/items-list',
         visible: false
       }
     ]
