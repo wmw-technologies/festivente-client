@@ -15,6 +15,7 @@ import UICard from '@/src/components/UI/Card';
 import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
 import UITextarea from '@/src/components/UI/Textarea';
+import UIIcon from '@/src/components/UI/Icon';
 
 const schema = z.object({
   clientName: z.string().min(1, 'Nazwa klienta jest wymagana'),
@@ -52,14 +53,39 @@ type FormProps = {
 type Device = {
   id: string;
   name: string;
+  serialNumber?: string;
+  location: string;
+  manufacturer?: string | undefined;
+  skuNumber: string;
+  rentalValue: number;
+  category?: string;
 };
 
 async function fetchDevices(): Promise<Device[]> {
   // Fetch devices from the database
   return [
-    { id: '1', name: 'Device 1' },
-    { id: '2', name: 'Device 2' },
-    { id: '3', name: 'Device 3' }
+    {
+      id: '1',
+      name: 'Urządzenie do robienia dymu z dupy',
+      location: 'Magazyn',
+      skuNumber: 'SKU-1',
+      rentalValue: 100
+    },
+    {
+      id: '2',
+      name: 'Urządzenie 2',
+      location: 'Magazyn',
+      skuNumber: 'SKU-2',
+      rentalValue: 200
+    },
+    {
+      id: '3',
+      name: 'Urządzenie 3',
+      location: 'Magazyn',
+      skuNumber: 'SKU-3',
+      rentalValue: 300,
+      serialNumber: 'SN-3322'
+    }
   ];
 }
 
@@ -78,24 +104,41 @@ export default function Form({ id, isEdit, data }: FormProps) {
   });
 
   const [availableDevices, setAvailableDevices] = useState<Device[]>([]);
-  const [rentalDevices, setRentalDevices] = useState<Device[]>([]);
+  const [inCartDevices, setInCartDevices] = useState<Device[]>([]);
+  const [filteredDevices, setFilteredDevices] = useState<Device[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
     async function loadDevices() {
       const devices = await fetchDevices();
       setAvailableDevices(devices);
     }
+
     loadDevices();
   }, []);
 
+  useEffect(() => {
+    const filtered = availableDevices.filter(
+      (device) =>
+        device.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        device.skuNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        device.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (device.serialNumber && device.serialNumber.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+    setFilteredDevices(filtered);
+    console.log(filtered, searchQuery);
+  }, [searchQuery, availableDevices]);
+
   const addDeviceToRental = (device: Device) => {
     setAvailableDevices(availableDevices.filter((d) => d.id !== device.id));
-    setRentalDevices([...rentalDevices, device]);
+    setFilteredDevices(filteredDevices.filter((d) => d.id !== device.id));
+    setInCartDevices([...inCartDevices, device]);
   };
 
   const removeDeviceFromRental = (device: Device) => {
-    setRentalDevices(rentalDevices.filter((d) => d.id !== device.id));
+    setInCartDevices(inCartDevices.filter((d) => d.id !== device.id));
     setAvailableDevices([...availableDevices, device]);
+    setFilteredDevices([...filteredDevices, device]);
   };
 
   async function onSubmit(form: Schema) {
@@ -174,31 +217,47 @@ export default function Form({ id, isEdit, data }: FormProps) {
             </UIGroup>
           </div>
           <div className={`${styles['form-items']} row`}>
-            <div className="col-6">
-              <h3>Dostępne urządzenia</h3>
-              <ul>
-                {availableDevices.map((device) => (
-                  <li key={device.id}>
-                    {device.name}
-                    <button type="button" onClick={() => addDeviceToRental(device)}>
-                      Dodaj
-                    </button>
-                  </li>
-                ))}
-              </ul>
+            <div className={`col-6 ${styles['form-items__col']}`}>
+              <h3 className={styles['form-items__header']}>Dostępne urządzenia</h3>
+              <div className={styles['form-items__input']}>
+                <UIInput
+                  placeholder="Wyszukaj urządzenie"
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                  }}
+                />
+              </div>
+              {filteredDevices.map((device) => (
+                <div className={styles['items-card']} key={device.id}>
+                  <div className={styles['items-card__props']}>
+                    <span>Nazwa: {device.name}</span>
+                    <span>SKU: {device.skuNumber}</span>
+                    <span>Wartoćś wypożyczenia: {device.rentalValue} PLN</span>
+                    <span>Lokalizacja: {device.location}</span>
+                    {device.serialNumber && <span>Numer seryjny: {device.serialNumber}</span>}
+                  </div>
+                  <button className={styles['items-card__button']} onClick={() => addDeviceToRental(device)}>
+                    <UIIcon name="PlusIcon" smaller />
+                  </button>
+                </div>
+              ))}
             </div>
-            <div className="col-6">
-              <h3>Urządzenia do wypożyczenia</h3>
-              <ul>
-                {rentalDevices.map((device) => (
-                  <li key={device.id}>
-                    {device.name}
-                    <button type="button" onClick={() => removeDeviceFromRental(device)}>
-                      Usuń
-                    </button>
-                  </li>
-                ))}
-              </ul>
+            <div className={`col-6 ${styles['form-items__col']}`}>
+              <h3 className={styles['form-items__header']}>Urządzenia w koszyku</h3>
+              {inCartDevices.map((device) => (
+                <div className={styles['items-card']} key={device.id}>
+                  <div className={styles['items-card__props']}>
+                    <span>Nazwa: {device.name}</span>
+                    <span>SKU: {device.skuNumber}</span>
+                    <span>Wartoćś wypożyczenia: {device.rentalValue} PLN</span>
+                    <span>Lokalizacja: {device.location}</span>
+                    {device.serialNumber && <span>Numer seryjny: {device.serialNumber}</span>}
+                  </div>
+                  <button className={styles['items-card__button']} onClick={() => removeDeviceFromRental(device)}>
+                    <UIIcon name="MinusIcon" smaller />
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         </div>
