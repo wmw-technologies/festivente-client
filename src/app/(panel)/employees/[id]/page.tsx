@@ -1,8 +1,8 @@
 import { cookies } from 'next/headers';
-import { ResponseAPI, Warehouse } from '@/src/types';
+import { ResponseAPI, Employee } from '@/src/types';
 import Form from './form';
 
-type WarehouseItemsFormProps = {
+type EventsFormProps = {
   params: {
     id: string;
   };
@@ -14,19 +14,20 @@ async function fetchData(id: string) {
   if (!authCookie) return null;
 
   const accessToken = JSON.parse(authCookie).accessToken;
-  const response = await fetch(`${url}/warehouse/${id}`, {
+  const response = await fetch(`${url}/employees/${id}`, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'Bearer ' + accessToken
     }
   });
+
   if (!response.ok) return null;
 
-  const data: ResponseAPI<Warehouse> = await response.json();
+  const data: ResponseAPI<Employee> = await response.json();
   return data.data ?? null;
 }
 
-export default async function WarehouseForm({ params }: WarehouseItemsFormProps) {
+export default async function EmployeesForm({ params }: EventsFormProps) {
   const { id } = params;
   const isEdit = id !== 'add';
   const data = isEdit ? await fetchData(id) : null;

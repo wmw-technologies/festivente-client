@@ -99,7 +99,19 @@ export const SITEMAP: Array<SitemapItem> = [
     name: 'Pracownicy',
     icon: 'UsersIcon',
     path: '/employees',
-    permissions: [Permissions.EMPLOYEES.ACCESS]
+    permissions: [Permissions.EMPLOYEES.ACCESS],
+    children: [
+      {
+        name: 'Dodaj pracownika',
+        path: '/employees/add',
+        visible: false
+      },
+      {
+        name: 'Edytuj pracownika',
+        path: '/employees/:id',
+        visible: false
+      }
+    ]
   },
   {
     name: 'Imprezy',

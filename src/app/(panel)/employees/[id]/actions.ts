@@ -2,8 +2,8 @@
 
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
-import { ResponseAPI, Warehouse } from '@/src/types';
-import { Schema } from '@/src/app/(panel)/warehouse/[id]/form';
+import { ResponseAPI } from '@/src/types';
+import { Schema } from '@/src/app/(panel)/employees/[id]/form';
 
 export async function create(form: Schema) {
   const url = process.env.NEXT_PUBLIC_API_URL;
@@ -11,7 +11,7 @@ export async function create(form: Schema) {
   if (!authCookie) return;
 
   const accessToken = JSON.parse(authCookie).accessToken;
-  const response = await fetch(`${url}/warehouse/create`, {
+  const response = await fetch(`${url}/employees/create`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -20,9 +20,9 @@ export async function create(form: Schema) {
     body: JSON.stringify(form)
   });
 
-  const json: ResponseAPI<Warehouse> = await response.json();
+  const json: ResponseAPI<any> = await response.json();
 
-  revalidatePath('/warehouse');
+  revalidatePath('/employees');
 
   return {
     ...json,
@@ -37,7 +37,7 @@ export async function update(id: string, form: Schema) {
   if (!authCookie) return;
 
   const accessToken = JSON.parse(authCookie).accessToken;
-  const response = await fetch(`${url}/warehouse/update/${id}`, {
+  const response = await fetch(`${url}/employees/update/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -46,9 +46,9 @@ export async function update(id: string, form: Schema) {
     body: JSON.stringify(form)
   });
 
-  const json: ResponseAPI<Warehouse> = await response.json();
+  const json: ResponseAPI<any> = await response.json();
 
-  revalidatePath('/warehouse');
+  revalidatePath('/employees');
 
   return {
     ...json,

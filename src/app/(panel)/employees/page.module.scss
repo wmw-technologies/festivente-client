@@ -1,0 +1,34 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-gap: 1rem;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    gap: 4px;
+
+    .group {
+      color: var(--f-gray-400);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.8125rem;
+
+      &.primary {
+        color: var(--f-primary);
+      }
+    }
+  }
+}
+
+.empty {
+  text-align: center;
+  color: var(--f-gray-400);
+}

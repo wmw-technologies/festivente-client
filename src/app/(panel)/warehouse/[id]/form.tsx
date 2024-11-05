@@ -1,13 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import toast from 'react-hot-toast';
+import { warehouseCategories } from '@/src/constants';
 import { create, update } from './actions';
-import { Option, Warehouse } from '@/src/types';
+import { Warehouse } from '@/src/types';
 import EditableTable from './editable-table';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
@@ -29,7 +30,7 @@ const schema = z.object({
     .refine((val) => val >= 0, { message: 'Amount must be positive' })
     .refine((val) => val <= 100000, { message: 'Amount must be less than or equal to 100,000 PLN' })
     .transform((val) => val.toFixed(2)),
-  category: z.string().optional(),
+  category: z.string().optional().nullable(),
   description: z.string().optional(),
   isSerialTracked: z.boolean().optional(),
   devices: z.array(
@@ -48,10 +49,9 @@ type FormProps = {
   id: string;
   isEdit: boolean;
   data: Warehouse | null;
-  categories: Array<Option>;
 };
 
-export default function Form({ id, isEdit, data, categories }: FormProps) {
+export default function Form({ id, isEdit, data }: FormProps) {
   const router = useRouter();
   const title = isEdit ? `Edytuj w magazynie: ${data?.name}` : 'Dodaj do magazynu';
 
@@ -144,7 +144,12 @@ export default function Form({ id, isEdit, data, categories }: FormProps) {
               <UIInput type="number" placeholder="Wprowadź wartość wynajmu" {...register('rentalValue')} />
             </UIGroup>
             <UIGroup header="Kategoria" error={errors.category}>
-              <UISelect name="category" placeholder="Wybierz kategorię" options={categories} control={control} />
+              <UISelect
+                name="category"
+                placeholder="Wybierz kategorię"
+                options={warehouseCategories}
+                control={control}
+              />
             </UIGroup>
             <UIGroup header="Opis" error={errors.description}>
               <UITextarea placeholder="Wprowadź opis" {...register('description')} />

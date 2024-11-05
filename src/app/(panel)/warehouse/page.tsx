@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import { Column } from '@/src/types';
 import { ResponseAPI, Warehouse } from '@/src/types';
+import { warehouseCategories, warehouseStatuses } from '@/src/constants';
 import { formatCurrency, dashIfEmpty } from '@/src/utils/format';
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
@@ -8,6 +9,14 @@ import UIButton from '@/src/components/UI/Button';
 import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 import UITable from '@/src/components/UI/Table';
 import UIBadge from '@/src/components/UI/Badge';
+
+function getCategoryName(value?: string) {
+  return warehouseCategories.find((item) => item.value === value)?.text ?? '';
+}
+
+function getStatusName(value?: string) {
+  return warehouseStatuses.find((item) => item.value === value)?.text ?? '';
+}
 
 async function fetchData() {
   const url = process.env.NEXT_PUBLIC_API_URL;
@@ -51,7 +60,7 @@ export default async function Page() {
     {
       id: 4,
       header: 'Kategoria',
-      item: (item: Warehouse) => <span>{dashIfEmpty(item.category)}</span>
+      item: (item: Warehouse) => <span>{dashIfEmpty(getCategoryName(item.category))}</span>
     },
     {
       id: 5,
@@ -67,7 +76,9 @@ export default async function Page() {
       id: 7,
       header: 'Status',
       item: (item: Warehouse) => (
-        <UIBadge variant={item.status === 'Available' ? 'success' : 'secondary'}>{item.status ?? '-'}</UIBadge>
+        <UIBadge variant={item.status === 'Available' ? 'success' : 'secondary'}>
+          {getStatusName(item.status) ?? '-'}
+        </UIBadge>
       )
     },
     {

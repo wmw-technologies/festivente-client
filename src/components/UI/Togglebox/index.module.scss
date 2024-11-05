@@ -1,11 +1,16 @@
 .togglebox {
   position: relative;
   order: 2;
+  height: 1.5rem;
+  margin-top: 4px;
   
   &__input {
     appearance: none;
     -webkit-appearance: none;
     cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
 
     &:before {
       content: '';
