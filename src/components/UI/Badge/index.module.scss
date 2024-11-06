@@ -1,5 +1,5 @@
 .badge {
-  padding: 0.25rem 0.625rem;
+  padding: 0.1875rem 0.625rem;
   text-align: center;
   line-height: 1rem;
   font-size: 0.75rem;
@@ -8,9 +8,9 @@
   display: inline-block;
 
   &.primary {
-    border: 1px solid var(--f-primary);
-    background: var(--f-primary);
-    color: var(--f-white);
+    border: 1px solid var(--f-primary-light);
+    background: var(--f-primary-light);
+    color: var(--f-primary);
   }
 
   &.secondary {
@@ -20,8 +20,8 @@
   }
 
   &.success {
-    border: 1px solid var(--f-green);
-    background: var(--f-green);
-    color: var(--f-white);
+    border: 1px solid var(--f-green-light);
+    background: var(--f-green-light);
+    color: var(--f-green);
   }
 }

@@ -28,27 +28,27 @@ const toastOptions: DefaultToastOptions = {
   duration: 5000,
   success: {
     iconTheme: {
-      primary: 'var(--f-green)',
-      secondary: '#fff'
+      primary: 'var(--f-green-light)',
+      secondary: 'var(--f-green)'
     },
     style: {
       borderRadius: '9999px',
       padding: '10px 20px',
-      background: 'var(--f-green)',
-      color: '#fff',
+      background: 'var(--f-green-light)',
+      color: 'var(--f-green)',
       boxShadow: 'none'
     }
   },
   error: {
     iconTheme: {
-      primary: 'var(--f-red)',
-      secondary: '#fff'
+      primary: 'var(--f-red-light)',
+      secondary: 'var(--f-red)'
     },
     style: {
       borderRadius: '9999px',
       padding: '10px 16px',
-      background: 'var(--f-red)',
-      color: '#fff',
+      background: 'var(--f-red-light)',
+      color: 'var(--f-red)',
       boxShadow: 'none'
     }
   }
