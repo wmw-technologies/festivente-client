@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { ResponseAPI, Role } from '@/src/types';
+import { Rental, ResponseAPI } from '@/src/types';
 import Form from './form';
 
 type EventsFormProps = {
@@ -9,24 +9,21 @@ type EventsFormProps = {
 };
 
 async function fetchData(id: string) {
-  // const url = process.env.NEXT_PUBLIC_API_URL;
-  // const authCookie = cookies().get('auth')?.value;
-  // if (!authCookie) return null;
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  const authCookie = cookies().get('auth')?.value;
+  if (!authCookie) return null;
 
-  // const accessToken = JSON.parse(authCookie).accessToken;
-  // const response = await fetch(`${url}/role/${id}`, {
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     Authorization: 'Bearer ' + accessToken
-  //   }
-  // });
+  const accessToken = JSON.parse(authCookie).accessToken;
+  const response = await fetch(`${url}/rentals/${id}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + accessToken
+    }
+  });
+  if (!response.ok) return null;
 
-  // if (!response.ok) return null;
-
-  // const data: ResponseAPI<Role> = await response.json();
-  // return data.data ?? null;
-
-  return null;
+  const data: ResponseAPI<Rental> = await response.json();
+  return data.data ?? null;
 }
 
 export default async function RentalsForm({ params }: EventsFormProps) {

@@ -2,8 +2,8 @@
 
 import { useEffect, useReducer, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { Role } from '@/src/types';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { Rental, Role } from '@/src/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 // import { create, update } from './actions';
@@ -19,20 +19,22 @@ import UIIcon from '@/src/components/UI/Icon';
 
 const schema = z.object({
   clientName: z.string().min(1, 'Nazwa klienta jest wymagana'),
-  clientCity: z.string().min(1, 'Miasto jest wymagany'),
-  clientStreet: z.string().min(1, 'Ulica jest wymagany'),
+  clientCity: z.string().min(1, 'Miasto jest wymagane'),
+  clientStreet: z.string().min(1, 'Ulica jest wymagana'),
   clientPostCode: z.string().min(1, 'Kod pocztowy jest wymagany'),
   clientPhone: z.string().min(1, 'Numer telefonu jest wymagany'),
   clientEmail: z.string().email('Nieprawidłowy adres e-mail'),
-  rentalDate: z.string().min(1, 'Data wypożyczenia jest wymagana'),
-  returnDate: z.string().min(1, 'Data zwrotu jest wymagana'),
+  rentalDate: z.string().date().min(1, 'Data wypożyczenia jest wymagana'),
+  returnDate: z.string().date().min(1, 'Data zwrotu jest wymagana'),
   items: z
     .array(
       z.object({
         id: z.string().min(1, 'ID przedmiotu jest wymagane')
       })
     )
-    .nonempty('Musisz dodać co najmniej jeden przedmiot'),
+    .nonempty({
+      message: 'Wypożyczenie musi zawierać przynajmniej jedno urządzenie'
+    }),
   inTotal: z
     .string()
     .regex(/^\d+(\.\d{1,2})?$/, { message: 'Must be a valid PLN amount (e.g., 99 or 999.99)' })
@@ -46,7 +48,7 @@ export type Schema = z.infer<typeof schema>;
 
 type FormProps = {
   isEdit: boolean;
-  data: Role | null;
+  data: Rental | null;
   id: string;
 };
 
@@ -91,16 +93,22 @@ async function fetchDevices(): Promise<Device[]> {
 
 export default function Form({ id, isEdit, data }: FormProps) {
   const router = useRouter();
-  const title = isEdit ? `Formularz edycji wypożyczenia: ${data?.name}` : 'Formularz dodawania wypożyczenia';
+  const title = isEdit ? `Formularz edycji wypożyczenia: ${data?.companyName}` : 'Formularz dodawania wypożyczenia';
 
   const {
     register,
     formState: { errors, isSubmitting, isValid, isSubmitted },
     setValue,
     setError,
+    control,
     handleSubmit
   } = useForm<Schema>({
     resolver: zodResolver(schema)
+  });
+
+  const { fields, append, remove, insert } = useFieldArray({
+    control,
+    name: 'items'
   });
 
   const [availableDevices, setAvailableDevices] = useState<Device[]>([]);
@@ -126,23 +134,27 @@ export default function Form({ id, isEdit, data }: FormProps) {
         (device.serialNumber && device.serialNumber.toLowerCase().includes(searchQuery.toLowerCase()))
     );
     setFilteredDevices(filtered);
-    console.log(filtered, searchQuery);
   }, [searchQuery, availableDevices]);
 
   const addDeviceToRental = (device: Device) => {
     setAvailableDevices(availableDevices.filter((d) => d.id !== device.id));
     setFilteredDevices(filteredDevices.filter((d) => d.id !== device.id));
     setInCartDevices([...inCartDevices, device]);
+    append({ id: device.id });
   };
 
   const removeDeviceFromRental = (device: Device) => {
     setInCartDevices(inCartDevices.filter((d) => d.id !== device.id));
     setAvailableDevices([...availableDevices, device]);
     setFilteredDevices([...filteredDevices, device]);
+    const index = inCartDevices.findIndex((d) => d.id === device.id);
+    if (index !== -1) remove(index);
   };
 
   async function onSubmit(form: Schema) {
+    setValue('rentalDate', new Date().toISOString());
     try {
+      console.log(form);
       // const response = !isEdit
       //   ? await create({ ...form, permissions: state })
       //   : await update(id, { ...form, permissions: state });
@@ -212,6 +224,12 @@ export default function Form({ id, isEdit, data }: FormProps) {
             <UIGroup header="Warotść" error={errors.inTotal} required>
               <UIInput type="number" placeholder="Wprowadź wartość wypożyczenia" {...register('inTotal')} />
             </UIGroup>
+            <UIGroup header="Data wypożyczenia" error={errors.rentalDate} required>
+              <UIInput type="date" {...register('rentalDate')} />
+            </UIGroup>
+            <UIGroup header="Data zwrotu" error={errors.returnDate} required>
+              <UIInput type="date" {...register('returnDate')} />
+            </UIGroup>
             <UIGroup header="Uwagi" error={errors.notes} required>
               <UITextarea rows={2} placeholder="Uwagi do wypożyczenia" {...register('notes')} />
             </UIGroup>
@@ -236,7 +254,10 @@ export default function Form({ id, isEdit, data }: FormProps) {
                     <span>Lokalizacja: {device.location}</span>
                     {device.serialNumber && <span>Numer seryjny: {device.serialNumber}</span>}
                   </div>
-                  <button className={styles['items-card__button']} onClick={() => addDeviceToRental(device)}>
+                  <button
+                    className={`${styles['items-card__button']} ${styles['items-card__button--add']}`}
+                    onClick={() => addDeviceToRental(device)}
+                  >
                     <UIIcon name="PlusIcon" smaller />
                   </button>
                 </div>
@@ -244,8 +265,9 @@ export default function Form({ id, isEdit, data }: FormProps) {
             </div>
             <div className={`col-6 ${styles['form-items__col']}`}>
               <h3 className={styles['form-items__header']}>Urządzenia w koszyku</h3>
+              {errors.items && <span className={styles['form-items__error']}>{errors.items.message}</span>}
               {inCartDevices.map((device) => (
-                <div className={styles['items-card']} key={device.id}>
+                <div className={`${styles['items-card']} ${styles['items-card--in-cart']}`} key={device.id}>
                   <div className={styles['items-card__props']}>
                     <span>Nazwa: {device.name}</span>
                     <span>SKU: {device.skuNumber}</span>
@@ -253,7 +275,10 @@ export default function Form({ id, isEdit, data }: FormProps) {
                     <span>Lokalizacja: {device.location}</span>
                     {device.serialNumber && <span>Numer seryjny: {device.serialNumber}</span>}
                   </div>
-                  <button className={styles['items-card__button']} onClick={() => removeDeviceFromRental(device)}>
+                  <button
+                    className={`${styles['items-card__button']} ${styles['items-card__button--remove']}`}
+                    onClick={() => removeDeviceFromRental(device)}
+                  >
                     <UIIcon name="MinusIcon" smaller />
                   </button>
                 </div>

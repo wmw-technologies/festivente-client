@@ -68,3 +68,19 @@ export interface Device {
   location: string;
   description?: string;
 }
+
+export interface Rental {
+  _id: string;
+  startDate: Date;
+  endDate: Date;
+  companyName: string;
+  phone: string;
+  issuedBy?: string;
+  receivedBy?: string;
+  price: number;
+  discount?: number;
+  ended?: boolean;
+  devices: Array<string>; // Assuming devices are referenced by their ObjectId as strings
+  createdAt: Date;
+  updatedAt: Date;
+}
