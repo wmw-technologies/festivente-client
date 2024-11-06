@@ -6,9 +6,9 @@ import { formatCurrency, dashIfEmpty } from '@/src/utils/format';
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
-import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 import UITable from '@/src/components/UI/Table';
 import UIBadge from '@/src/components/UI/Badge';
+import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 
 function getCategoryName(value?: string) {
   return warehouseCategories.find((item) => item.value === value)?.text ?? '';

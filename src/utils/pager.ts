@@ -1,56 +1,28 @@
+import { Pager } from '@/src/types';
+
 type Order = 'ASC' | 'DESC';
 
-export default class Pager {
-  private page: number;
-  private perPage: number;
-  private total: number = 0;
-  private sort: string;
-  private order: Order;
+const DEFAULT_PAGE = 1;
+const DEFAULT_PER_PAGE = 10;
+const DEFAULT_SORT = '';
+const DEFAULT_ORDER: Order = 'ASC';
 
-  constructor(page: number, perPage: number = 3, sort = '', order: Order = 'ASC') {
-    this.page = page;
-    this.perPage = perPage;
-    this.sort = sort;
-    this.order = order;
-  }
+export const ALLOWED_PER_PAGE = [10, 20, 50, 100];
 
-  public getPage() {
-    return this.page;
-  }
+export function getPager(searchParams: { [key: string]: string | string[] | undefined }): Pager {
+  const page = parseInt(searchParams.page as string) || DEFAULT_PAGE;
+  let perPage = parseInt(searchParams.perPage as string) || DEFAULT_PER_PAGE;
+  const sort = typeof searchParams.sort === 'string' ? searchParams.sort : DEFAULT_SORT;
+  const order: Order =
+    searchParams.order === 'ASC' || searchParams.order === 'DESC' ? searchParams.order : DEFAULT_ORDER;
 
-  public getPerPage() {
-    return this.perPage;
-  }
+  if (!ALLOWED_PER_PAGE.includes(perPage)) perPage = DEFAULT_PER_PAGE;
 
-  public getTotal() {
-    return this.total;
-  }
-
-  public getSort() {
-    return this.sort;
-  }
-
-  public getOrder() {
-    return this.order;
-  }
-
-  public setPage(page: number) {
-    this.page = page;
-  }
-
-  public setPerPage(perPage: number) {
-    this.perPage = perPage;
-  }
-
-  public setTotal(total: number) {
-    this.total = total;
-  }
-
-  public setSort(sort: string) {
-    this.sort = sort;
-  }
-
-  public setOrder(order: Order) {
-    this.order = order;
-  }
+  return {
+    page,
+    perPage,
+    total: 0,
+    sort,
+    order
+  };
 }

@@ -12,13 +12,26 @@
       th {
         padding: 0.625rem 0.75rem 0.625rem 1.25rem;
         white-space: nowrap;
+
+        .sortButton {
+          display: flex;
+          margin-top: 2px;
+          align-items: center;
+          gap: 6px;
+          cursor: pointer;
+          background: none;
+          border: none;
+          outline: none;
+          color: var(--f-primary);
+          font-weight: 700;
+        }
       }
     }
   }
 
   .tbody {
     border-top: 1px solid var(--f-gray-300);
-    
+
     tr {
       border-bottom: 1px solid var(--f-gray-300);
       height: 52px;

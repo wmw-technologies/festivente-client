@@ -1,61 +1,74 @@
-import { ResponseAPI, User } from '@/src/types';
+import { ResponseAPI, Pagination, User } from '@/src/types';
 import { cookies } from 'next/headers';
-import { Column } from '@/src/types';
+import { Column, Pager } from '@/src/types';
+import { getPager } from '@/src/utils/pager';
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
 import UITable from '@/src/components/UI/Table';
 import UIBadge from '@/src/components/UI/Badge';
+import UIPagination from '@/src/components/UI/Pagination';
 import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 
-async function fetchData() {
+type AdministrationUsersProps = {
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+async function fetchData(pager: Pager) {
   const url = process.env.NEXT_PUBLIC_API_URL;
   const authCookie = cookies().get('auth')?.value;
   if (!authCookie) return [];
 
   const accessToken = JSON.parse(authCookie).accessToken;
-  const response = await fetch(`${url}/user/list`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + accessToken
+  const response = await fetch(
+    `${url}/user/list?page=${pager.page}&perPage=${pager.perPage}&sort=${pager.sort}&order=${pager.order}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + accessToken
+      }
     }
-  });
+  );
 
   if (!response.ok) return [];
 
-  const data: ResponseAPI<User[]> = await response.json();
+  const data: ResponseAPI<Pagination<User>> = await response.json();
 
-  return data.data ?? [];
+  pager.total = data.data?.totalRows ?? 0;
+  return data.data?.items ?? [];
 }
 
-export default async function AdministrationUsers() {
-  const data = await fetchData();
+export default async function AdministrationUsers({ searchParams }: AdministrationUsersProps) {
+  const pager = getPager(searchParams);
+  const data = await fetchData(pager);
 
   const columns: Array<Column> = [
     {
       id: 1,
       header: 'Imię',
-      item: (item: any) => <span>{(item as User).first_name || '-'}</span>
+      item: (item: User) => <span>{item.first_name || '-'}</span>,
+      sortable: true
     },
     {
       id: 2,
       header: 'Nazwisko',
-      item: (item: any) => <span>{(item as User).last_name || '-'}</span>
+      item: (item: User) => <span>{item.last_name || '-'}</span>,
+      sortable: true
     },
     {
       id: 3,
       header: 'Email',
-      item: (item: any) => <span>{(item as User).email || '-'}</span>
+      item: (item: User) => <span>{item.email || '-'}</span>
     },
     {
       id: 4,
       header: 'Numer telefonu',
-      item: (item: any) => <span>{(item as User).phone || '-'}</span>
+      item: (item: User) => <span>{item.phone || '-'}</span>
     },
     {
       id: 5,
       header: 'Rola',
-      item: (item: any) => <UIBadge>{(item as User).role?.name || '-'}</UIBadge>
+      item: (item: User) => <UIBadge>{item.role?.name || '-'}</UIBadge>
     },
     {
       id: 6,
@@ -79,6 +92,7 @@ export default async function AdministrationUsers() {
           </UIButton>
         </UIPanel>
       }
+      footer={<UIPagination pager={pager} />}
       background={false}
     >
       <UITable columns={columns} data={data} />

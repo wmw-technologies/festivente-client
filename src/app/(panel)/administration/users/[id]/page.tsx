@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { ResponseAPI, User, Role, Option } from '@/src/types';
+import { ResponseAPI, Pagination, User, Role, Option } from '@/src/types';
 import Form from './form';
 
 type AdministrationUsersFormProps = {
@@ -41,8 +41,8 @@ async function fetchRoles() {
 
   if (!response.ok) return [];
 
-  const data: ResponseAPI<Role[]> = await response.json();
-  return (data.data ?? []).map((role) => ({
+  const data: ResponseAPI<Pagination<Role>> = await response.json();
+  return (data.data?.items ?? []).map((role) => ({
     text: role.name,
     value: role._id
   })) as Option[];

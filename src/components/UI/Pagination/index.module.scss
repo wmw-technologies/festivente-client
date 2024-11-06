@@ -1,11 +1,15 @@
 .pagination {
   display: flex;
   justify-content: space-between;
-  padding: 20px;
 
   &__set-page {
     display: flex;
     gap: 10px;
+
+    .dots {
+      display: flex;
+      align-items: center;
+    }
   }
 
   &__set-rows {

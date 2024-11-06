@@ -20,10 +20,28 @@ export interface Column {
   sortable?: boolean;
 }
 
+export interface Option {
+  text: string;
+  value: string;
+}
+
+export interface Pager {
+  page: number;
+  perPage: number;
+  total: number;
+  sort: string;
+  order: 'ASC' | 'DESC';
+}
+
 export interface ResponseAPI<T = undefined> {
   message: string;
   data?: T;
   errors?: Record<string, string>;
+}
+
+export interface Pagination<T = undefined> {
+  items: Array<T>;
+  totalRows: number;
 }
 
 export interface User {
@@ -39,11 +57,6 @@ export interface Role {
   _id: string;
   name: string;
   permissions: Array<string>;
-}
-
-export interface Option {
-  text: string;
-  value: string;
 }
 
 export interface Warehouse {

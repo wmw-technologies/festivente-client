@@ -1,5 +1,6 @@
 import { Column } from '@/src/types';
 import styles from './index.module.scss';
+import UIIcon from '@/src/components/UI/Icon';
 
 type UITableProps = {
   columns: Array<Column>;
@@ -15,7 +16,14 @@ export default function UITable({ columns, data, noHeader }: UITableProps) {
           <tr>
             {columns.map((column) => (
               <th key={column.id} style={{ width: column.width }}>
-                <span>{column.header}</span>
+                {column.sortable ? (
+                  <button type="button" className={styles.sortButton}>
+                    <span>{column.header}</span>
+                    <UIIcon name="ArrowDownCircleIcon" smaller />
+                  </button>
+                ) : (
+                  <span>{column.header}</span>
+                )}
               </th>
             ))}
           </tr>
