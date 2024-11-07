@@ -82,6 +82,22 @@ export interface Device {
   description?: string;
 }
 
+export interface Rental {
+  _id: string;
+  startDate: Date;
+  endDate: Date;
+  companyName: string;
+  phone: string;
+  issuedBy?: string;
+  receivedBy?: string;
+  price: number;
+  discount?: number;
+  ended?: boolean;
+  devices: Array<Device>; // Assuming devices are referenced by their ObjectId as strings
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface Employee {
   _id: string;
   firstName: string;
