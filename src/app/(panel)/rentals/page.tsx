@@ -6,7 +6,7 @@ import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
 import UITable from '@/src/components/UI/Table';
 import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
-import { dashIfEmpty } from '@/src/utils/format';
+import { dashIfEmpty, formatDate } from '@/src/utils/format';
 
 async function fetchData() {
   const url = process.env.NEXT_PUBLIC_API_URL;
@@ -40,12 +40,12 @@ export default async function Rentals() {
     {
       id: 2,
       header: 'Data wypożyczenia',
-      item: (item: Rental) => <span>{new Date(item.startDate).toLocaleDateString()}</span>
+      item: (item: Rental) => <span>{formatDate(item.startDate)}</span>
     },
     {
       id: 3,
       header: 'Data zwrotu',
-      item: (item: Rental) => <span>{new Date(item.endDate).toLocaleDateString()}</span>
+      item: (item: Rental) => <span>{formatDate(item.endDate)}</span>
     },
     {
       id: 4,

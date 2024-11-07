@@ -1,7 +1,7 @@
 export function formatDate(date: string) {
   return new Date(date).toLocaleDateString('pl-PL', {
     year: 'numeric',
-    month: 'long',
+    month: '2-digit',
     day: 'numeric'
   });
 }

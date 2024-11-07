@@ -84,8 +84,8 @@ export interface Device {
 
 export interface Rental {
   _id: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: string;
+  endDate: string;
   companyName: string;
   phone: string;
   issuedBy?: string;
