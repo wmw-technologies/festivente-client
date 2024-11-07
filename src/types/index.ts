@@ -80,7 +80,7 @@ export interface Rental {
   price: number;
   discount?: number;
   ended?: boolean;
-  devices: Array<string>; // Assuming devices are referenced by their ObjectId as strings
+  devices: Array<Device>; // Assuming devices are referenced by their ObjectId as strings
   createdAt: Date;
   updatedAt: Date;
 }

@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useReducer, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { Rental, Role } from '@/src/types';
+import { Device, Rental } from '@/src/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 // import { create, update } from './actions';
@@ -16,6 +16,7 @@ import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
 import UITextarea from '@/src/components/UI/Textarea';
 import UIIcon from '@/src/components/UI/Icon';
+import { create, update } from './actions';
 
 const schema = z.object({
   clientName: z.string().min(1, 'Nazwa klienta jest wymagana'),
@@ -26,10 +27,13 @@ const schema = z.object({
   clientEmail: z.string().email('Nieprawidłowy adres e-mail'),
   rentalDate: z.string().date().min(1, 'Data wypożyczenia jest wymagana'),
   returnDate: z.string().date().min(1, 'Data zwrotu jest wymagana'),
-  items: z
+  devices: z
     .array(
       z.object({
-        id: z.string().min(1, 'ID przedmiotu jest wymagane')
+        _id: z.string().optional(),
+        serialNumber: z.string().min(1).optional(),
+        location: z.string().min(1),
+        description: z.string().optional()
       })
     )
     .nonempty({
@@ -40,7 +44,8 @@ const schema = z.object({
     .regex(/^\d+(\.\d{1,2})?$/, { message: 'Must be a valid PLN amount (e.g., 99 or 999.99)' })
     .transform((val) => parseFloat(val))
     .refine((val) => val >= 0, { message: 'Amount must be positive' })
-    .refine((val) => val <= 100000, { message: 'Amount must be less than or equal to 100,000 PLN' }),
+    .refine((val) => val <= 100000, { message: 'Amount must be less than or equal to 100,000 PLN' })
+    .transform((val) => val.toFixed(2)),
   notes: z.string().optional()
 });
 
@@ -48,57 +53,22 @@ export type Schema = z.infer<typeof schema>;
 
 type FormProps = {
   isEdit: boolean;
-  data: Rental | null;
+  rentalsData: Rental | null;
+  warehouseListDevices: Device[];
   id: string;
 };
 
-type Device = {
-  id: string;
-  name: string;
-  serialNumber?: string;
-  location: string;
-  manufacturer?: string | undefined;
-  skuNumber: string;
-  rentalValue: number;
-  category?: string;
-};
-
-async function fetchDevices(): Promise<Device[]> {
-  // Fetch devices from the database
-  return [
-    {
-      id: '1',
-      name: 'Urządzenie do robienia dymu z dupy',
-      location: 'Magazyn',
-      skuNumber: 'SKU-1',
-      rentalValue: 100
-    },
-    {
-      id: '2',
-      name: 'Urządzenie 2',
-      location: 'Magazyn',
-      skuNumber: 'SKU-2',
-      rentalValue: 200
-    },
-    {
-      id: '3',
-      name: 'Urządzenie 3',
-      location: 'Magazyn',
-      skuNumber: 'SKU-3',
-      rentalValue: 300,
-      serialNumber: 'SN-3322'
-    }
-  ];
-}
-
-export default function Form({ id, isEdit, data }: FormProps) {
+export default function Form({ id, isEdit, rentalsData, warehouseListDevices }: FormProps) {
   const router = useRouter();
-  const title = isEdit ? `Formularz edycji wypożyczenia: ${data?.companyName}` : 'Formularz dodawania wypożyczenia';
+  const title = isEdit
+    ? `Formularz edycji wypożyczenia: ${rentalsData?.companyName}`
+    : 'Formularz dodawania wypożyczenia';
 
   const {
     register,
     formState: { errors, isSubmitting, isValid, isSubmitted },
     setValue,
+    getValues,
     setError,
     control,
     handleSubmit
@@ -108,28 +78,29 @@ export default function Form({ id, isEdit, data }: FormProps) {
 
   const { fields, append, remove, insert } = useFieldArray({
     control,
-    name: 'items'
+    name: 'devices'
   });
 
   const [availableDevices, setAvailableDevices] = useState<Device[]>([]);
-  const [inCartDevices, setInCartDevices] = useState<Device[]>([]);
+  const [inCartDevices, setInCartDevices] = useState<Device[]>(isEdit ? (rentalsData?.devices ?? []) : []);
   const [filteredDevices, setFilteredDevices] = useState<Device[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
-    async function loadDevices() {
-      const devices = await fetchDevices();
-      setAvailableDevices(devices);
+    if (rentalsData) {
+      const rentalDeviceIds = new Set(rentalsData.devices.map((device) => device._id));
+      const available = warehouseListDevices.filter((device) => !rentalDeviceIds.has(device._id));
+      setAvailableDevices(available);
+    } else {
+      setAvailableDevices(warehouseListDevices);
     }
-
-    loadDevices();
   }, []);
 
   useEffect(() => {
     const filtered = availableDevices.filter(
       (device) =>
-        device.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        device.skuNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        // device.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        // device.skuNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
         device.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (device.serialNumber && device.serialNumber.toLowerCase().includes(searchQuery.toLowerCase()))
     );
@@ -137,42 +108,59 @@ export default function Form({ id, isEdit, data }: FormProps) {
   }, [searchQuery, availableDevices]);
 
   const addDeviceToRental = (device: Device) => {
-    setAvailableDevices(availableDevices.filter((d) => d.id !== device.id));
-    setFilteredDevices(filteredDevices.filter((d) => d.id !== device.id));
+    setAvailableDevices(availableDevices.filter((d) => d._id !== device._id));
+    setFilteredDevices(filteredDevices.filter((d) => d._id !== device._id));
     setInCartDevices([...inCartDevices, device]);
-    append({ id: device.id });
+    append({ ...device });
+    console.log({ device });
   };
 
   const removeDeviceFromRental = (device: Device) => {
-    setInCartDevices(inCartDevices.filter((d) => d.id !== device.id));
+    setInCartDevices(inCartDevices.filter((d) => d._id !== device._id));
     setAvailableDevices([...availableDevices, device]);
     setFilteredDevices([...filteredDevices, device]);
-    const index = inCartDevices.findIndex((d) => d.id === device.id);
+    const index = inCartDevices.findIndex((d) => d._id === device._id);
     if (index !== -1) remove(index);
   };
 
   async function onSubmit(form: Schema) {
-    setValue('rentalDate', new Date().toISOString());
+    console.log(form);
+
     try {
-      console.log(form);
-      // const response = !isEdit
-      //   ? await create({ ...form, permissions: state })
-      //   : await update(id, { ...form, permissions: state });
-      // if (response?.ok) {
-      //   router.push('/administration/roles');
-      //   toast.success(response?.message);
-      // } else {
-      //   setError('name', { message: response?.message });
-      // }
+      const response = !isEdit ? await create(form) : await update(id, form);
+
+      if (response?.ok) {
+        router.push('/rentals');
+        toast.success(response?.message);
+      } else {
+        if (response?.errors) {
+          Object.keys(response?.errors).map((key) => {
+            setError(key as any, { message: (response?.errors as any)[key] });
+          });
+        }
+      }
     } catch (error) {
-      toast.error('Wystąpił błąd podczas zapisywania roli');
+      toast.error('Error saving the device');
     }
   }
 
   function init() {
-    // if (!data) return;
-    // setValue('name', data?.name);
-    // dispatch({ type: PermissionsActionKind.SET_PERMISSIONS, payload: data.permissions });
+    if (!rentalsData) return;
+
+    setValue('clientName', rentalsData.companyName);
+    setValue('clientPhone', rentalsData.phone);
+    setValue('rentalDate', new Date(rentalsData.startDate).toISOString().split('T')[0]);
+    setValue('returnDate', new Date(rentalsData.endDate).toISOString().split('T')[0]);
+    setValue('inTotal', rentalsData.price.toString());
+    const devices = rentalsData.devices.map((device) => ({
+      _id: device._id,
+      serialNumber: device.serialNumber,
+      location: device.location,
+      description: device.description
+    }));
+    rentalsData.devices.forEach((device) => {
+      append({ ...device });
+    });
   }
 
   useEffect(() => {
@@ -246,13 +234,14 @@ export default function Form({ id, isEdit, data }: FormProps) {
                 />
               </div>
               {filteredDevices.map((device) => (
-                <div className={styles['items-card']} key={device.id}>
+                <div className={styles['items-card']} key={device._id}>
                   <div className={styles['items-card__props']}>
-                    <span>Nazwa: {device.name}</span>
+                    {/* <span>Nazwa: {device.name}</span>
                     <span>SKU: {device.skuNumber}</span>
-                    <span>Wartoćś wypożyczenia: {device.rentalValue} PLN</span>
+                    <span>Wartoćś wypożyczenia: {device.rentalValue} PLN</span> */}
                     <span>Lokalizacja: {device.location}</span>
                     {device.serialNumber && <span>Numer seryjny: {device.serialNumber}</span>}
+                    {device.description && <span>Opis: {device.description}</span>}
                   </div>
                   <button
                     className={`${styles['items-card__button']} ${styles['items-card__button--add']}`}
@@ -265,15 +254,16 @@ export default function Form({ id, isEdit, data }: FormProps) {
             </div>
             <div className={`col-6 ${styles['form-items__col']}`}>
               <h3 className={styles['form-items__header']}>Urządzenia w koszyku</h3>
-              {errors.items && <span className={styles['form-items__error']}>{errors.items.message}</span>}
+              {errors.devices && <span className={styles['form-items__error']}>{errors.devices.message}</span>}
               {inCartDevices.map((device) => (
-                <div className={`${styles['items-card']} ${styles['items-card--in-cart']}`} key={device.id}>
+                <div className={`${styles['items-card']} ${styles['items-card--in-cart']}`} key={device._id}>
                   <div className={styles['items-card__props']}>
-                    <span>Nazwa: {device.name}</span>
+                    {/* <span>Nazwa: {device.name}</span>
                     <span>SKU: {device.skuNumber}</span>
-                    <span>Wartoćś wypożyczenia: {device.rentalValue} PLN</span>
+                    <span>Wartoćś wypożyczenia: {device.rentalValue} PLN</span> */}
                     <span>Lokalizacja: {device.location}</span>
                     {device.serialNumber && <span>Numer seryjny: {device.serialNumber}</span>}
+                    {device.description && <span>Opis: {device.description}</span>}
                   </div>
                   <button
                     className={`${styles['items-card__button']} ${styles['items-card__button--remove']}`}
