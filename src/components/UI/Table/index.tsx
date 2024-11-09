@@ -5,13 +5,15 @@ import UIIcon from '@/src/components/UI/Icon';
 
 type UITableProps = {
   columns: Array<Column>;
-  pager: Pager;
+  pager?: Pager;
   data: Array<unknown>;
   noHeader?: boolean;
 };
 
 export default function UITable({ columns, pager, data, noHeader }: UITableProps) {
   function href(_sort: string) {
+    if (pager == null) return '';
+
     const order = pager.sort === _sort && pager.order === 'ASC' ? 'DESC' : 'ASC';
     const sort = _sort;
 
@@ -19,6 +21,8 @@ export default function UITable({ columns, pager, data, noHeader }: UITableProps
   }
 
   function activeClass(column: Column) {
+    if (pager == null) return '';
+
     if (pager.sort === column.sort) {
       if (pager.order === 'ASC') return `${styles.active} ${styles.rotate}`;
 
