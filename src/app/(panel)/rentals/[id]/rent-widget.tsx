@@ -19,7 +19,8 @@ type RentWidegetProps = {
   rentalsData: Rental | null;
   availableDevices: Device[];
   isSubmitted: boolean;
-  append: UseFieldArrayAppend<Schema>;
+  append: any;
+  // append: UseFieldArrayAppend<Schema>;
   remove: UseFieldArrayRemove;
   trigger: UseFormTrigger<Schema>;
   getValues: UseFormGetValues<Schema>;

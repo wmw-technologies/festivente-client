@@ -102,8 +102,8 @@ export default function Form({ id, isEdit, data }: FormProps) {
     >
       <form id="events-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
-          <UIGroup header="Nazwa" error={errors.name} required className="col-4">
-            <UIInput placeholder="Wprowadź nazwę" autocomplete="name" {...register('name')} />
+          <UIGroup header="Nazwa" error={errors.clientName} required className="col-4">
+            <UIInput placeholder="Wprowadź nazwę" autocomplete="name" {...register('clientName')} />
           </UIGroup>
         </div>
       </form>
