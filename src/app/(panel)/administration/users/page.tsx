@@ -47,18 +47,19 @@ export default async function AdministrationUsers({ searchParams }: Administrati
       id: 1,
       header: 'Imię',
       item: (item: User) => <span>{item.first_name || '-'}</span>,
-      sortable: true
+      sort: 'first_name'
     },
     {
       id: 2,
       header: 'Nazwisko',
       item: (item: User) => <span>{item.last_name || '-'}</span>,
-      sortable: true
+      sort: 'last_name'
     },
     {
       id: 3,
       header: 'Email',
-      item: (item: User) => <span>{item.email || '-'}</span>
+      item: (item: User) => <span>{item.email || '-'}</span>,
+      sort: 'email'
     },
     {
       id: 4,
@@ -95,7 +96,7 @@ export default async function AdministrationUsers({ searchParams }: Administrati
       footer={<UIPagination pager={pager} />}
       background={false}
     >
-      <UITable columns={columns} data={data} />
+      <UITable columns={columns} pager={pager} data={data} />
     </UICard>
   );
 }

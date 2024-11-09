@@ -45,7 +45,7 @@ export default async function AdministrationRoles({ searchParams }: Administrati
       id: 1,
       header: 'Nazwa',
       item: (item: Role) => <span>{item.name}</span>,
-      sortable: true
+      sort: 'name'
     },
     {
       id: 2,
@@ -71,7 +71,7 @@ export default async function AdministrationRoles({ searchParams }: Administrati
       footer={<UIPagination pager={pager} />}
       background={false}
     >
-      <UITable columns={columns} data={data} />
+      <UITable columns={columns} pager={pager} data={data} />
     </UICard>
   );
 }

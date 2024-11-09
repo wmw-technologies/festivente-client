@@ -1,14 +1,33 @@
-import { Column } from '@/src/types';
+import { Column, Pager } from '@/src/types';
 import styles from './index.module.scss';
+import Link from 'next/link';
 import UIIcon from '@/src/components/UI/Icon';
 
 type UITableProps = {
   columns: Array<Column>;
+  pager: Pager;
   data: Array<unknown>;
   noHeader?: boolean;
 };
 
-export default function UITable({ columns, data, noHeader }: UITableProps) {
+export default function UITable({ columns, pager, data, noHeader }: UITableProps) {
+  function href(_sort: string) {
+    const order = pager.sort === _sort && pager.order === 'ASC' ? 'DESC' : 'ASC';
+    const sort = _sort;
+
+    return `?page=${pager.page}&perPage=${pager.perPage}&sort=${sort}&order=${order}`;
+  }
+
+  function activeClass(column: Column) {
+    if (pager.sort === column.sort) {
+      if (pager.order === 'ASC') return `${styles.active} ${styles.rotate}`;
+
+      return styles.active;
+    }
+
+    return '';
+  }
+
   return (
     <table className={styles.table}>
       {!noHeader && (
@@ -16,11 +35,13 @@ export default function UITable({ columns, data, noHeader }: UITableProps) {
           <tr>
             {columns.map((column) => (
               <th key={column.id} style={{ width: column.width }}>
-                {column.sortable ? (
-                  <button type="button" className={styles.sortButton}>
+                {column.sort ? (
+                  <Link href={href(column.sort)} className={styles.sortButton}>
                     <span>{column.header}</span>
-                    <UIIcon name="ArrowDownCircleIcon" smaller />
-                  </button>
+                    <div className={activeClass(column)}>
+                      <UIIcon name="ArrowDownCircleIcon" smaller />
+                    </div>
+                  </Link>
                 ) : (
                   <span>{column.header}</span>
                 )}
