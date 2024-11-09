@@ -15,7 +15,23 @@ import UICard from '@/src/components/UI/Card';
 import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
 import UITextarea from '@/src/components/UI/Textarea';
-import UIIcon from '@/src/components/UI/Icon';
+import RentWidget from './rent-widget';
+
+const WarehouseSchema = z.object({
+  _id: z.string(),
+  name: z.string(),
+  manufacturer: z.string().optional(),
+  skuNumber: z.string(),
+  rentalValue: z.number(),
+  category: z.string().optional(),
+  description: z.string().optional(),
+  isSerialTracked: z.boolean(),
+  status: z.enum(['Available', 'Out of stock']),
+  createdBy: z.any(),
+  devices: z.array(z.any()), // Assuming devices is an array of any type
+  updatedAt: z.string(),
+  createdAt: z.string()
+});
 
 const schema = z.object({
   clientName: z.string().min(1, 'Nazwa klienta jest wymagana'),
@@ -29,10 +45,12 @@ const schema = z.object({
   devices: z
     .array(
       z.object({
-        _id: z.string().optional(),
-        serialNumber: z.string().min(1).optional(),
-        location: z.string().min(1),
-        description: z.string().optional()
+        _id: z.string(),
+        serialNumber: z.string().optional(),
+        location: z.string(),
+        description: z.string().optional(),
+        warehouseId: WarehouseSchema,
+        rentalId: z.any().optional()
       })
     )
     .nonempty({
@@ -53,20 +71,21 @@ export type Schema = z.infer<typeof schema>;
 type FormProps = {
   isEdit: boolean;
   rentalsData: Rental | null;
-  warehouseListDevices: Device[];
+  availableDevices: Device[];
   id: string;
 };
 
-export default function Form({ id, isEdit, rentalsData, warehouseListDevices }: FormProps) {
+export default function Form({ id, isEdit, rentalsData, availableDevices }: FormProps) {
   const router = useRouter();
   const title = isEdit
-    ? `Formularz edycji wypożyczenia: ${rentalsData?.companyName}`
+    ? `Formularz edycji wypożyczenia: ${rentalsData?.clientName}`
     : 'Formularz dodawania wypożyczenia';
 
   const {
     register,
     formState: { errors, isSubmitting, isValid, isSubmitted },
     setValue,
+    trigger,
     getValues,
     setError,
     control,
@@ -75,31 +94,10 @@ export default function Form({ id, isEdit, rentalsData, warehouseListDevices }: 
     resolver: zodResolver(schema)
   });
 
-  const { fields, append, remove, insert } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: 'devices'
   });
-
-  const [availableDevices, setAvailableDevices] = useState<Device[]>([]);
-  const [inCartDevices, setInCartDevices] = useState<Device[]>(isEdit ? (rentalsData?.devices ?? []) : []);
-  const [filteredDevices, setFilteredDevices] = useState<Device[]>([]);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-
-  const addDeviceToRental = (device: Device) => {
-    setAvailableDevices(availableDevices.filter((d) => d._id !== device._id));
-    setFilteredDevices(filteredDevices.filter((d) => d._id !== device._id));
-    setInCartDevices([...inCartDevices, device]);
-    append({ ...device });
-    console.log({ device });
-  };
-
-  const removeDeviceFromRental = (device: Device) => {
-    setInCartDevices(inCartDevices.filter((d) => d._id !== device._id));
-    setAvailableDevices([...availableDevices, device]);
-    setFilteredDevices([...filteredDevices, device]);
-    const index = inCartDevices.findIndex((d) => d._id === device._id);
-    if (index !== -1) remove(index);
-  };
 
   async function onSubmit(form: Schema) {
     console.log(form);
@@ -123,43 +121,24 @@ export default function Form({ id, isEdit, rentalsData, warehouseListDevices }: 
   }
 
   function init() {
-    if (rentalsData) {
-      const rentalDeviceIds = new Set(rentalsData.devices.map((device) => device._id));
-      const available = warehouseListDevices.filter((device) => !rentalDeviceIds.has(device._id));
-      setAvailableDevices(available);
-    } else {
-      setAvailableDevices(warehouseListDevices);
-    }
-
     if (!rentalsData) return;
+    console.log(rentalsData);
 
-    setValue('clientName', rentalsData.companyName);
-    setValue('clientPhone', rentalsData.phone);
-    setValue('rentalDate', new Date(rentalsData.startDate).toISOString().split('T')[0]);
-    setValue('returnDate', new Date(rentalsData.endDate).toISOString().split('T')[0]);
-    setValue('inTotal', rentalsData.price.toString());
+    setValue('clientName', rentalsData.clientName);
+    setValue('clientPhone', rentalsData.clientPhone);
+    setValue('rentalDate', new Date(rentalsData.rentalDate).toISOString().split('T')[0]);
+    setValue('returnDate', new Date(rentalsData.returnDate).toISOString().split('T')[0]);
+    setValue('inTotal', rentalsData.inTotal.toString());
+    setValue('clientCity', rentalsData.clientCity);
+    setValue('clientStreet', rentalsData.clientStreet);
+    setValue('clientPostCode', rentalsData.clientPostCode);
+    setValue('clientEmail', rentalsData.clientEmail);
+    setValue('notes', rentalsData.notes);
 
-    const devices = rentalsData.devices.map((device) => ({
-      _id: device._id,
-      serialNumber: device.serialNumber,
-      location: device.location,
-      description: device.description
-    }));
-    rentalsData.devices.forEach((device) => {
-      append({ ...device });
-    });
+    setValue('devices', rentalsData.devices as any);
+
+    console.log('start value', getValues());
   }
-
-  useEffect(() => {
-    const filtered = availableDevices.filter(
-      (device) =>
-        // device.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        // device.skuNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        device.location?.toLowerCase?.()?.includes?.(searchQuery.toLowerCase()) ||
-        (device.serialNumber && device.serialNumber.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
-    setFilteredDevices(filtered);
-  }, [searchQuery, availableDevices]);
 
   useEffect(() => {
     init();
@@ -228,59 +207,18 @@ export default function Form({ id, isEdit, rentalsData, warehouseListDevices }: 
           </div>
         </div>
 
-        <div className="row">
-          <div className="col-6">
-            <h3 className={styles['form-items__header']}>Dostępne urządzenia</h3>
-            <div className={styles['form-items__input']}>
-              <UIInput
-                placeholder="Wyszukaj urządzenie"
-                onChange={(e) => {
-                  setSearchQuery(e.target.value);
-                }}
-              />
-            </div>
-            {filteredDevices.map((device) => (
-              <div className={styles['items-card']} key={device._id}>
-                <div className={styles['items-card__props']}>
-                  {/* <span>Nazwa: {device.name}</span>
-                    <span>SKU: {device.skuNumber}</span>
-                    <span>Wartoćś wypożyczenia: {device.rentalValue} PLN</span> */}
-                  <span>Lokalizacja: {device.location}</span>
-                  {device.serialNumber && <span>Numer seryjny: {device.serialNumber}</span>}
-                  {device.description && <span>Opis: {device.description}</span>}
-                </div>
-                <button
-                  className={`${styles['items-card__button']} ${styles['items-card__button--add']}`}
-                  onClick={() => addDeviceToRental(device)}
-                >
-                  <UIIcon name="PlusIcon" smaller />
-                </button>
-              </div>
-            ))}
-          </div>
-          <div className="col-6">
-            <h3 className={styles['form-items__header']}>Urządzenia w koszyku</h3>
-            {errors.devices && <span className={styles['form-items__error']}>{errors.devices.message}</span>}
-            {inCartDevices.map((device) => (
-              <div className={`${styles['items-card']} ${styles['items-card--in-cart']}`} key={device._id}>
-                <div className={styles['items-card__props']}>
-                  {/* <span>Nazwa: {device.name}</span>
-                    <span>SKU: {device.skuNumber}</span>
-                    <span>Wartoćś wypożyczenia: {device.rentalValue} PLN</span> */}
-                  <span>Lokalizacja: {device.location}</span>
-                  {device.serialNumber && <span>Numer seryjny: {device.serialNumber}</span>}
-                  {device.description && <span>Opis: {device.description}</span>}
-                </div>
-                <button
-                  className={`${styles['items-card__button']} ${styles['items-card__button--remove']}`}
-                  onClick={() => removeDeviceFromRental(device)}
-                >
-                  <UIIcon name="MinusIcon" smaller />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
+        <RentWidget
+          isEdit={isEdit}
+          rentalsData={rentalsData}
+          availableDevices={availableDevices}
+          append={append}
+          remove={remove}
+          trigger={trigger}
+          getValues={getValues}
+          setError={setError}
+          isSubmitted={isSubmitted}
+          errors={errors}
+        />
       </form>
     </UICard>
   );

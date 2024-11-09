@@ -71,8 +71,8 @@ export interface Warehouse {
   status: 'Available' | 'Out of stock';
   createdBy: User;
   devices: Array<Device>;
-  updatedAt: Date;
-  createdAt: Date;
+  updatedAt: string; //
+  createdAt: string; //
 }
 
 export interface Device {
@@ -80,20 +80,25 @@ export interface Device {
   serialNumber?: string;
   location: string;
   description?: string;
+  warehouseId: Warehouse;
+  rentalId?: Rental;
 }
 
 export interface Rental {
   _id: string;
-  startDate: string;
-  endDate: string;
-  companyName: string;
-  phone: string;
-  issuedBy?: string;
-  receivedBy?: string;
-  price: number;
-  discount?: number;
-  ended?: boolean;
-  devices: Array<Device>; // Assuming devices are referenced by their ObjectId as strings
+  clientName: string;
+  clientCity: string;
+  clientStreet: string;
+  clientPostCode: string;
+  clientPhone: string;
+  clientEmail: string;
+  rentalDate: Date;
+  returnDate: Date;
+  inTotal: number;
+  notes?: string;
+  status: string;
+  createdBy: User;
+  devices: Array<Device>;
   createdAt: Date;
   updatedAt: Date;
 }
