@@ -16,7 +16,19 @@ import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
 
 const schema = z.object({
-  name: z.string().min(3).max(64)
+  eventName: z.string().min(3).max(64),
+  clientName: z.string().min(3).max(64),
+  clientEmail: z.string().email(),
+  clientPhone: z.string().min(9).max(16),
+  date: z.string(),
+  location: z.string().min(3).max(64),
+  budget: z.number().min(0),
+  description: z.string().min(3).max(256),
+  assignedEmployees: z.array(z.string()).min(1),
+  estimatedHours: z.number().min(0),
+  actualHours: z.number().min(0),
+  notes: z.string().min(3).max(256)
+  // status
 });
 
 export type Schema = z.infer<typeof schema>;
@@ -58,7 +70,7 @@ export default function Form({ id, isEdit, data }: FormProps) {
   }
 
   function init() {
-    // if (!data) return;
+    if (!data) return;
     // setValue('name', data?.name);
     // dispatch({ type: PermissionsActionKind.SET_PERMISSIONS, payload: data.permissions });
   }

@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { Schema } from './form';
 import {
   FieldErrors,
-  set,
   UseFieldArrayAppend,
   UseFieldArrayRemove,
   UseFormGetValues,
@@ -14,7 +13,6 @@ import styles from './rent-widget.module.scss';
 import UIInput from '@/src/components/UI/Input';
 import UIIcon from '@/src/components/UI/Icon';
 import { formatCurrency } from '@/src/utils/format';
-import { get } from 'http';
 
 type RentWidegetProps = {
   isEdit: boolean;
@@ -110,7 +108,7 @@ export default function RentWidget({
             <div className={styles['items-card__props']}>
               <span>Nazwa: {device.warehouseId.name}</span>
               <span>SKU: {device.warehouseId.skuNumber}</span>
-              <span>Wartoćś wypożyczenia: {formatCurrency(device.warehouseId.rentalValue)}</span>
+              <span>Wartość wypożyczenia: {formatCurrency(device.warehouseId.rentalValue)}</span>
               <span>Lokalizacja: {device.location}</span>
               {device.serialNumber && <span>Numer seryjny: {device.serialNumber}</span>}
               {device.description && <span>Opis: {device.description}</span>}

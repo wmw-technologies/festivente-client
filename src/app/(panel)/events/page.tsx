@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { Column } from '@/src/types';
-import { ResponseAPI, Role, Pager } from '@/src/types';
+import { ResponseAPI, Event, Pager } from '@/src/types';
 import { getPager } from '@/src/utils/pager';
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
@@ -43,13 +43,37 @@ export default async function Events({ searchParams }: EventsProps) {
     {
       id: 1,
       header: 'Nazwa',
-      item: (item) => <span>{(item as Role).name}</span>,
-      sort: 'name'
+      item: (item: Event) => <span>{item.eventName}</span>,
+      sort: 'eventName'
     },
     {
       id: 2,
+      header: 'Data',
+      item: (item: Event) => <span>{item.date}</span>,
+      sort: 'date'
+    },
+    {
+      id: 3,
+      header: 'Miejsce',
+      item: (item: Event) => <span>{item.location}</span>,
+      sort: 'location'
+    },
+    {
+      id: 4,
+      header: 'Przypisani pracownicy',
+      item: (item: Event) => <span>{item.actualHours}</span>,
+      sort: 'actualHours'
+    },
+    {
+      id: 5,
+      header: 'Status',
+      item: (item: Event) => <span>{item.status}</span>,
+      sort: 'status'
+    },
+    {
+      id: 6,
       header: '',
-      item: (item: any) => (
+      item: (item: Event) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>
           <UIDropdownItem href={`/events/${item._id}`}>Edytuj</UIDropdownItem>
         </UIDropdown>

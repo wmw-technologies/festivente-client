@@ -7,7 +7,7 @@
     width: 100%;
 
     tr {
-      color: var(--f-primary);
+      color: var(--f-block);
 
       th {
         padding: 0.625rem 0.75rem 0.625rem 1.25rem;
@@ -22,24 +22,30 @@
           background: none;
           border: none;
           outline: none;
-          color: var(--f-primary);
+          color: var(--f-black);
           font-weight: 700;
           text-decoration: none;
           margin: 0;
 
-          > div {
+          .arrow {
             display: flex;
             flex-direction: column;
             gap: 2px;
             transition: transform 0.3s ease;
             color: var(--f-black);
             margin-top: 2px;
+          }
 
-            &.active {
+          &.active {
+            color: var(--f-primary);
+
+            .arrow {
               color: var(--f-primary);
             }
-            
-            &.rotate {
+          }
+
+          &.rotate {
+            .arrow {
               transform: rotate(180deg);
             }
           }

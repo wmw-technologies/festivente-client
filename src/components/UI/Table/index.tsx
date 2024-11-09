@@ -40,9 +40,9 @@ export default function UITable({ columns, pager, data, noHeader }: UITableProps
             {columns.map((column) => (
               <th key={column.id} style={{ width: column.width }}>
                 {column.sort ? (
-                  <Link href={href(column.sort)} className={styles.sortButton}>
+                  <Link href={href(column.sort)} className={`${styles.sortButton} ${activeClass(column)}`}>
                     <span>{column.header}</span>
-                    <div className={activeClass(column)}>
+                    <div className={styles.arrow}>
                       <UIIcon name="ArrowDownCircleIcon" smaller />
                     </div>
                   </Link>

@@ -92,8 +92,8 @@ export interface Rental {
   clientPostCode: string;
   clientPhone: string;
   clientEmail: string;
-  rentalDate: Date;
-  returnDate: Date;
+  rentalDate: string;
+  returnDate: string;
   inTotal: number;
   notes?: string;
   status: string;
@@ -111,4 +111,22 @@ export interface Employee {
   phone?: string;
   position: string;
   dailyRate?: number;
+}
+
+export interface Event {
+  _id: string;
+  eventName: string;
+  clientName: string;
+  clientEmail: string;
+  clientPhone: string;
+  date: string;
+  location: string;
+  budget: number;
+  assignedEmployees: Array<Employee>;
+  status: 'Pending' | 'Confirmed' | 'Cancelled';
+  estimatedHours: number;
+  actualHours: number;
+  notes?: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
