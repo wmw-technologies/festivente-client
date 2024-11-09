@@ -16,7 +16,6 @@
 
         .sortButton {
           display: flex;
-          margin-top: 2px;
           align-items: center;
           gap: 6px;
           cursor: pointer;
@@ -25,6 +24,25 @@
           outline: none;
           color: var(--f-primary);
           font-weight: 700;
+          text-decoration: none;
+          margin: 0;
+
+          > div {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            transition: transform 0.3s ease;
+            color: var(--f-black);
+            margin-top: 2px;
+
+            &.active {
+              color: var(--f-primary);
+            }
+            
+            &.rotate {
+              transform: rotate(180deg);
+            }
+          }
         }
       }
     }

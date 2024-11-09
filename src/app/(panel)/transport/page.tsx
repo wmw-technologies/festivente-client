@@ -36,8 +36,7 @@ export default async function Transport() {
     {
       id: 1,
       header: 'Nazwa',
-      item: (item) => <span>{(item as Role).name}</span>,
-      sortable: true
+      item: (item) => <span>{(item as Role).name}</span>
     },
     {
       id: 2,
