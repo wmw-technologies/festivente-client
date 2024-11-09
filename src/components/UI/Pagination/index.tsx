@@ -32,12 +32,12 @@ export default function UIPagination({ pager }: UIPaginationProps) {
   const { startPage, endPage } = getPageRange();
 
   const handleChangePage = (page: number) => {
-    router.push(`?page=${page}&perPage=${pager.perPage}`);
+    router.push(`?page=${page}&perPage=${pager.perPage}&sort=${pager.sort}&order=${pager.order}`);
   };
 
   const handleRowsPerPageChange: React.ChangeEventHandler<HTMLSelectElement> = (e) => {
     const value = e.target.value;
-    router.push(`?page=1&perPage=${value}`);
+    router.push(`?page=1&perPage=${value}&sort=${pager.sort}&order=${pager.order}`);
   };
 
   return (
