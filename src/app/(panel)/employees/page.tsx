@@ -27,7 +27,7 @@ async function fetchData(pager: Pager) {
 
   const accessToken = JSON.parse(authCookie).accessToken;
   const response = await fetch(
-    `${url}/employees/list?page=${pager.page}&perPage=${pager.perPage}&sort=${pager.sort}&order=${pager.order}`,
+    `${url}/employee/list?page=${pager.page}&perPage=${pager.perPage}&sort=${pager.sort}&order=${pager.order}`,
     {
       headers: {
         'Content-Type': 'application/json',

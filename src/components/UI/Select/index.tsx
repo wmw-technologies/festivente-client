@@ -6,15 +6,17 @@ import styles from './index.module.scss';
 import Tippy from '@tippyjs/react/headless';
 import { Option } from '@/src/types';
 import UIIcon from '@/src/components/UI/Icon';
+import UIBadge from '@/src/components/UI/Badge';
 
 type UISelectProps = {
   name: string;
   placeholder?: string;
+  multiselect?: boolean;
   options: Option[];
   control: Control<any>;
 };
 
-export default function UISelect({ name, placeholder, options = [], control }: UISelectProps) {
+export default function UISelect({ name, placeholder, multiselect, options = [], control }: UISelectProps) {
   const { field } = useController({
     control,
     name
@@ -24,8 +26,11 @@ export default function UISelect({ name, placeholder, options = [], control }: U
   const show = () => setVisible(true);
   const hide = () => setVisible(false);
 
-  const value = field.value;
-  const text = options.find((item) => item.value === value)?.text;
+  const value: string[] | string | null = field.value;
+
+  function getSelectedText(value: string | string[] | null) {
+    return options.find((item) => item.value === value)?.text;
+  }
 
   function handleClick(e?: MouseEvent) {
     e?.preventDefault();
@@ -40,8 +45,33 @@ export default function UISelect({ name, placeholder, options = [], control }: U
 
   function handleSelectValue(e: MouseEvent, item: Option) {
     e.preventDefault();
-    field.onChange(item.value);
+
+    const value = item.value;
+
+    if (multiselect) {
+      const values = Array.isArray(field.value) ? field.value : [];
+      const index = values.indexOf(value);
+
+      if (index === -1) field.onChange([...values, value]);
+    } else {
+      field.onChange(value);
+    }
+
     hide();
+  }
+
+  function handleRemoveOption(value: string) {
+    if (Array.isArray(field.value)) {
+      field.onChange(field.value.filter((v) => v !== value));
+    }
+  }
+
+  function activeOption(value: string) {
+    if (multiselect) {
+      return Array.isArray(field.value) && field.value.includes(value) ? styles.active : '';
+    } else {
+      return field.value === value ? styles.active : '';
+    }
   }
 
   return (
@@ -56,7 +86,7 @@ export default function UISelect({ name, placeholder, options = [], control }: U
             {options.map((item, index) => (
               <div
                 key={index}
-                className={`${styles.selectDropdownItem} ${item.value === value ? styles.active : ''}`}
+                className={`${styles.selectDropdownItem} ${activeOption(item.value)}`}
                 onClick={(e) => handleSelectValue(e, item)}
               >
                 {item.text}
@@ -71,14 +101,36 @@ export default function UISelect({ name, placeholder, options = [], control }: U
         }}
       >
         <div className={`${styles.select} ${visible ? styles.active : ''}`} onClick={handleClick}>
-          {value ? <span>{text}</span> : <span className={styles.placeholder}>{placeholder}</span>}
+          {multiselect ? (
+            <>
+              {Array.isArray(value) && value.length ? (
+                <div className={styles.multiselect}>
+                  {value.map((v, i) => (
+                    <UIBadge variant="primary" key={v} onClick={() => handleRemoveOption(v)}>
+                      {getSelectedText(v)}
+                    </UIBadge>
+                  ))}
+                </div>
+              ) : (
+                <span className={styles.placeholder}>{placeholder}</span>
+              )}
+            </>
+          ) : (
+            <>
+              {value ? (
+                <span>{getSelectedText(value)}</span>
+              ) : (
+                <span className={styles.placeholder}>{placeholder}</span>
+              )}
+            </>
+          )}
 
           <div className={styles.buttons}>
-            {value && (
+            {value && !multiselect ? (
               <div className={styles.button} onClick={handleClearValue}>
-                <UIIcon name="XMarkIcon" smaller />
+                <UIIcon name="XCircleIcon" smaller />
               </div>
-            )}
+            ) : null}
             <div className={`${styles.button} ${styles.arrows}`}>
               <UIIcon name="ChevronUpDownIcon" smaller />
             </div>

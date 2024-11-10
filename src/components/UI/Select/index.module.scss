@@ -2,13 +2,19 @@
   order: 2;
 
   .select {
-    padding: 0.375rem 0;
+    padding: 0.25rem 0;
     border-bottom: 1px solid var(--f-black);
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
     min-height: 34px;
+
+    .multiselect {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
 
     .placeholder {
       color: var(--f-gray-400);

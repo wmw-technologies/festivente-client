@@ -3,7 +3,7 @@
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { ResponseAPI } from '@/src/types';
-import { Schema } from '@/src/app/(panel)/employees/[id]/form';
+import { Schema } from '@/src/app/(panel)/events/[id]/form';
 
 export async function create(form: Schema) {
   const url = process.env.NEXT_PUBLIC_API_URL;
@@ -11,7 +11,7 @@ export async function create(form: Schema) {
   if (!authCookie) return;
 
   const accessToken = JSON.parse(authCookie).accessToken;
-  const response = await fetch(`${url}/employee/create`, {
+  const response = await fetch(`${url}/event/create`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ export async function create(form: Schema) {
 
   const json: ResponseAPI<any> = await response.json();
 
-  revalidatePath('/employees');
+  revalidatePath('/events');
 
   return {
     ...json,
@@ -37,7 +37,7 @@ export async function update(id: string, form: Schema) {
   if (!authCookie) return;
 
   const accessToken = JSON.parse(authCookie).accessToken;
-  const response = await fetch(`${url}/employee/update/${id}`, {
+  const response = await fetch(`${url}/event/update/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ export async function update(id: string, form: Schema) {
 
   const json: ResponseAPI<any> = await response.json();
 
-  revalidatePath('/employees');
+  revalidatePath('/events');
 
   return {
     ...json,

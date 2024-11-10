@@ -49,7 +49,7 @@ export default async function Events({ searchParams }: EventsProps) {
     {
       id: 2,
       header: 'Data',
-      item: (item: Event) => <span>{item.date}</span>,
+      item: (item: Event) => <span>tu bedzie data</span>,
       sort: 'date'
     },
     {

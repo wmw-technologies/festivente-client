@@ -15,7 +15,7 @@ async function fetchData(id: string) {
 
   const accessToken = JSON.parse(authCookie).accessToken;
 
-  const response = await fetch(`${url}/rentals/${id}`, {
+  const response = await fetch(`${url}/rental/${id}`, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'Bearer ' + accessToken
@@ -34,7 +34,7 @@ async function fetchAvailableDevices() {
 
   const accessToken = JSON.parse(authCookie).accessToken;
 
-  const response = await fetch(`${url}/rentals/available-devices`, {
+  const response = await fetch(`${url}/rental/available-devices`, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'Bearer ' + accessToken

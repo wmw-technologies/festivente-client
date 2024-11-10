@@ -49,7 +49,6 @@ export default function Form({ id, isEdit, data }: FormProps) {
     register,
     control,
     formState: { errors, isSubmitting, isValid, isSubmitted },
-    watch,
     setValue,
     setError,
     handleSubmit

@@ -14,7 +14,7 @@ async function fetchData(id: string) {
   if (!authCookie) return null;
 
   const accessToken = JSON.parse(authCookie).accessToken;
-  const response = await fetch(`${url}/employees/${id}`, {
+  const response = await fetch(`${url}/employee/${id}`, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'Bearer ' + accessToken

@@ -11,7 +11,7 @@ export async function create(form: Schema) {
   if (!authCookie) return;
 
   const accessToken = JSON.parse(authCookie).accessToken;
-  const response = await fetch(`${url}/rentals/create`, {
+  const response = await fetch(`${url}/rental/create`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ export async function update(id: string, form: Schema) {
   if (!authCookie) return;
 
   const accessToken = JSON.parse(authCookie).accessToken;
-  const response = await fetch(`${url}/rentals/update/${id}`, {
+  const response = await fetch(`${url}/rental/update/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',

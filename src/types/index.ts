@@ -119,14 +119,15 @@ export interface Event {
   clientName: string;
   clientEmail: string;
   clientPhone: string;
-  date: string;
+  date: Date;
+  description?: string;
   location: string;
   budget: number;
   assignedEmployees: Array<Employee>;
-  status: 'Pending' | 'Confirmed' | 'Cancelled';
-  estimatedHours: number;
-  actualHours: number;
+  estimatedHours?: number;
+  actualHours?: number;
   notes?: string;
+  status: 'Pending' | 'Confirmed' | 'Cancelled';
   createdAt: Date;
   updatedAt: Date;
 }
