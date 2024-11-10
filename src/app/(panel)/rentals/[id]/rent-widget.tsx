@@ -1,96 +1,52 @@
-import { Device, Rental } from '@/src/types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { Device } from '@/src/types';
 import { Schema } from './form';
-import {
-  FieldErrors,
-  UseFieldArrayAppend,
-  UseFieldArrayRemove,
-  UseFormGetValues,
-  UseFormSetError,
-  UseFormTrigger
-} from 'react-hook-form';
+import { FieldErrors, useController, Control } from 'react-hook-form';
+import { formatCurrency } from '@/src/utils/format';
 import styles from './rent-widget.module.scss';
 import UIInput from '@/src/components/UI/Input';
 import UIIcon from '@/src/components/UI/Icon';
-import { formatCurrency } from '@/src/utils/format';
 
 type RentWidegetProps = {
-  isEdit: boolean;
-  rentalsData: Rental | null;
   availableDevices: Device[];
-  isSubmitted: boolean;
-  append: any;
-  // append: UseFieldArrayAppend<Schema>;
-  remove: UseFieldArrayRemove;
-  trigger: UseFormTrigger<Schema>;
-  getValues: UseFormGetValues<Schema>;
-  setError: UseFormSetError<Schema>;
+  control: Control<Schema>;
   errors: FieldErrors<Schema>;
 };
 
-export default function RentWidget({
-  isEdit,
-  rentalsData,
-  availableDevices,
-  isSubmitted,
-  append,
-  remove,
-  trigger,
-  getValues,
-  setError,
-  errors
-}: RentWidegetProps) {
-  const [inCartDevices, setInCartDevices] = useState<Device[]>(isEdit ? (rentalsData?.devices ?? []) : []);
-  const [filteredDevices, setFilteredDevices] = useState<Device[]>([]);
+export default function RentWidget({ availableDevices, control, errors }: RentWidegetProps) {
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const { field } = useController({
+    control,
+    name: 'devices',
+    defaultValue: []
+  });
+
+  const filteredDevices = availableDevices.filter(
+    (device) =>
+      (searchQuery === '' ||
+        device.warehouseId.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        device.warehouseId.skuNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        device.serialNumber?.toLowerCase?.().includes?.(searchQuery.toLowerCase())) &&
+      !field.value.includes(device._id)
+  );
+
+  const addedDevices = availableDevices.filter((device) => field.value.some((id: string) => id === device._id));
 
   const addDeviceToRental = (device: Device) => {
-    const isDeviceInCart = inCartDevices.some((d) => d._id === device._id);
+    const isDeviceAdded = field.value.some((id: string) => id === device._id);
 
-    if (isDeviceInCart) {
-      // Optionally, you can show a message or handle the case when the device is already in the cart
-      console.log('Device is already in the cart');
-      setError('devices', { message: 'Urządzenie jest już w koszyku' });
-      return;
-    }
-    setFilteredDevices(filteredDevices.filter((d) => d._id !== device._id));
-    setInCartDevices([...inCartDevices, device]);
-    append({ ...device });
+    if (isDeviceAdded) return;
 
-    if (isSubmitted) {
-      trigger('devices');
-    }
+    field.onChange([...field.value, device._id]);
   };
 
   const removeDeviceFromRental = (device: Device) => {
-    setInCartDevices(inCartDevices.filter((d) => d._id !== device._id));
-    setFilteredDevices([...filteredDevices, device]);
-    const index = inCartDevices.findIndex((d) => d._id === device._id);
-    console.log(inCartDevices);
+    const isDeviceAdded = field.value.some((id: string) => id === device._id);
 
-    if (index !== -1) remove(index);
-    if (isSubmitted) {
-      trigger('devices');
-    }
+    if (!isDeviceAdded) return;
+
+    field.onChange(field.value.filter((id: string) => id !== device._id));
   };
-
-  useEffect(() => {
-    console.log('incart', inCartDevices);
-
-    console.log(getValues());
-    console.log('errors', errors);
-  }, [inCartDevices]);
-
-  useEffect(() => {
-    const filtered = availableDevices.filter(
-      (device) =>
-        device.warehouseId.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        device.warehouseId.skuNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        device.location?.toLowerCase?.()?.includes?.(searchQuery.toLowerCase()) ||
-        (device.serialNumber && device.serialNumber.toLowerCase().includes(searchQuery.toLowerCase()))
-    );
-    setFilteredDevices(filtered);
-  }, [searchQuery, availableDevices]);
 
   return (
     <div className="row">
@@ -115,6 +71,7 @@ export default function RentWidget({
               {device.description && <span>Opis: {device.description}</span>}
             </div>
             <button
+              type="button"
               className={`${styles['items-card__button']} ${styles['items-card__button--add']}`}
               onClick={() => addDeviceToRental(device)}
             >
@@ -126,7 +83,7 @@ export default function RentWidget({
       <div className="col-6">
         <h3 className={styles['form-items__header']}>Urządzenia w koszyku</h3>
         {errors.devices && <span className={styles['form-items__error']}>{errors.devices.message}</span>}
-        {inCartDevices.map((device) => (
+        {addedDevices.map((device) => (
           <div className={`${styles['items-card']} ${styles['items-card--in-cart']}`} key={device._id}>
             <div className={styles['items-card__props']}>
               <span>Nazwa: {device.warehouseId.name}</span>
@@ -137,6 +94,7 @@ export default function RentWidget({
               {device.description && <span>Opis: {device.description}</span>}
             </div>
             <button
+              type="button"
               className={`${styles['items-card__button']} ${styles['items-card__button--remove']}`}
               onClick={() => removeDeviceFromRental(device)}
             >

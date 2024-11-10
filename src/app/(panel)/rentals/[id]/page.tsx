@@ -27,14 +27,15 @@ async function fetchData(id: string) {
   return data.data ?? null;
 }
 
-async function fetchAvailableDevices() {
+async function fetchAvailableDevices(_id: string) {
   const url = process.env.NEXT_PUBLIC_API_URL;
   const authCookie = cookies().get('auth')?.value;
   if (!authCookie) return [];
 
   const accessToken = JSON.parse(authCookie).accessToken;
+  const idQuery = _id === 'add' ? '' : `?id=${_id}`;
 
-  const response = await fetch(`${url}/rental/available-devices`, {
+  const response = await fetch(`${url}/rental/available-devices${idQuery}`, {
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'Bearer ' + accessToken
@@ -50,7 +51,7 @@ export default async function RentalsForm({ params }: EventsFormProps) {
   const { id } = params;
   const isEdit = id !== 'add';
   const data = isEdit ? await fetchData(id) : null;
-  const availableDevices = await fetchAvailableDevices();
+  const availableDevices = await fetchAvailableDevices(id);
 
-  return <Form id={id} isEdit={isEdit} rentalsData={data} availableDevices={availableDevices} />;
+  return <Form id={id} isEdit={isEdit} data={data} availableDevices={availableDevices} />;
 }
