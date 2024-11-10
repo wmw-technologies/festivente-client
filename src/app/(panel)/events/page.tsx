@@ -66,20 +66,19 @@ export default async function Events({ searchParams }: EventsProps) {
       header: 'Przypisani pracownicy',
       item: (item: Event) => (
         <span>{item.assignedEmployees?.map?.((el) => `${el.firstName} ${el.lastName}`)?.join?.(', ')}</span>
-      ),
-      sort: 'actualHours'
+      )
     },
     {
       id: 5,
       header: 'Status',
-      item: (item: Event) => <UIBadge>{item.status}</UIBadge>,
-      sort: 'status'
+      item: (item: Event) => <UIBadge>{item.status}</UIBadge>
     },
     {
       id: 6,
       header: '',
       item: (item: Event) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>
+          <UIDropdownItem href={`/events/${item._id}/details`}>Szczegóły</UIDropdownItem>
           <UIDropdownItem href={`/events/${item._id}`}>Edytuj</UIDropdownItem>
         </UIDropdown>
       ),

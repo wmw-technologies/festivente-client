@@ -128,6 +128,11 @@ export const SITEMAP: Array<SitemapItem> = [
         name: 'Edytuj wydarzenie',
         path: '/events/:id',
         visible: false
+      },
+      {
+        name: 'Szczegóły wydarzenia',
+        path: '/events/:id/details',
+        visible: false
       }
     ]
   },
