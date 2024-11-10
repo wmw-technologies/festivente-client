@@ -24,17 +24,13 @@ const schema = z.object({
   date: z.string().date(),
   description: z.string().max(256).optional(),
   location: z.string().min(3).max(64),
-  // budget: z.number().min(0),
   budget: z
-    .string()
-    .regex(/^\d+(\.\d{1,2})?$/, { message: 'Must be a valid PLN amount (e.g., 99 or 999.99)' })
-    .transform((val) => parseFloat(val))
+    .number()
     .refine((val) => val >= 0, { message: 'Amount must be positive' })
     .refine((val) => val <= 100000, { message: 'Amount must be less than or equal to 100,000 PLN' }),
-  // .transform((val) => val.toFixed(2)),
   assignedEmployees: z.array(z.string()).min(1),
-  estimatedHours: z.string().optional(),
-  actualHours: z.string().optional(),
+  estimatedHours: z.number().optional(),
+  actualHours: z.number().optional(),
   notes: z.string().max(256).optional()
 });
 
@@ -83,17 +79,21 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
 
   function init() {
     if (!data) return;
-    setValue('eventName', data?.eventName);
-    setValue('clientName', data?.clientName);
-    setValue('clientEmail', data?.clientEmail);
-    setValue('clientPhone', data?.clientPhone);
-    setValue('date', data?.date ? data.date.toISOString().split('T')[0] : '');
-    setValue('description', data?.description);
-    setValue('location', data?.location);
-    setValue('budget', data?.budget);
-    // setValue('assignedEmployees', data?.assignedEmployees);
-    // setValue('estimatedHours', data?.estimatedHours);
-    // setValue('actualHours', data?.actualHours);
+    setValue('eventName', data.eventName);
+    setValue('clientName', data.clientName);
+    setValue('clientEmail', data.clientEmail);
+    setValue('clientPhone', data.clientPhone);
+    setValue('date', data.date.split('T')[0]);
+    setValue('description', data.description);
+    setValue('location', data.location);
+    setValue('budget', data.budget);
+    setValue(
+      'assignedEmployees',
+      data.assignedEmployees?.map?.((el) => el._id)
+    );
+    setValue('estimatedHours', data.estimatedHours);
+    setValue('actualHours', data.actualHours);
+    setValue('notes', data.notes);
   }
 
   useEffect(() => {
@@ -131,7 +131,11 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
               <UIInput type="date" placeholder="Wprowadź data wydarzenia" {...register('date')} />
             </UIGroup>
             <UIGroup header="Miejsce wydarzenia" error={errors.location} required>
-              <UIInput placeholder="Wprowadź miejsce wydarzenia" autocomplete="name" {...register('location')} />
+              <UIInput
+                placeholder="Wprowadź miejsce wydarzenia"
+                autocomplete="street-address"
+                {...register('location')}
+              />
             </UIGroup>
             <UIGroup header="Opis wydarzenia" error={errors.description}>
               <UITextarea rows={3} placeholder="Wprowadź opis wydarzenia" {...register('description')} />
@@ -140,15 +144,15 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
               <UIInput placeholder="Wprowadź nazwę klienta" autocomplete="name" {...register('clientName')} />
             </UIGroup>
             <UIGroup header="Email klienta" error={errors.clientEmail} required>
-              <UIInput placeholder="Wprowadź email klienta" autocomplete="name" {...register('clientEmail')} />
+              <UIInput placeholder="Wprowadź email klienta" autocomplete="email" {...register('clientEmail')} />
             </UIGroup>
             <UIGroup header="Numer telefonu klienta" error={errors.clientPhone} required>
-              <UIInput placeholder="Wprowadź numer telefonu klienta" autocomplete="name" {...register('clientPhone')} />
+              <UIInput placeholder="Wprowadź numer telefonu klienta" autocomplete="tel" {...register('clientPhone')} />
             </UIGroup>
           </div>
           <div className="col-4">
-            <UIGroup header="Budżet" error={errors.budget} required>
-              <UIInput placeholder="Wprowadź budżet" type="number" autocomplete="name" {...register('budget')} />
+            <UIGroup header="Budżet (PLN)" error={errors.budget} required>
+              <UIInput placeholder="Wprowadź budżet" type="number" {...register('budget', { valueAsNumber: true })} />
             </UIGroup>
             <UIGroup header="Pracownicy" error={errors.assignedEmployees} required>
               <UISelect
@@ -163,16 +167,14 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
               <UIInput
                 type="number"
                 placeholder="Wprowadź przewidywany czas"
-                autocomplete="name"
-                {...register('estimatedHours')}
+                {...register('estimatedHours', { valueAsNumber: true })}
               />
             </UIGroup>
             <UIGroup header="Rzeczywisty czas w godzinach" error={errors.actualHours}>
               <UIInput
                 type="number"
                 placeholder="Wprowadź rzeczywisty czas"
-                autocomplete="name"
-                {...register('actualHours')}
+                {...register('actualHours', { valueAsNumber: true })}
               />
             </UIGroup>
             <UIGroup header="Uwagi" error={errors.notes}>

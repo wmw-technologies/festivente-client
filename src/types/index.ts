@@ -119,7 +119,7 @@ export interface Event {
   clientName: string;
   clientEmail: string;
   clientPhone: string;
-  date: Date;
+  date: string;
   description?: string;
   location: string;
   budget: number;
