@@ -6,6 +6,7 @@ import { formatCurrency } from '@/src/utils/format';
 import styles from './rent-widget.module.scss';
 import UIInput from '@/src/components/UI/Input';
 import UIIcon from '@/src/components/UI/Icon';
+import UITooltip from '@/src/components/UI/Tooltip';
 
 type RentWidegetProps = {
   availableDevices: Device[];
@@ -63,12 +64,30 @@ export default function RentWidget({ availableDevices, control, errors }: RentWi
         {filteredDevices.map((device) => (
           <div className={styles['items-card']} key={device._id}>
             <div className={styles['items-card__props']}>
-              <span>Nazwa: {device.warehouseId.name}</span>
-              <span>SKU: {device.warehouseId.skuNumber}</span>
-              <span>Wartość wypożyczenia: {formatCurrency(device.warehouseId.rentalValue)}</span>
-              <span>Lokalizacja: {device.location}</span>
-              {device.serialNumber && <span>Numer seryjny: {device.serialNumber}</span>}
-              {device.description && <span>Opis: {device.description}</span>}
+              <UITooltip overlowing overflowWidth={232} text={device.warehouseId.name}>
+                <span className={styles['items-card__item']}>Nazwa: {device.warehouseId.name}</span>
+              </UITooltip>
+              <UITooltip overlowing overflowWidth={232} text={device.warehouseId.skuNumber}>
+                <span className={styles['items-card__item']}>SKU: {device.warehouseId.skuNumber}</span>
+              </UITooltip>
+              <UITooltip overlowing overflowWidth={232} text={formatCurrency(device.warehouseId.rentalValue)}>
+                <span className={styles['items-card__item']}>
+                  Wartość wypożyczenia: {formatCurrency(device.warehouseId.rentalValue)}
+                </span>
+              </UITooltip>
+              <UITooltip overlowing overflowWidth={232} text={device.location}>
+                <span className={styles['items-card__item']}>Lokalizacja: {device.location}</span>
+              </UITooltip>
+              {device.serialNumber && (
+                <UITooltip overlowing overflowWidth={232} text={device.serialNumber}>
+                  <span className={styles['items-card__item']}>Numer seryjny: {device.serialNumber}</span>
+                </UITooltip>
+              )}
+              {device.description && (
+                <UITooltip overlowing overflowWidth={232} text={device.description}>
+                  <span className={styles['items-card__item']}>Opis: {device.description}</span>
+                </UITooltip>
+              )}
             </div>
             <button
               type="button"
@@ -81,17 +100,37 @@ export default function RentWidget({ availableDevices, control, errors }: RentWi
         ))}
       </div>
       <div className="col-6">
-        <h3 className={styles['form-items__header']}>Urządzenia w koszyku</h3>
+        <h3 className={`${styles['form-items__header']} ${styles['form-items__header--in-cart']}`}>
+          Urządzenia w koszyku
+        </h3>
         {errors.devices && <span className={styles['form-items__error']}>{errors.devices.message}</span>}
         {addedDevices.map((device) => (
           <div className={`${styles['items-card']} ${styles['items-card--in-cart']}`} key={device._id}>
             <div className={styles['items-card__props']}>
-              <span>Nazwa: {device.warehouseId.name}</span>
-              <span>SKU: {device.warehouseId.skuNumber}</span>
-              <span>Wartoćś wypożyczenia: {formatCurrency(device.warehouseId.rentalValue)}</span>
-              <span>Lokalizacja: {device.location}</span>
-              {device.serialNumber && <span>Numer seryjny: {device.serialNumber}</span>}
-              {device.description && <span>Opis: {device.description}</span>}
+              <UITooltip overlowing overflowWidth={232} text={device.warehouseId.name}>
+                <span className={styles['items-card__item']}>Nazwa: {device.warehouseId.name}</span>
+              </UITooltip>
+              <UITooltip overlowing overflowWidth={232} text={device.warehouseId.skuNumber}>
+                <span className={styles['items-card__item']}>SKU: {device.warehouseId.skuNumber}</span>
+              </UITooltip>
+              <UITooltip overlowing overflowWidth={232} text={formatCurrency(device.warehouseId.rentalValue)}>
+                <span className={styles['items-card__item']}>
+                  Wartoćś wypożyczenia: {formatCurrency(device.warehouseId.rentalValue)}
+                </span>
+              </UITooltip>
+              <UITooltip overlowing overflowWidth={232} text={device.location}>
+                <span className={styles['items-card__item']}>Lokalizacja: {device.location}</span>
+              </UITooltip>
+              {device.serialNumber && (
+                <UITooltip overlowing overflowWidth={232} text={device.serialNumber}>
+                  <span className={styles['items-card__item']}>Numer seryjny: {device.serialNumber}</span>
+                </UITooltip>
+              )}
+              {device.description && (
+                <UITooltip overlowing overflowWidth={232} text={device.description}>
+                  <span className={styles['items-card__item']}>Opis: {device.description}</span>
+                </UITooltip>
+              )}
             </div>
             <button
               type="button"
