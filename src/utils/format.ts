@@ -6,7 +6,9 @@ export function formatDate(date: string) {
   });
 }
 
-export function formatDateTime(date: string) {
+export function formatDateTime(date?: string) {
+  if (!date) return '-';
+
   return new Date(date).toLocaleString('pl-PL', {
     year: 'numeric',
     month: '2-digit',
