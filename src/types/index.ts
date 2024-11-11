@@ -131,3 +131,21 @@ export interface Event {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface Transport {
+  _id: string;
+  vehicleType: string;
+  vehicleDetails: {
+    brand: string;
+    model: string;
+    registrationNumber: string;
+  };
+  driver: Employee;
+  event: Event;
+  departureTime: string;
+  arrivalTime?: string;
+  departureLocation: string;
+  destinationLocation: string;
+  notes?: string;
+  status: 'Pending' | 'Confirmed' | 'Cancelled';
+}

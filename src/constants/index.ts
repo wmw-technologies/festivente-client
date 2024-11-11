@@ -39,3 +39,11 @@ export const positions: Array<Option> = [
   { value: 'producer', text: 'Realizator' },
   { value: 'stageHand', text: 'Stage hand' }
 ];
+
+export const vehicleTypes: Array<Option> = [
+  { value: 'van', text: 'Van' },
+  { value: 'bus', text: 'Autobus' },
+  { value: 'truck', text: 'Ciężarówka' },
+  { value: 'car', text: 'Samochód' },
+  { value: 'other', text: 'Inny' }
+];
