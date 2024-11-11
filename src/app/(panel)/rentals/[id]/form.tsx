@@ -25,7 +25,7 @@ const schema = z.object({
   clientEmail: z.string().email('Nieprawidłowy adres e-mail'),
   rentalDate: z.string().date().min(1, 'Data wypożyczenia jest wymagana'),
   returnDate: z.string().date().min(1, 'Data zwrotu jest wymagana'),
-  devices: z.array(z.string()).min(1),
+  devices: z.array(z.string()).min(1, 'W wypożyczeniu musi być przynajmniej jedno urządzenie'),
   inTotal: z
     .number()
     .refine((val) => val >= 0, { message: 'Amount must be positive' })
