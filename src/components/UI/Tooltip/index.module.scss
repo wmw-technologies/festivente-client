@@ -7,7 +7,6 @@
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  // max-width: 232px;
 }
 
 .tooltip {
@@ -21,7 +20,7 @@
   border-radius: 4px;
   white-space: nowrap;
   z-index: 1000;
-  pointer-events: auto; /* Allow mouse events */
+  pointer-events: auto;
 }
 
 .tooltip::after {
