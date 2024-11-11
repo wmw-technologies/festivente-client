@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { ResponseAPI, Role } from '@/src/types';
+import { ResponseAPI, Pagination, Employee, Event, Transport, Option } from '@/src/types';
 import Form from './form';
 
 type EventsFormProps = {
@@ -9,30 +9,74 @@ type EventsFormProps = {
 };
 
 async function fetchData(id: string) {
-  // const url = process.env.NEXT_PUBLIC_API_URL;
-  // const authCookie = cookies().get('auth')?.value;
-  // if (!authCookie) return null;
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  const authCookie = cookies().get('auth')?.value;
+  if (!authCookie) return null;
 
-  // const accessToken = JSON.parse(authCookie).accessToken;
-  // const response = await fetch(`${url}/role/${id}`, {
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     Authorization: 'Bearer ' + accessToken
-  //   }
-  // });
+  const accessToken = JSON.parse(authCookie).accessToken;
+  const response = await fetch(`${url}/transport/${id}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + accessToken
+    }
+  });
 
-  // if (!response.ok) return null;
+  if (!response.ok) return null;
 
-  // const data: ResponseAPI<Role> = await response.json();
-  // return data.data ?? null;
+  const data: ResponseAPI<Transport> = await response.json();
+  return data.data ?? null;
+}
 
-  return null;
+async function fetchEmployees() {
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  const authCookie = cookies().get('auth')?.value;
+  if (!authCookie) return [];
+
+  const accessToken = JSON.parse(authCookie).accessToken;
+  const response = await fetch(`${url}/employee/list`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + accessToken
+    }
+  });
+
+  if (!response.ok) return [];
+
+  const data: ResponseAPI<Pagination<Employee>> = await response.json();
+  return (data.data?.items ?? []).map((role) => ({
+    text: `${role.firstName} ${role.lastName}`,
+    value: role._id
+  })) as Option[];
+}
+
+async function fetchEvents() {
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  const authCookie = cookies().get('auth')?.value;
+  if (!authCookie) return [];
+
+  const accessToken = JSON.parse(authCookie).accessToken;
+  const response = await fetch(`${url}/event/list`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + accessToken
+    }
+  });
+
+  if (!response.ok) return [];
+
+  const data: ResponseAPI<Pagination<Event>> = await response.json();
+  return (data.data?.items ?? []).map((role) => ({
+    text: role.eventName,
+    value: role._id
+  })) as Option[];
 }
 
 export default async function TransportForm({ params }: EventsFormProps) {
   const { id } = params;
   const isEdit = id !== 'add';
   const data = isEdit ? await fetchData(id) : null;
+  const employees = await fetchEmployees();
+  const events = await fetchEvents();
 
-  return <Form id={id} isEdit={isEdit} data={data} />;
+  return <Form id={id} isEdit={isEdit} data={data} employees={employees} events={events} />;
 }
