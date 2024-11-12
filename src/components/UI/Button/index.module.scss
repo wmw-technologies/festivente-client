@@ -141,8 +141,8 @@
   cursor: pointer;
 
   &.primary {
-    background: var(--f-primary);
-    color: var(--f-white);
+    background: var(--f-primary-light);
+    color: var(--f-primary);
   }
 
   &.gray {
