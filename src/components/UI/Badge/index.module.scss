@@ -12,6 +12,14 @@
   justify-self: flex-start;
   gap: 4px;
   cursor: default;
+  overflow: hidden;
+
+  span {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
   &.primary {
     border: 1px solid var(--f-primary-light);

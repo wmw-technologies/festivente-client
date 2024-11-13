@@ -21,7 +21,7 @@ export default function UIBadge({ variant = 'primary', children, onClick }: UIBa
 
   return (
     <div className={`${styles.badge} ${classVariant}`}>
-      {children}
+      <span>{children}</span>
       {onClick ? (
         <div className={styles.clear} onClick={handleClick}>
           <UIIcon name="XCircleIcon" smaller />

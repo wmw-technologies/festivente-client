@@ -187,3 +187,22 @@ input:-webkit-autofill:active {
   max-width: 100%;
   padding: 0 8px;
 }
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 6px;
+  background: var(--f-gray-200);
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  background: var(--f-black);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--f-primary);
+}

@@ -14,6 +14,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 4px;
+      overflow: hidden;
     }
 
     .placeholder {
@@ -72,6 +73,17 @@
     line-height: 22px;
     display: flex;
     flex-direction: column;
+
+    &.noOption {
+      opacity: 0.5;
+      cursor: default;
+
+      &:hover {
+        background-color: unset;
+        color: unset;
+        font-weight: unset;
+      }
+    }
 
     &.active,
     &:hover {
