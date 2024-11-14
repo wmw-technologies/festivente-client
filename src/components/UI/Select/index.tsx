@@ -92,6 +92,9 @@ export default function UISelect({ name, placeholder, multiselect, options = [],
                 {item.text}
               </div>
             ))}
+            {options.length === 0 && (
+              <div className={`${styles.selectDropdownItem} ${styles.noOption}`}>Brak opcji</div>
+            )}
           </div>
         )}
         onClickOutside={hide}

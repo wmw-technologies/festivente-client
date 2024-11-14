@@ -7,11 +7,24 @@
   .cardBody {
     border-radius: 0.375rem;
     flex: 1 1 100%;
+    padding: 16px;
+    overflow-x: auto;
 
-    &.background {
-      padding: 16px;
+    &.primary {
+      border: 1px solid var(--f-primary-light);
+      background: var(--f-primary-light);
+      color: var(--f-primary);
+    }
+
+    &.gray {
       border: 1px solid var(--f-gray-300);
       background: var(--f-gray-100);
+    }
+
+    &.noBackground {
+      padding: 0;
+      border: 0;
+      background: transparent;
     }
   }
 }

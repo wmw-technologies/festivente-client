@@ -51,12 +51,16 @@ export interface User {
   email: string;
   phone: string;
   role: Role;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Role {
   _id: string;
   name: string;
   permissions: Array<string>;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Warehouse {
@@ -71,8 +75,8 @@ export interface Warehouse {
   status: 'Available' | 'Out of stock';
   createdBy: User;
   devices: Array<Device>;
-  updatedAt: string; //
-  createdAt: string; //
+  updatedAt: string;
+  createdAt: string;
 }
 
 export interface Device {
@@ -82,6 +86,8 @@ export interface Device {
   description?: string;
   warehouseId: Warehouse;
   rentalId?: Rental;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Rental {
@@ -99,8 +105,8 @@ export interface Rental {
   status: string;
   createdBy: User;
   devices: Array<Device>;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Employee {
@@ -111,6 +117,8 @@ export interface Employee {
   phone?: string;
   position: string;
   dailyRate?: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Event {
@@ -128,8 +136,8 @@ export interface Event {
   actualHours?: number;
   notes?: string;
   status: 'Pending' | 'Confirmed' | 'Cancelled';
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Transport {
@@ -148,4 +156,16 @@ export interface Transport {
   destinationLocation: string;
   notes?: string;
   status: 'Pending' | 'Confirmed' | 'Cancelled';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Service {
+  _id: string;
+  returnDate: string;
+  serviceDate: string;
+  servicePerson: Array<Employee>;
+  devices: Array<Device>;
+  createdAt: string;
+  updatedAt: string;
 }

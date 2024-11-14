@@ -61,21 +61,22 @@ export default function Form({ id, isEdit, data, employees, events }: FormProps)
   });
 
   async function onSubmit(form: Schema) {
-    console.log('form', JSON.parse(JSON.stringify(form)));
     try {
       const response = !isEdit ? await create(form) : await update(id, form);
 
-      if (response?.ok) {
-        router.push('/transport');
-        toast.success(response?.message);
-      } else {
-        if (response?.errors) {
-          Object.keys(response?.errors).map((key) => {
-            setError(key as any, { message: (response?.errors as any)[key] });
-          });
-        }
+      if (!response?.ok) throw response;
+
+      router.push('/transport');
+      toast.success(response.message);
+    } catch (ex: any) {
+      if (ex.status === 422 && ex?.errors) {
+        Object.keys(ex?.errors).map((key) => {
+          setError(key as any, { message: (ex.errors as any)[key] });
+        });
+
+        return;
       }
-    } catch (error) {
+
       toast.error('Wystąpił błąd podczas zapisywania transportu');
     }
   }

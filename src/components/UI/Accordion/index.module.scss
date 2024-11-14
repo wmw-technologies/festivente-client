@@ -42,9 +42,9 @@
 
   &.primary {
     .accordionHeader {
-      border: 1px solid var(--f-primary);
-      background: var(--f-primary);
-      color: var(--f-white);
+      border: 1px solid var(--f-primary-light);
+      background: var(--f-primary-light);
+      color: var(--f-primary);
     }
   }
 

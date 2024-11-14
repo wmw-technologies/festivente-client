@@ -34,17 +34,25 @@ export default function SignIn() {
   const router = useRouter();
 
   async function onSubmit(form: Schema) {
-    const response = await signIn(form);
+    try {
+      const response = await signIn(form);
 
-    if (response?.ok) {
+      if (!response.ok) throw response;
+
       toast.success(response.message);
       router.push('/dashboard');
-    } else {
-      if (response?.errors) {
-        for (const error in response.errors) {
-          setError(error as keyof Schema, { type: 'validate', message: response.errors[error] });
+    } catch (ex: any) {
+      if (ex.status === 401) {
+        if (ex?.errors) {
+          for (const error in ex.errors) {
+            setError(error as keyof Schema, { type: 'validate', message: ex.errors[error] });
+          }
         }
+
+        return;
       }
+
+      toast.error('Wystąpił błąd podczas logowania');
     }
   }
 
