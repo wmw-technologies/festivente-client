@@ -166,7 +166,7 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
           </div>
         </div>
 
-        <RentWidget availableDevices={availableDevices} control={control} errors={errors} />
+        <RentWidget availableDevices={availableDevices} control={control} errors={errors} setValue={setValue} />
       </form>
     </UICard>
   );

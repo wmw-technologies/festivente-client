@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Device } from '@/src/types';
 import { Schema } from './form';
-import { FieldErrors, useController, Control } from 'react-hook-form';
+import { FieldErrors, useController, Control, UseFormSetValue } from 'react-hook-form';
 import { formatCurrency } from '@/src/utils/format';
 import styles from './rent-widget.module.scss';
 import UIInput from '@/src/components/UI/Input';
@@ -12,9 +12,10 @@ type RentWidegetProps = {
   availableDevices: Device[];
   control: Control<Schema>;
   errors: FieldErrors<Schema>;
+  setValue: UseFormSetValue<Schema>;
 };
 
-export default function RentWidget({ availableDevices, control, errors }: RentWidegetProps) {
+export default function RentWidget({ availableDevices, control, errors, setValue }: RentWidegetProps) {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const { field } = useController({
     control,
@@ -32,6 +33,11 @@ export default function RentWidget({ availableDevices, control, errors }: RentWi
   );
 
   const addedDevices = availableDevices.filter((device) => field.value.some((id: string) => id === device._id));
+  const countInTotal = addedDevices.reduce((acc, device) => acc + device.warehouseId.rentalValue, 0);
+
+  useEffect(() => {
+    setValue('inTotal', countInTotal);
+  }, [addedDevices]);
 
   const addDeviceToRental = (device: Device) => {
     const isDeviceAdded = field.value.some((id: string) => id === device._id);
@@ -67,16 +73,17 @@ export default function RentWidget({ availableDevices, control, errors }: RentWi
               <UITooltip overlowing overflowWidth={232} text={device.warehouseId.name}>
                 <span className={styles['items-card__item']}>Nazwa: {device.warehouseId.name}</span>
               </UITooltip>
+              <UITooltip overlowing overflowWidth={232} text={device.location}>
+                <span className={styles['items-card__item']}>Lokalizacja: {device.location}</span>
+              </UITooltip>
               <UITooltip overlowing overflowWidth={232} text={device.warehouseId.skuNumber}>
                 <span className={styles['items-card__item']}>SKU: {device.warehouseId.skuNumber}</span>
               </UITooltip>
+
               <UITooltip overlowing overflowWidth={232} text={formatCurrency(device.warehouseId.rentalValue)}>
                 <span className={styles['items-card__item']}>
                   Wartość wypożyczenia: {formatCurrency(device.warehouseId.rentalValue)}
                 </span>
-              </UITooltip>
-              <UITooltip overlowing overflowWidth={232} text={device.location}>
-                <span className={styles['items-card__item']}>Lokalizacja: {device.location}</span>
               </UITooltip>
               {device.serialNumber && (
                 <UITooltip overlowing overflowWidth={232} text={device.serialNumber}>
@@ -110,6 +117,10 @@ export default function RentWidget({ availableDevices, control, errors }: RentWi
               <UITooltip overlowing overflowWidth={232} text={device.warehouseId.name}>
                 <span className={styles['items-card__item']}>Nazwa: {device.warehouseId.name}</span>
               </UITooltip>
+
+              <UITooltip overlowing overflowWidth={232} text={device.location}>
+                <span className={styles['items-card__item']}>Lokalizacja: {device.location}</span>
+              </UITooltip>
               <UITooltip overlowing overflowWidth={232} text={device.warehouseId.skuNumber}>
                 <span className={styles['items-card__item']}>SKU: {device.warehouseId.skuNumber}</span>
               </UITooltip>
@@ -117,9 +128,6 @@ export default function RentWidget({ availableDevices, control, errors }: RentWi
                 <span className={styles['items-card__item']}>
                   Wartoćś wypożyczenia: {formatCurrency(device.warehouseId.rentalValue)}
                 </span>
-              </UITooltip>
-              <UITooltip overlowing overflowWidth={232} text={device.location}>
-                <span className={styles['items-card__item']}>Lokalizacja: {device.location}</span>
               </UITooltip>
               {device.serialNumber && (
                 <UITooltip overlowing overflowWidth={232} text={device.serialNumber}>
