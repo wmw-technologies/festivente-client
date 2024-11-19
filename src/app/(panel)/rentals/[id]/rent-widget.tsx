@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { Device } from '@/src/types';
 import { Schema } from './form';
-import { FieldErrors, useController, Control, UseFormSetValue } from 'react-hook-form';
+import { FieldErrors, useController, Control, UseFormSetValue, set } from 'react-hook-form';
 import { formatCurrency } from '@/src/utils/format';
 import styles from './rent-widget.module.scss';
 import UIInput from '@/src/components/UI/Input';
@@ -23,6 +23,14 @@ export default function RentWidget({ availableDevices, control, errors, setValue
     defaultValue: []
   });
 
+  const [addedDevices, setAddedDevices] = useState<Device[]>([]);
+
+  useEffect(() => {
+    if (addedDevices.length === 0)
+      setAddedDevices(availableDevices.filter((device) => field.value.some((id: string) => id === device._id)));
+  }, [addedDevices]);
+  console.log(addedDevices);
+
   const filteredDevices = availableDevices.filter(
     (device) =>
       (searchQuery === '' ||
@@ -32,12 +40,12 @@ export default function RentWidget({ availableDevices, control, errors, setValue
       !field.value.includes(device._id)
   );
 
-  const addedDevices = availableDevices.filter((device) => field.value.some((id: string) => id === device._id));
-  const countInTotal = addedDevices.reduce((acc, device) => acc + device.warehouseId.rentalValue, 0);
-
+  // const addedDevices = availableDevices.filter((device) => field.value.some((id: string) => id === device._id));
+  // const countInTotal = addedDevices.reduce((acc, device) => acc + device.warehouseId.rentalValue, 0);
+  // setAddedDevices(availableDevices.filter((device) => field.value.some((id: string) => id === device._id)));
   useEffect(() => {
-    setValue('inTotal', countInTotal);
-  }, [addedDevices]);
+    // setValue('inTotal', countInTotal);
+  }, []);
 
   const addDeviceToRental = (device: Device) => {
     const isDeviceAdded = field.value.some((id: string) => id === device._id);
@@ -45,6 +53,7 @@ export default function RentWidget({ availableDevices, control, errors, setValue
     if (isDeviceAdded) return;
 
     field.onChange([...field.value, device._id]);
+    setAddedDevices([...addedDevices, device]);
   };
 
   const removeDeviceFromRental = (device: Device) => {
@@ -53,7 +62,22 @@ export default function RentWidget({ availableDevices, control, errors, setValue
     if (!isDeviceAdded) return;
 
     field.onChange(field.value.filter((id: string) => id !== device._id));
+    setAddedDevices(addedDevices.filter((addedDevice) => addedDevice._id !== device._id));
   };
+
+  const updateAddedDevices = () => {
+    setAddedDevices(availableDevices.filter((device) => field.value.some((id: string) => id === device._id)));
+  };
+
+  // const handleAddDevice = (device: Device) => {
+  //   addDeviceToRental(device);
+  //   updateAddedDevices();
+  // };
+
+  // const handleRemoveDevice = (device: Device) => {
+  //   removeDeviceFromRental(device);
+  //   updateAddedDevices();
+  // };
 
   return (
     <div className="row">
