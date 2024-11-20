@@ -16,20 +16,25 @@ type RentWidegetProps = {
 };
 
 export default function RentWidget({ availableDevices, control, errors, setValue }: RentWidegetProps) {
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const { field } = useController({
+  const { field: deviceId } = useController({
     control,
     name: 'devices',
     defaultValue: []
   });
 
-  const [addedDevices, setAddedDevices] = useState<Device[]>([]);
+  const { field: rentalDate } = useController({
+    control,
+    name: 'rentalDate'
+  });
 
-  useEffect(() => {
-    if (addedDevices.length === 0)
-      setAddedDevices(availableDevices.filter((device) => field.value.some((id: string) => id === device._id)));
-  }, [addedDevices]);
-  console.log(addedDevices);
+  const { field: returnDate } = useController({
+    control,
+    name: 'returnDate'
+  });
+
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [addedDevices, setAddedDevices] = useState<Device[]>([]);
+  const [rentalDays, setRentalDays] = useState<number>(0);
 
   const filteredDevices = availableDevices.filter(
     (device) =>
@@ -37,47 +42,47 @@ export default function RentWidget({ availableDevices, control, errors, setValue
         device.warehouseId.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         device.warehouseId.skuNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
         device.serialNumber?.toLowerCase?.().includes?.(searchQuery.toLowerCase())) &&
-      !field.value.includes(device._id)
+      !deviceId.value.includes(device._id)
   );
 
-  // const addedDevices = availableDevices.filter((device) => field.value.some((id: string) => id === device._id));
-  // const countInTotal = addedDevices.reduce((acc, device) => acc + device.warehouseId.rentalValue, 0);
-  // setAddedDevices(availableDevices.filter((device) => field.value.some((id: string) => id === device._id)));
-  useEffect(() => {
-    // setValue('inTotal', countInTotal);
-  }, []);
+  function calculateRentalDays(rentalDate: string, returnDate: string): number {
+    const startDate = new Date(rentalDate);
+    const endDate = new Date(returnDate);
+    const timeDifference = endDate.getTime() - startDate.getTime();
+    const dayDifference = timeDifference / (1000 * 3600 * 24);
+    return Math.ceil(dayDifference);
+  }
+
+  const countInTotal = addedDevices.reduce((acc, device) => (acc + device.warehouseId.rentalValue) * rentalDays, 0);
 
   const addDeviceToRental = (device: Device) => {
-    const isDeviceAdded = field.value.some((id: string) => id === device._id);
+    const isDeviceAdded = deviceId.value.some((id: string) => id === device._id);
 
     if (isDeviceAdded) return;
 
-    field.onChange([...field.value, device._id]);
+    deviceId.onChange([...deviceId.value, device._id]);
     setAddedDevices([...addedDevices, device]);
+    setValue('inTotal', countInTotal + device.warehouseId.rentalValue);
   };
 
   const removeDeviceFromRental = (device: Device) => {
-    const isDeviceAdded = field.value.some((id: string) => id === device._id);
+    const isDeviceAdded = deviceId.value.some((id: string) => id === device._id);
 
     if (!isDeviceAdded) return;
 
-    field.onChange(field.value.filter((id: string) => id !== device._id));
+    deviceId.onChange(deviceId.value.filter((id: string) => id !== device._id));
     setAddedDevices(addedDevices.filter((addedDevice) => addedDevice._id !== device._id));
+    setValue('inTotal', countInTotal - device.warehouseId.rentalValue);
   };
 
-  const updateAddedDevices = () => {
-    setAddedDevices(availableDevices.filter((device) => field.value.some((id: string) => id === device._id)));
-  };
+  useEffect(() => {
+    setRentalDays(calculateRentalDays(rentalDate.value, returnDate.value));
+  }, [rentalDate.value, returnDate.value]);
 
-  // const handleAddDevice = (device: Device) => {
-  //   addDeviceToRental(device);
-  //   updateAddedDevices();
-  // };
-
-  // const handleRemoveDevice = (device: Device) => {
-  //   removeDeviceFromRental(device);
-  //   updateAddedDevices();
-  // };
+  useEffect(() => {
+    if (deviceId.value)
+      setAddedDevices(availableDevices.filter((device) => deviceId.value.some((id: string) => id === device._id)));
+  }, [deviceId.value]);
 
   return (
     <div className="row">
