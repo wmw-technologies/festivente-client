@@ -100,6 +100,7 @@ export default async function WarehousePage({ searchParams }: WarehouseProps) {
       header: '',
       item: (item: Warehouse) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>
+          <UIDropdownItem href={`/warehouse/${item._id}/details`}>Szczegóły</UIDropdownItem>
           <UIDropdownItem href={`/warehouse/${item._id}`}>Edytuj</UIDropdownItem>
         </UIDropdown>
       ),
