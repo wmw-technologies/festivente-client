@@ -39,9 +39,3 @@ Instalacja hooków husky
 ```bash
 npm run prepare
 ```
-
-### Autorzy
-
-- [Wojciech Skirło](https://github.com/WojciechSkirlo)
-- [Michał Sałek](https://github.com/salekmichal1)
-
