@@ -16,7 +16,7 @@ type RentWidegetProps = {
 };
 
 export default function RentWidget({ availableDevices, control, errors, setValue }: RentWidegetProps) {
-  const { field: deviceId } = useController({
+  const { field: deviceIds } = useController({
     control,
     name: 'devices',
     defaultValue: []
@@ -42,7 +42,7 @@ export default function RentWidget({ availableDevices, control, errors, setValue
         device.warehouseId.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         device.warehouseId.skuNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
         device.serialNumber?.toLowerCase?.().includes?.(searchQuery.toLowerCase())) &&
-      !deviceId.value.includes(device._id)
+      !deviceIds.value.includes(device._id)
   );
 
   function calculateRentalDays(rentalDate: string, returnDate: string): number {
@@ -53,36 +53,39 @@ export default function RentWidget({ availableDevices, control, errors, setValue
     return Math.ceil(dayDifference);
   }
 
-  const countInTotal = addedDevices.reduce((acc, device) => (acc + device.warehouseId.rentalValue) * rentalDays, 0);
+  const countInTotal = addedDevices.reduce((acc, device) => acc + device.warehouseId.rentalValue, 0);
 
   const addDeviceToRental = (device: Device) => {
-    const isDeviceAdded = deviceId.value.some((id: string) => id === device._id);
+    const isDeviceAdded = deviceIds.value.some((id: string) => id === device._id);
 
     if (isDeviceAdded) return;
 
-    deviceId.onChange([...deviceId.value, device._id]);
+    deviceIds.onChange([...deviceIds.value, device._id]);
     setAddedDevices([...addedDevices, device]);
-    setValue('inTotal', countInTotal + device.warehouseId.rentalValue);
+    setValue('inTotal', (countInTotal + device.warehouseId.rentalValue) * rentalDays);
+    console.log(rentalDays);
   };
 
   const removeDeviceFromRental = (device: Device) => {
-    const isDeviceAdded = deviceId.value.some((id: string) => id === device._id);
+    const isDeviceAdded = deviceIds.value.some((id: string) => id === device._id);
 
     if (!isDeviceAdded) return;
 
-    deviceId.onChange(deviceId.value.filter((id: string) => id !== device._id));
+    deviceIds.onChange(deviceIds.value.filter((id: string) => id !== device._id));
     setAddedDevices(addedDevices.filter((addedDevice) => addedDevice._id !== device._id));
-    setValue('inTotal', countInTotal - device.warehouseId.rentalValue);
+    setValue('inTotal', (countInTotal - device.warehouseId.rentalValue) * rentalDays);
+    console.log(rentalDays);
   };
 
   useEffect(() => {
     setRentalDays(calculateRentalDays(rentalDate.value, returnDate.value));
+    if (rentalDays) setValue('inTotal', countInTotal * calculateRentalDays(rentalDate.value, returnDate.value));
   }, [rentalDate.value, returnDate.value]);
 
   useEffect(() => {
-    if (deviceId.value)
-      setAddedDevices(availableDevices.filter((device) => deviceId.value.some((id: string) => id === device._id)));
-  }, [deviceId.value]);
+    if (deviceIds.value)
+      setAddedDevices(availableDevices.filter((device) => deviceIds.value.some((id: string) => id === device._id)));
+  }, [deviceIds.value]);
 
   return (
     <div className="row">
