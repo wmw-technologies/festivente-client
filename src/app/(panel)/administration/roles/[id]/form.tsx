@@ -47,7 +47,7 @@ const permissions = [
     name: 'Administracja',
     children: [
       {
-        name: 'Dostęp do administracji',
+        name: 'Dostęp do modułu administracji',
         key: Permissions.ADMINISTRATION.ACCESS
       }
     ]
@@ -56,12 +56,8 @@ const permissions = [
     name: 'Magazyn',
     children: [
       {
-        name: 'Dostęp do magazynu',
+        name: 'Dostęp do modułu magazynu',
         key: Permissions.WAREHOUSE.ACCESS
-      },
-      {
-        name: 'Dodawanie do magazynu',
-        key: Permissions.WAREHOUSE.ADD
       }
     ]
   },
@@ -69,7 +65,7 @@ const permissions = [
     name: 'Wypożyczenia',
     children: [
       {
-        name: 'Dostęp do wypożyczeń',
+        name: 'Dostęp do modułu wypożyczeń',
         key: Permissions.RENTALS.ACCESS
       }
     ]
@@ -78,7 +74,7 @@ const permissions = [
     name: 'Pracownicy',
     children: [
       {
-        name: 'Dostęp do pracowników',
+        name: 'Dostęp do modułu pracowników',
         key: Permissions.EMPLOYEES.ACCESS
       }
     ]
@@ -87,8 +83,17 @@ const permissions = [
     name: 'Imprezy',
     children: [
       {
-        name: 'Dostęp do imprez',
+        name: 'Dostęp do modułu imprez',
         key: Permissions.EVENTS.ACCESS
+      }
+    ]
+  },
+  {
+    name: 'Pojazdy',
+    children: [
+      {
+        name: 'Dostęp do modułu pojazdów',
+        key: Permissions.VEHICLES.ACCESS
       }
     ]
   },
@@ -96,7 +101,7 @@ const permissions = [
     name: 'Transport',
     children: [
       {
-        name: 'Dostęp do transportu',
+        name: 'Dostęp do modułu transportu',
         key: Permissions.TRANSPORT.ACCESS
       }
     ]
@@ -105,7 +110,7 @@ const permissions = [
     name: 'Serwis',
     children: [
       {
-        name: 'Dostęp do serwisu',
+        name: 'Dostęp do modułu serwisu',
         key: Permissions.SERVICE.ACCESS
       }
     ]

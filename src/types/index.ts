@@ -140,6 +140,18 @@ export interface Event {
   updatedAt: string;
 }
 
+export interface Vehicle {
+  _id: string;
+  registrationNumber: string;
+  deviceType: string;
+  pricePerKm: number;
+  insuranceDate: string;
+  inspectionDate: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Transport {
   _id: string;
   vehicleType: string;

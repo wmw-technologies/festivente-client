@@ -137,8 +137,31 @@ export const SITEMAP: Array<SitemapItem> = [
     ]
   },
   {
-    name: 'Transport',
+    name: 'Pojazdy',
     icon: 'TruckIcon',
+    path: '/vehicles',
+    permissions: [Permissions.VEHICLES.ACCESS],
+    children: [
+      {
+        name: 'Dodaj pojazd',
+        path: '/vehicles/add',
+        visible: false
+      },
+      {
+        name: 'Edytuj pojazd',
+        path: '/vehicles/:id',
+        visible: false
+      },
+      {
+        name: 'Szczegóły pojazdu',
+        path: '/vehicles/:id/details',
+        visible: false
+      }
+    ]
+  },
+  {
+    name: 'Transport',
+    icon: 'MapPinIcon',
     path: '/transport',
     permissions: [Permissions.TRANSPORT.ACCESS],
     children: [
