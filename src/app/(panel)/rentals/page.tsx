@@ -77,6 +77,7 @@ export default async function Rentals({ searchParams }: RentalsProps) {
       header: '',
       item: (item: Rental) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>
+          <UIDropdownItem href={`/rentals/${item._id}/details`}>Szczegóły</UIDropdownItem>
           <UIDropdownItem href={`/rentals/${item._id}`}>Edytuj</UIDropdownItem>
         </UIDropdown>
       ),
