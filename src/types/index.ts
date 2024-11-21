@@ -143,7 +143,6 @@ export interface Event {
 export interface Vehicle {
   _id: string;
   registrationNumber: string;
-  deviceType: string;
   pricePerKm: number;
   insuranceDate: string;
   inspectionDate: string;

@@ -1,13 +1,12 @@
 import { cookies } from 'next/headers';
 import { Column, ResponseAPI, Vehicle, Pager, Pagination } from '@/src/types';
 import { getPager } from '@/src/utils/pager';
-import { formatDate } from '@/src/utils/format';
+import { dashIfEmpty, formatCurrency } from '@/src/utils/format';
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
 import UITable from '@/src/components/UI/Table';
 import UIPagination from '@/src/components/UI/Pagination';
-import UIBadge from '@/src/components/UI/Badge';
 import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 
 type VehiclesProps = {
@@ -45,36 +44,18 @@ export default async function Vehicles({ searchParams }: VehiclesProps) {
   const columns: Array<Column> = [
     {
       id: 1,
-      header: 'Nazwa',
-      item: (item: Vehicle) => <span>{item._id}</span>
-      // sort: 'eventName'
+      header: 'Numer rejestracyjny',
+      item: (item: Vehicle) => <span>{dashIfEmpty(item.registrationNumber)}</span>,
+      sort: 'registrationNumber'
     },
-    // {
-    //   id: 2,
-    //   header: 'Data',
-    //   item: (item: Event) => <span>{formatDate(item.date)}</span>,
-    //   sort: 'date'
-    // },
-    // {
-    //   id: 3,
-    //   header: 'Miejsce',
-    //   item: (item: Event) => <span>{item.location}</span>,
-    //   sort: 'location'
-    // },
-    // {
-    //   id: 4,
-    //   header: 'Przypisani pracownicy',
-    //   item: (item: Event) => (
-    //     <span>{item.assignedEmployees?.map?.((el) => `${el.firstName} ${el.lastName}`)?.join?.(', ')}</span>
-    //   )
-    // },
-    // {
-    //   id: 5,
-    //   header: 'Status',
-    //   item: (item: Event) => <UIBadge>{item.status}</UIBadge>
-    // },
     {
-      id: 6,
+      id: 2,
+      header: 'Cena za km (PLN)',
+      item: (item: Vehicle) => <span>{formatCurrency(item.pricePerKm)}</span>,
+      sort: 'date'
+    },
+    {
+      id: 3,
       header: '',
       item: (item: Vehicle) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>

@@ -13,15 +13,14 @@ import UIButton from '@/src/components/UI/Button';
 import UICard from '@/src/components/UI/Card';
 import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
-// import UISelect from '@/src/components/UI/Select';
+import UIDatepicker from '@/src/components/UI/Datepicker';
 import UITextarea from '@/src/components/UI/Textarea';
 
 const schema = z.object({
   registrationNumber: z.string().min(5).max(15),
-  // deviceType: z.string().min(1).max(15),
   pricePerKm: z.number().min(0),
-  inspectionDate: z.string().datetime(),
-  insuranceDate: z.string().datetime(),
+  inspectionDate: z.date().optional(),
+  insuranceDate: z.date().optional(),
   description: z.string().max(256).optional()
 });
 
@@ -35,11 +34,12 @@ type FormProps = {
 
 export default function Form({ id, isEdit, data }: FormProps) {
   const router = useRouter();
-  const title = isEdit ? `Formularz edycji pojazdu: ${data?._id}` : 'Formularz dodawania pojazdu';
+  const title = isEdit ? `Formularz edycji pojazdu: ${data?.registrationNumber}` : 'Formularz dodawania pojazdu';
 
   const {
     register,
     control,
+    watch,
     formState: { errors, isSubmitting, isValid, isSubmitted },
     setValue,
     setError,
@@ -52,18 +52,20 @@ export default function Form({ id, isEdit, data }: FormProps) {
     try {
       const response = !isEdit ? await create(form) : await update(id, form);
 
-      if (response?.ok) {
-        router.push('/events');
-        toast.success(response?.message);
-      } else {
-        if (response?.errors) {
-          Object.keys(response?.errors).map((key) => {
-            setError(key as any, { message: (response?.errors as any)[key] });
-          });
-        }
+      if (!response?.ok) throw response;
+
+      router.push('/vehicles');
+      toast.success(response?.message);
+    } catch (ex: any) {
+      if (ex.status === 422 && ex?.errors) {
+        Object.keys(ex?.errors).map((key) => {
+          setError(key as any, { message: (ex.errors as any)[key] });
+        });
+
+        return;
       }
-    } catch (error) {
-      toast.error('Wystąpił błąd podczas zapisywania wydarzenia');
+
+      toast.error('Wystąpił błąd podczas zapisywania pojazdu');
     }
   }
 
@@ -71,8 +73,8 @@ export default function Form({ id, isEdit, data }: FormProps) {
     if (!data) return;
     setValue('registrationNumber', data.registrationNumber);
     setValue('pricePerKm', data.pricePerKm);
-    setValue('inspectionDate', data.inspectionDate);
-    setValue('insuranceDate', data.insuranceDate);
+    setValue('inspectionDate', data.inspectionDate ? new Date(data.inspectionDate) : undefined);
+    setValue('insuranceDate', data.insuranceDate ? new Date(data.insuranceDate) : undefined);
     setValue('description', data.description);
   }
 
@@ -107,13 +109,6 @@ export default function Form({ id, isEdit, data }: FormProps) {
             <UIGroup header="Numer rejestracyjny" error={errors.registrationNumber} required>
               <UIInput placeholder="Wprowadź numer rejestracyjny" {...register('registrationNumber')} />
             </UIGroup>
-            {/* <UIGroup header="Kategoria prawa jazdy" error={errors.deviceType} required>
-              <UIInput
-                type="number"
-                placeholder="Wprowadź numer rejestracyjny"
-                {...register('pricePerKm', { valueAsNumber: true })}
-              />
-            </UIGroup> */}
             <UIGroup header="Cena za km (PLN)" error={errors.pricePerKm} required>
               <UIInput
                 type="number"
@@ -122,10 +117,10 @@ export default function Form({ id, isEdit, data }: FormProps) {
               />
             </UIGroup>
             <UIGroup header="Data przeglądu" error={errors.inspectionDate}>
-              <UIInput placeholder="Wprowadź " {...register('inspectionDate')} />
+              <UIDatepicker placeholder="Wybierz datę przeglądu" name="inspectionDate" control={control} />
             </UIGroup>
             <UIGroup header="Data ubezpieczenia" error={errors.insuranceDate}>
-              <UIInput placeholder="Wprowadź numer rejestracyjny" {...register('insuranceDate')} />
+              <UIDatepicker placeholder="Wybierz datę ubezpieczenia" name="insuranceDate" control={control} />
             </UIGroup>
             <UIGroup header="Opis" error={errors.description}>
               <UITextarea rows={3} placeholder="Wprowadź opis" {...register('description')} />
