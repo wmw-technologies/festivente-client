@@ -40,7 +40,7 @@ export default function UICard({ name, type = 'date', placeholder, control }: UI
         showTimeSelect={type === 'datetime'}
         onChange={(date) => field.onChange(date)}
       />
-      <div className="icons">
+      <div className="buttons">
         {field.value != null ? (
           <div className="clear-button" onClick={(e) => handleClearValue(e)}>
             <UIIcon name="XCircleIcon" smaller />
