@@ -35,6 +35,7 @@ export default function UICard({ name, type = 'date', placeholder, control }: UI
         className="datepicker-input"
         selected={field.value}
         locale={'pl'}
+        dateFormat={type === 'datetime' ? 'dd.MM.YYYY, HH:mm' : 'dd.MM.YYYY'}
         placeholderText={placeholder}
         showTimeSelect={type === 'datetime'}
         onChange={(date) => field.onChange(date)}

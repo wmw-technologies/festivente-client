@@ -175,8 +175,11 @@ export interface Service {
   _id: string;
   returnDate: string;
   serviceDate: string;
-  servicePerson: Array<Employee>;
-  devices: Array<Device>;
+  repairPrice: number;
+  servicePerson: Employee;
+  device: Device;
+  description: string;
+  status: 'Available' | 'Out of stock';
   createdAt: string;
   updatedAt: string;
 }

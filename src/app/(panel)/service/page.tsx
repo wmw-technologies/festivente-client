@@ -1,12 +1,13 @@
 import { cookies } from 'next/headers';
 import { Column, ResponseAPI, Pager, Pagination, Service } from '@/src/types';
 import { getPager } from '@/src/utils/pager';
-import { formatDateTime } from '@/src/utils/format';
+import { formatDateTime, formatCurrency } from '@/src/utils/format';
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
 import UITable from '@/src/components/UI/Table';
 import UIPagination from '@/src/components/UI/Pagination';
+import UIBadge from '@/src/components/UI/Badge';
 import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 
 type ServiceProps = {
@@ -44,25 +45,26 @@ export default async function ServicePage({ searchParams }: ServiceProps) {
   const columns: Array<Column> = [
     {
       id: 1,
-      header: 'Data zwrotu',
+      header: 'Data przyjęcia urządzenia',
       item: (item: Service) => <span>{formatDateTime(item.returnDate)}</span>
     },
     {
       id: 2,
-      header: 'Data serwisu',
+      header: 'Data zakończenia serwisu',
       item: (item: Service) => <span>{formatDateTime(item.serviceDate)}</span>
     },
     {
       id: 3,
-      header: 'Serwisant',
-      item: (item: Service) => (
-        <span>
-          {item.servicePerson.at(0)?.firstName} {item.servicePerson.at(0)?.lastName}
-        </span>
-      )
+      header: 'Koszt naprawy',
+      item: (item: Service) => <span>{formatCurrency(item.repairPrice)}</span>
     },
     {
       id: 4,
+      header: 'Status',
+      item: (item: Service) => <UIBadge variant={item.status === 'Available' ? 'success' : 'secondary'}>asd</UIBadge>
+    },
+    {
+      id: 5,
       header: '',
       item: (item: Service) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>

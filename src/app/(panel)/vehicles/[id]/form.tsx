@@ -117,10 +117,10 @@ export default function Form({ id, isEdit, data }: FormProps) {
               />
             </UIGroup>
             <UIGroup header="Data przeglądu" error={errors.inspectionDate}>
-              <UIDatepicker placeholder="Wybierz datę przeglądu" name="inspectionDate" control={control} />
+              <UIDatepicker name="inspectionDate" placeholder="Wybierz datę przeglądu" control={control} />
             </UIGroup>
             <UIGroup header="Data ubezpieczenia" error={errors.insuranceDate}>
-              <UIDatepicker placeholder="Wybierz datę ubezpieczenia" name="insuranceDate" control={control} />
+              <UIDatepicker name="insuranceDate" placeholder="Wybierz datę ubezpieczenia" control={control} />
             </UIGroup>
             <UIGroup header="Opis" error={errors.description}>
               <UITextarea rows={3} placeholder="Wprowadź opis" {...register('description')} />

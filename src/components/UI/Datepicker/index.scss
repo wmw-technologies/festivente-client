@@ -73,6 +73,10 @@
       }
     }
 
+    .react-datepicker__time-list-item--selected {
+      background-color: var(--f-primary) !important;
+    }
+
     .react-datepicker__day--keyboard-selected {
       background: var(--f-primary-light);
 

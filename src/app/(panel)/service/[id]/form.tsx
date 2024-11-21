@@ -14,12 +14,16 @@ import UICard from '@/src/components/UI/Card';
 import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
 import UISelect from '@/src/components/UI/Select';
+import UIDatepicker from '@/src/components/UI/Datepicker';
+import UITextarea from '@/src/components/UI/Textarea';
 
 const schema = z.object({
-  returnDate: z.any().optional().nullable(),
-  serviceDate: z.date(),
-  servicePerson: z.array(z.string()).min(1),
-  devices: z.array(z.string()).min(1)
+  returnDate: z.date(),
+  serviceDate: z.date().optional(),
+  repairPrice: z.number().min(0).optional(),
+  servicePerson: z.string().optional(),
+  device: z.string(),
+  description: z.string().max(256).optional()
 });
 
 export type Schema = z.infer<typeof schema>;
@@ -35,7 +39,7 @@ type FormProps = {
 export default function Form({ id, isEdit, data, employees, devices }: FormProps) {
   const router = useRouter();
   const title = isEdit
-    ? `Formularz edycji urządzenia serwisowanego: ${data?._id}`
+    ? `Formularz edycji urządzenia serwisowanego: ${data?.device?.warehouseId}`
     : 'Formularz dodawania urządzenia w serwisie';
 
   const {
@@ -51,6 +55,7 @@ export default function Form({ id, isEdit, data, employees, devices }: FormProps
 
   async function onSubmit(form: Schema) {
     try {
+      console.log('form', form);
       const response = !isEdit ? await create(form) : await update(id, form);
 
       if (!response?.ok) throw response;
@@ -71,16 +76,17 @@ export default function Form({ id, isEdit, data, employees, devices }: FormProps
   }
 
   function init() {
-    if (!data) return;
+    if (!data) {
+      setValue('returnDate', new Date());
+      return;
+    }
 
-    setValue(
-      'servicePerson',
-      data.servicePerson.map((item) => item._id)
-    );
-    setValue(
-      'devices',
-      data.devices.map((item) => item._id)
-    );
+    setValue('returnDate', new Date(data.returnDate));
+    setValue('serviceDate', data.serviceDate ? new Date(data.serviceDate) : undefined);
+    setValue('repairPrice', data.repairPrice);
+    setValue('servicePerson', data.servicePerson?._id);
+    setValue('device', data.device?._id);
+    setValue('description', data.description);
   }
 
   useEffect(() => {
@@ -111,39 +117,47 @@ export default function Form({ id, isEdit, data, employees, devices }: FormProps
       <form id="service-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
           <div className="col-4">
-            <UIGroup header="Data zwrotu urządzenia" error={errors.returnDate}>
-              <UIInput
-                type="datetime-local"
-                placeholder="Wprowadź zwrotu urządzenia"
-                autocomplete="name"
-                {...register('returnDate', { valueAsDate: true })}
+            <UIGroup header="Data przyjęcia urządzenia" error={errors.returnDate} required>
+              <UIDatepicker
+                name="returnDate"
+                type="datetime"
+                placeholder="Wybierz datę przyjęcia urządzenia"
+                control={control}
               />
             </UIGroup>
-            <UIGroup header="Data serwisu" error={errors.serviceDate} required>
-              <UIInput
-                type="datetime-local"
-                placeholder="Wprowadź datę serwisu"
-                autocomplete="name"
-                {...register('serviceDate', { valueAsDate: true })}
+            <UIGroup header="Data zakończenia serwisu" error={errors.serviceDate}>
+              <UIDatepicker
+                name="serviceDate"
+                type="datetime"
+                placeholder="Wybierz datę zakończenia serwisu"
+                control={control}
               />
             </UIGroup>
-            <UIGroup header="Osoba serwisująca" error={errors.servicePerson} required>
+            <UIGroup header="Koszt naprawy (PLN)" error={errors.repairPrice}>
+              <UIInput
+                placeholder="Wprowadź koszt naprawy"
+                type="number"
+                {...register('repairPrice', { setValueAs: (v) => (v ? parseFloat(v) : undefined) })}
+              />
+            </UIGroup>
+            <UIGroup header="Osoba serwisująca" error={errors.servicePerson}>
               <UISelect
                 name="servicePerson"
-                placeholder="Wybierz pracownika/ów"
-                multiselect
+                placeholder="Wybierz osobę serwisującą"
                 options={employees}
                 control={control}
               />
             </UIGroup>
-            <UIGroup header="Urządzenia serwisowane" error={errors.devices} required>
+            <UIGroup header="Urządzenie serwisowane" error={errors.device} required>
               <UISelect
-                name="devices"
-                placeholder="Wybierz pracownika/ów"
-                multiselect
+                name="device"
+                placeholder="Wybierz urządzenie serwisowane"
                 options={devices}
                 control={control}
               />
+            </UIGroup>
+            <UIGroup header="Opis" error={errors.description}>
+              <UITextarea rows={3} placeholder="Wprowadź opis" {...register('description')} />
             </UIGroup>
           </div>
         </div>
