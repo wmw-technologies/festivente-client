@@ -1,11 +1,11 @@
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
-import styles from './page.module.scss';
 import { cookies } from 'next/headers';
 import { Column, Device, Rental, ResponseAPI } from '@/src/types';
 import { dashIfEmpty, formatCurrency, formatDateTime } from '@/src/utils/format';
 import UITable from '@/src/components/UI/Table';
+import UIDetails from '@/src/components/UI/Details';
 
 type DetailsProps = {
   params: {
@@ -67,7 +67,13 @@ const columns: Array<Column> = [
     id: 6,
     header: 'Dodane przez',
     item: (item: Device) => (
-      <span>{dashIfEmpty(`${item.warehouseId.createdBy.first_name} ${item.warehouseId.createdBy.last_name}`)}</span>
+      <span>
+        {dashIfEmpty(
+          item.warehouseId.createdBy.first_name || item.warehouseId.createdBy.last_name === undefined
+            ? undefined
+            : `${item.warehouseId.createdBy.first_name} ${item.warehouseId.createdBy.last_name}`
+        )}
+      </span>
     )
   },
   {
@@ -80,6 +86,22 @@ const columns: Array<Column> = [
 export default async function RentalsDetailsPage({ params }: DetailsProps) {
   const { id } = params;
   const data = await fetchData(id);
+  const details = [
+    { detailName: 'Nazwa klienta', detailData: data?.clientName },
+    { detailName: 'Miasto', detailData: data?.clientCity },
+    { detailName: 'Ulica', detailData: data?.clientStreet },
+    { detailName: 'Kod pocztowy', detailData: data?.clientPostCode },
+    { detailName: 'Email klienta', detailData: data?.clientEmail },
+    { detailName: 'Telefon klienta', detailData: data?.clientPhone },
+    { detailName: 'Wartość', detailData: formatCurrency(data?.inTotal ?? 0) },
+    { detailName: 'Data wypożyczenia', detailData: formatDateTime(data?.rentalDate) },
+    { detailName: 'Data zwrotu', detailData: formatDateTime(data?.returnDate) },
+    { detailName: 'Data dodania', detailData: formatDateTime(data?.createdAt) },
+    { detailName: 'Data ostatniej aktualizacji', detailData: formatDateTime(data?.updatedAt) },
+    { detailName: 'Status', detailData: data?.status },
+    { detailName: 'Opis', detailData: data?.notes }
+  ];
+
   return (
     <UICard
       header={
@@ -90,15 +112,8 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
         </UIPanel>
       }
     >
-      <div className={styles['details-container']}>
-        <h2>{data?._id}</h2>
-        <div className={styles.details}>
-          <div>
-            <span>Nazwa klienta</span>
-            <p>{data?.clientName}</p>
-          </div>
-        </div>
-      </div>
+      <UIDetails header={data?._id} details={details} />
+
       <UITable columns={columns} data={data?.devices ?? []} />
     </UICard>
   );

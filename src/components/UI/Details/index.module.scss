@@ -24,7 +24,8 @@
 }
 
 .details {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2.6rem;
+  display: grid;
+  grid-auto-flow: row;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 3rem;
 }

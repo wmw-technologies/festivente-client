@@ -87,6 +87,7 @@ export default async function TransportPage({ searchParams }: TransportProps) {
       header: '',
       item: (item: Transport) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>
+          <UIDropdownItem href={`/transport/${item._id}/details`}>Szczegóły</UIDropdownItem>
           <UIDropdownItem href={`/transport/${item._id}`}>Edytuj</UIDropdownItem>
         </UIDropdown>
       ),

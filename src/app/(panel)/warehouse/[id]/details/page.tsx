@@ -1,11 +1,11 @@
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
-import styles from './page.module.scss';
 import { cookies } from 'next/headers';
 import { Column, Device, ResponseAPI, Warehouse } from '@/src/types';
 import { dashIfEmpty, formatCurrency, formatDateTime } from '@/src/utils/format';
 import UITable from '@/src/components/UI/Table';
+import UIDetails from '@/src/components/UI/Details';
 
 type DetailsProps = {
   params: {
@@ -72,6 +72,18 @@ const columns: Array<Column> = [
 export default async function WarehouseDetailsPage({ params }: DetailsProps) {
   const { id } = params;
   const data = await fetchData(id);
+
+  const details = [
+    { detailName: 'Producent', detailData: data?.manufacturer },
+    { detailName: 'SKU', detailData: data?.skuNumber },
+    { detailName: 'Kategoria', detailData: data?.category },
+    { detailName: 'Wartość wynajmu za dzień', detailData: formatCurrency(data?.rentalValue ?? 0) },
+    { detailName: 'Dodane przez', detailData: `${data?.createdBy.first_name} ${data?.createdBy.last_name}` },
+    { detailName: 'Data dodania', detailData: formatDateTime(data?.createdAt) },
+    { detailName: 'Data ostatniej aktualizacji', detailData: formatDateTime(data?.updatedAt) },
+    { detailName: 'Status', detailData: data?.status },
+    { detailName: 'Opis', detailData: data?.description }
+  ];
   return (
     <UICard
       header={
@@ -82,44 +94,8 @@ export default async function WarehouseDetailsPage({ params }: DetailsProps) {
         </UIPanel>
       }
     >
-      <div className={styles['details-container']}>
-        <h2>{data?.name}</h2>
-        <div className={styles.details}>
-          <div>
-            <span>Producent:</span>
-            <p>{data?.manufacturer}</p>
-          </div>
-          <div>
-            <span>SKU:</span>
-            <p> {data?.skuNumber}</p>
-          </div>
-          <div>
-            <span>Kategoria:</span> <p>{data?.category}</p>
-          </div>
-          <div>
-            <span>Wartość wynajmu za dzień:</span> <p>{formatCurrency(data?.rentalValue ?? 0)}</p>
-          </div>
-          <div>
-            <span>Dodane przez:</span>
-            <p>
-              {data?.createdBy.first_name} {data?.createdBy.last_name}
-            </p>
-          </div>
-          <div>
-            <span>Data dodania:</span> <p>{formatDateTime(data?.createdAt)}</p>
-          </div>
-          <div>
-            <span>Data ostatniej aktualizacji:</span> <p>{formatDateTime(data?.updatedAt)}</p>
-          </div>
-          <div>
-            <span>Status:</span>
-            <p> {data?.status}</p>
-          </div>
-          <div>
-            <span>Opis:</span> <p>{data?.description}</p>
-          </div>
-        </div>
-      </div>
+      <UIDetails details={details} header={data?.name} />
+
       <UITable columns={columns} data={data?.devices ?? []} />
     </UICard>
   );
