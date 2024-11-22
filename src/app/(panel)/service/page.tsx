@@ -68,6 +68,7 @@ export default async function ServicePage({ searchParams }: ServiceProps) {
       header: '',
       item: (item: Service) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>
+          <UIDropdownItem href={`/service/${item._id}/details`}>Szczegóły</UIDropdownItem>
           <UIDropdownItem href={`/service/${item._id}`}>Edytuj</UIDropdownItem>
         </UIDropdown>
       ),
