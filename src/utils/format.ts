@@ -18,7 +18,9 @@ export function formatDateTime(date?: string) {
   });
 }
 
-export function formatCurrency(value: number, currency: string = 'PLN') {
+export function formatCurrency(value?: number, currency: string = 'PLN') {
+  if (value == null) return '-';
+
   return new Intl.NumberFormat('pl-PL', {
     style: 'currency',
     currency

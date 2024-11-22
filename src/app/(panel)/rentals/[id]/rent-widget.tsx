@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { Device } from '@/src/types';
 import { Schema } from './form';
-import { FieldErrors, useController, Control, UseFormSetValue } from 'react-hook-form';
+import { FieldErrors, useController, Control, UseFormSetValue, set } from 'react-hook-form';
 import { formatCurrency } from '@/src/utils/format';
 import styles from './rent-widget.module.scss';
 import UIInput from '@/src/components/UI/Input';
@@ -16,12 +16,25 @@ type RentWidegetProps = {
 };
 
 export default function RentWidget({ availableDevices, control, errors, setValue }: RentWidegetProps) {
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const { field } = useController({
+  const { field: deviceIds } = useController({
     control,
     name: 'devices',
     defaultValue: []
   });
+
+  const { field: rentalDate } = useController({
+    control,
+    name: 'rentalDate'
+  });
+
+  const { field: returnDate } = useController({
+    control,
+    name: 'returnDate'
+  });
+
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [addedDevices, setAddedDevices] = useState<Device[]>([]);
+  const [rentalDays, setRentalDays] = useState<number>(0);
 
   const filteredDevices = availableDevices.filter(
     (device) =>
@@ -29,31 +42,50 @@ export default function RentWidget({ availableDevices, control, errors, setValue
         device.warehouseId.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         device.warehouseId.skuNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
         device.serialNumber?.toLowerCase?.().includes?.(searchQuery.toLowerCase())) &&
-      !field.value.includes(device._id)
+      !deviceIds.value.includes(device._id)
   );
 
-  const addedDevices = availableDevices.filter((device) => field.value.some((id: string) => id === device._id));
+  function calculateRentalDays(rentalDate: string, returnDate: string): number {
+    const startDate = new Date(rentalDate);
+    const endDate = new Date(returnDate);
+    const timeDifference = endDate.getTime() - startDate.getTime();
+    const dayDifference = timeDifference / (1000 * 3600 * 24);
+    return Math.ceil(dayDifference);
+  }
+
   const countInTotal = addedDevices.reduce((acc, device) => acc + device.warehouseId.rentalValue, 0);
 
-  useEffect(() => {
-    setValue('inTotal', countInTotal);
-  }, [addedDevices]);
-
   const addDeviceToRental = (device: Device) => {
-    const isDeviceAdded = field.value.some((id: string) => id === device._id);
+    const isDeviceAdded = deviceIds.value.some((id: string) => id === device._id);
 
     if (isDeviceAdded) return;
 
-    field.onChange([...field.value, device._id]);
+    deviceIds.onChange([...deviceIds.value, device._id]);
+    setAddedDevices([...addedDevices, device]);
+    setValue('inTotal', (countInTotal + device.warehouseId.rentalValue) * rentalDays);
+    console.log(rentalDays);
   };
 
   const removeDeviceFromRental = (device: Device) => {
-    const isDeviceAdded = field.value.some((id: string) => id === device._id);
+    const isDeviceAdded = deviceIds.value.some((id: string) => id === device._id);
 
     if (!isDeviceAdded) return;
 
-    field.onChange(field.value.filter((id: string) => id !== device._id));
+    deviceIds.onChange(deviceIds.value.filter((id: string) => id !== device._id));
+    setAddedDevices(addedDevices.filter((addedDevice) => addedDevice._id !== device._id));
+    setValue('inTotal', (countInTotal - device.warehouseId.rentalValue) * rentalDays);
+    console.log(rentalDays);
   };
+
+  useEffect(() => {
+    setRentalDays(calculateRentalDays(rentalDate.value, returnDate.value));
+    if (rentalDays) setValue('inTotal', countInTotal * calculateRentalDays(rentalDate.value, returnDate.value));
+  }, [rentalDate.value, returnDate.value]);
+
+  useEffect(() => {
+    if (deviceIds.value)
+      setAddedDevices(availableDevices.filter((device) => deviceIds.value.some((id: string) => id === device._id)));
+  }, [deviceIds.value]);
 
   return (
     <div className="row">

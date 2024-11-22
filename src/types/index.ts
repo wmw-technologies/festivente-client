@@ -140,6 +140,17 @@ export interface Event {
   updatedAt: string;
 }
 
+export interface Vehicle {
+  _id: string;
+  registrationNumber: string;
+  pricePerKm: number;
+  insuranceDate: string;
+  inspectionDate: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Transport {
   _id: string;
   vehicleType: string;
@@ -164,8 +175,11 @@ export interface Service {
   _id: string;
   returnDate: string;
   serviceDate: string;
-  servicePerson: Array<Employee>;
-  devices: Array<Device>;
+  repairPrice: number;
+  servicePerson: Employee;
+  device: Device;
+  description: string;
+  status: 'Available' | 'Out of stock';
   createdAt: string;
   updatedAt: string;
 }

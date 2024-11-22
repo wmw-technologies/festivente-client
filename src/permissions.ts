@@ -4,8 +4,7 @@ export default class Permissions {
   };
 
   static readonly WAREHOUSE = {
-    ACCESS: 'warehouse.access',
-    ADD: 'warehouse.add'
+    ACCESS: 'warehouse.access'
   };
 
   static readonly RENTALS = {
@@ -18,6 +17,10 @@ export default class Permissions {
 
   static readonly EVENTS = {
     ACCESS: 'events.access'
+  };
+
+  static readonly VEHICLES = {
+    ACCESS: 'vehicles.access'
   };
 
   static readonly TRANSPORT = {
