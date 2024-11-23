@@ -11,6 +11,21 @@ export const warehouseStatuses: Option[] = [
   }
 ];
 
+export const methodOfPayments: Option[] = [
+  {
+    text: 'Gotówka',
+    value: 'Cash'
+  },
+  {
+    text: 'Przelew',
+    value: 'Transfer'
+  },
+  {
+    text: 'Karta',
+    value: 'Card'
+  }
+];
+
 export const warehouseCategories: Option[] = [
   {
     text: 'Elektronika',

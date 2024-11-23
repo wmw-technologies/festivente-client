@@ -15,9 +15,12 @@ import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
 import UITextarea from '@/src/components/UI/Textarea';
 import RentWidget from './rent-widget';
+import { methodOfPayments } from '@/src/constants';
+import UISelect from '@/src/components/UI/Select';
 
 const schema = z.object({
   clientName: z.string().min(1, 'Nazwa klienta jest wymagana'),
+  clientNip: z.string().optional(),
   clientCity: z.string().min(1, 'Miasto jest wymagane'),
   clientStreet: z.string().min(1, 'Ulica jest wymagana'),
   clientPostCode: z.string().regex(/^\d{2}-\d{3}$/, 'Kod pocztowy musi być w formacie XX-XXX'),
@@ -30,6 +33,8 @@ const schema = z.object({
     .number()
     .refine((val) => val >= 0, { message: 'Amount must be positive' })
     .refine((val) => val <= 100000, { message: 'Amount must be less than or equal to 100,000 PLN' }),
+  discount: z.number().min(0, 'Minimum 0%').max(100, 'Maksimum 100%').optional(),
+  methodOfPayment: z.string().optional().nullable(),
   notes: z.string().optional()
 });
 
@@ -126,18 +131,14 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
             <UIGroup header="Nazwa klienta" error={errors.clientName} required>
               <UIInput placeholder="Wprowadź nazwę" {...register('clientName')} />
             </UIGroup>
+            <UIGroup header="NIP" error={errors.clientNip}>
+              <UIInput placeholder="Wprowadź NIP" {...register('clientNip')} />
+            </UIGroup>
             <UIGroup header="Numer telefonu" error={errors.clientPhone} required>
               <UIInput placeholder="Wprowadź numer telefonu" {...register('clientPhone')} />
             </UIGroup>
             <UIGroup header="Email" error={errors.clientEmail} required>
               <UIInput placeholder="Wprowadź email" {...register('clientEmail')} />
-            </UIGroup>
-            <UIGroup header="Wartość" error={errors.inTotal} required>
-              <UIInput
-                type="number"
-                placeholder="Wprowadź wartość wypożyczenia"
-                {...register('inTotal', { valueAsNumber: true })}
-              />
             </UIGroup>
           </div>
           <div className="col-3">
@@ -146,6 +147,16 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
             </UIGroup>
             <UIGroup header="Data zwrotu" error={errors.returnDate} required>
               <UIInput type="date" {...register('returnDate')} />
+            </UIGroup>
+            <UIGroup header="Wartość" error={errors.inTotal} required>
+              <UIInput
+                type="number"
+                placeholder="Wprowadź wartość wypożyczenia"
+                {...register('inTotal', { valueAsNumber: true })}
+              />
+            </UIGroup>
+            <UIGroup header="Procent rabatu" error={errors.discount}>
+              <UIInput type="number" placeholder="Wprowadź rabat" {...register('discount', { valueAsNumber: true })} />
             </UIGroup>
           </div>
           <div className="col-3">
@@ -160,6 +171,14 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
             </UIGroup>
           </div>
           <div className="col-3">
+            <UIGroup header="Sposób płatności" error={errors.methodOfPayment}>
+              <UISelect
+                name="methodOfPayment"
+                placeholder="Metoda płatności"
+                options={methodOfPayments}
+                control={control}
+              />
+            </UIGroup>
             <UIGroup header="Uwagi" error={errors.notes}>
               <UITextarea rows={3} placeholder="Uwagi do wypożyczenia" {...register('notes')} />
             </UIGroup>

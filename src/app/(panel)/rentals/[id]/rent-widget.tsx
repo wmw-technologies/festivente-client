@@ -32,6 +32,11 @@ export default function RentWidget({ availableDevices, control, errors, setValue
     name: 'returnDate'
   });
 
+  const { field: discount } = useController({
+    control,
+    name: 'discount'
+  });
+
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [addedDevices, setAddedDevices] = useState<Device[]>([]);
   const [rentalDays, setRentalDays] = useState<number>(0);
@@ -50,7 +55,9 @@ export default function RentWidget({ availableDevices, control, errors, setValue
     const endDate = new Date(returnDate);
     const timeDifference = endDate.getTime() - startDate.getTime();
     const dayDifference = timeDifference / (1000 * 3600 * 24);
-    return Math.ceil(dayDifference);
+    console.log(startDate, endDate, timeDifference, dayDifference);
+
+    return dayDifference ? Math.ceil(dayDifference) : 1;
   }
 
   const countInTotal = addedDevices.reduce((acc, device) => acc + device.warehouseId.rentalValue, 0);
@@ -62,8 +69,9 @@ export default function RentWidget({ availableDevices, control, errors, setValue
 
     deviceIds.onChange([...deviceIds.value, device._id]);
     setAddedDevices([...addedDevices, device]);
-    setValue('inTotal', (countInTotal + device.warehouseId.rentalValue) * rentalDays);
-    console.log(rentalDays);
+    const totalWithoutDiscount = countInTotal + device.warehouseId.rentalValue;
+    const discountAmount = ((discount.value ?? 0) / 100) * totalWithoutDiscount;
+    setValue('inTotal', totalWithoutDiscount - discountAmount);
   };
 
   const removeDeviceFromRental = (device: Device) => {
@@ -73,14 +81,19 @@ export default function RentWidget({ availableDevices, control, errors, setValue
 
     deviceIds.onChange(deviceIds.value.filter((id: string) => id !== device._id));
     setAddedDevices(addedDevices.filter((addedDevice) => addedDevice._id !== device._id));
-    setValue('inTotal', (countInTotal - device.warehouseId.rentalValue) * rentalDays);
-    console.log(rentalDays);
+    const totalWithoutDiscount = countInTotal - device.warehouseId.rentalValue;
+    const discountAmount = ((discount.value ?? 0) / 100) * totalWithoutDiscount;
+    setValue('inTotal', totalWithoutDiscount - discountAmount);
   };
 
   useEffect(() => {
     setRentalDays(calculateRentalDays(rentalDate.value, returnDate.value));
-    if (rentalDays) setValue('inTotal', countInTotal * calculateRentalDays(rentalDate.value, returnDate.value));
-  }, [rentalDate.value, returnDate.value]);
+    if (rentalDays) {
+      const totalWithoutDiscount = countInTotal * calculateRentalDays(rentalDate.value, returnDate.value);
+      const discountAmount = ((discount.value ?? 0) / 100) * totalWithoutDiscount;
+      setValue('inTotal', totalWithoutDiscount - discountAmount);
+    }
+  }, [rentalDate.value, returnDate.value, discount.value]);
 
   useEffect(() => {
     if (deviceIds.value)

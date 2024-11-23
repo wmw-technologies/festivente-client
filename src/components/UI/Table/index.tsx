@@ -33,45 +33,47 @@ export default function UITable({ columns, pager, data, noHeader }: UITableProps
   }
 
   return (
-    <table className={styles.table}>
-      {!noHeader && (
-        <thead className={styles.thead}>
-          <tr>
-            {columns.map((column) => (
-              <th key={column.id} style={{ width: column.width }}>
-                {column.sort ? (
-                  <Link href={href(column.sort)} className={`${styles.sortButton} ${activeClass(column)}`}>
+    <div className={styles['table-overflow']}>
+      <table className={styles.table}>
+        {!noHeader && (
+          <thead className={styles.thead}>
+            <tr>
+              {columns.map((column) => (
+                <th key={column.id} style={{ width: column.width }}>
+                  {column.sort ? (
+                    <Link href={href(column.sort)} className={`${styles.sortButton} ${activeClass(column)}`}>
+                      <span>{column.header}</span>
+                      <div className={styles.arrow}>
+                        <UIIcon name="ArrowDownCircleIcon" smaller />
+                      </div>
+                    </Link>
+                  ) : (
                     <span>{column.header}</span>
-                    <div className={styles.arrow}>
-                      <UIIcon name="ArrowDownCircleIcon" smaller />
-                    </div>
-                  </Link>
-                ) : (
-                  <span>{column.header}</span>
-                )}
-              </th>
-            ))}
-          </tr>
-        </thead>
-      )}
-      <tbody className={styles.tbody}>
-        {data.map((item, index) => (
-          <tr key={index}>
-            {columns.map((column) => (
-              <td key={column.id} style={{ width: column.width }}>
-                {column.item(item, index)}
-              </td>
-            ))}
-          </tr>
-        ))}
-        {data.length === 0 && (
-          <tr>
-            <td colSpan={columns.length} className={styles.empty}>
-              Brak danych
-            </td>
-          </tr>
+                  )}
+                </th>
+              ))}
+            </tr>
+          </thead>
         )}
-      </tbody>
-    </table>
+        <tbody className={styles.tbody}>
+          {data.map((item, index) => (
+            <tr key={index}>
+              {columns.map((column) => (
+                <td key={column.id} style={{ width: column.width }}>
+                  {column.item(item, index)}
+                </td>
+              ))}
+            </tr>
+          ))}
+          {data.length === 0 && (
+            <tr>
+              <td colSpan={columns.length} className={styles.empty}>
+                Brak danych
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 }

@@ -21,6 +21,7 @@ const UIInput = forwardRef<HTMLInputElement, UIInputProps>(function UIInput(
       name={name}
       ref={ref}
       type={type}
+      min={type === 'number' ? 0 : undefined}
       placeholder={placeholder}
       disabled={disabled}
       autoComplete={autocomplete}

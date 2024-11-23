@@ -93,6 +93,7 @@ export interface Device {
 export interface Rental {
   _id: string;
   clientName: string;
+  clientNIP?: string;
   clientCity: string;
   clientStreet: string;
   clientPostCode: string;
@@ -100,6 +101,7 @@ export interface Rental {
   clientEmail: string;
   rentalDate: string;
   returnDate: string;
+  methodOfPayment: 'Cash' | 'Card' | 'Transfer';
   inTotal: number;
   notes?: string;
   status: string;
