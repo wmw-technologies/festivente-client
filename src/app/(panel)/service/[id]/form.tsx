@@ -156,7 +156,7 @@ export default function Form({ id, isEdit, data, employees, devices }: FormProps
               />
             </UIGroup>
             <UIGroup header="Opis" error={errors.description}>
-              <UITextarea rows={4} placeholder="Wprowadź opis" {...register('description')} />
+              <UITextarea rows={3} placeholder="Wprowadź opis" {...register('description')} />
             </UIGroup>
           </div>
         </div>

@@ -133,7 +133,7 @@ export default function Form({ id, isEdit, data }: FormProps) {
               <UIDatepicker name="insuranceDate" placeholder="Wybierz datę ubezpieczenia" control={control} />
             </UIGroup>
             <UIGroup header="Opis" error={errors.description}>
-              <UITextarea rows={4} placeholder="Wprowadź opis" {...register('description')} />
+              <UITextarea rows={3} placeholder="Wprowadź opis" {...register('description')} />
             </UIGroup>
           </div>
         </div>

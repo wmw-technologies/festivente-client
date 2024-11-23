@@ -72,17 +72,16 @@ export interface Warehouse {
   rentalValue: number;
   category?: string;
   description?: string | undefined;
-  isSerialTracked: boolean;
+  devices: Array<Device>;
   status: 'Available' | 'Out of stock';
   createdBy: User;
-  devices: Array<Device>;
   updatedAt: string;
   createdAt: string;
 }
 
 export interface Device {
   _id: string;
-  serialNumber?: string;
+  serialNumber: string;
   location: string;
   description?: string;
   warehouseId: Warehouse;

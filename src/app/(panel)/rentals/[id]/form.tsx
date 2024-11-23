@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { Device, Rental } from '@/src/types';
+import { paymentForms } from '@/src/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { create, update } from './actions';
@@ -16,9 +17,12 @@ import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
 import UITextarea from '@/src/components/UI/Textarea';
 import UIDatepicker from '@/src/components/UI/Datepicker';
+import UISelect from '@/src/components/UI/Select';
+import UITogglebox from '@/src/components/UI/Togglebox';
 
 const schema = z.object({
   clientName: z.string().min(1, 'Nazwa klienta jest wymagana'),
+  clientNip: z.string().min(1, 'NIP jest wymagany'),
   clientCity: z.string().min(1, 'Miasto jest wymagane'),
   clientStreet: z.string().min(1, 'Ulica jest wymagana'),
   clientPostCode: z.string().regex(/^\d{2}-\d{3}$/, 'Kod pocztowy musi być w formacie XX-XXX'),
@@ -26,6 +30,8 @@ const schema = z.object({
   clientEmail: z.string().email('Nieprawidłowy adres e-mail'),
   rentalDate: z.date(),
   returnDate: z.date(),
+  paymentForm: z.string().min(1, 'Płatność jest wymagana'),
+  isPaid: z.boolean(),
   devices: z.array(z.string()).min(1, 'W wypożyczeniu musi być przynajmniej jedno urządzenie'),
   inTotal: z
     .number()
@@ -49,6 +55,7 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
 
   const {
     register,
+    watch,
     control,
     formState: { errors, isSubmitting, isValid, isSubmitted },
     setValue,
@@ -57,6 +64,9 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
   } = useForm<Schema>({
     resolver: zodResolver(schema)
   });
+
+  const rentalDate = watch('rentalDate');
+  const returnDate = watch('returnDate');
 
   async function onSubmit(form: Schema) {
     try {
@@ -103,6 +113,15 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (rentalDate && returnDate) {
+      console.log('rentalDate', rentalDate);
+      // setValue('devices', []);
+    }
+    console.log('useEffect', rentalDate, returnDate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rentalDate, returnDate]);
+
   return (
     <UICard
       header={
@@ -127,33 +146,16 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
         <div className="row">
           <div className="col-3">
             <UIGroup header="Nazwa klienta" error={errors.clientName} required>
-              <UIInput placeholder="Wprowadź nazwę" {...register('clientName')} />
+              <UIInput placeholder="Wprowadź nazwę klienta" {...register('clientName')} />
+            </UIGroup>
+            <UIGroup header="NIP" error={errors.clientNip} required>
+              <UIInput placeholder="Wprowadź NIP" {...register('clientNip')} />
             </UIGroup>
             <UIGroup header="Numer telefonu" error={errors.clientPhone} required>
               <UIInput placeholder="Wprowadź numer telefonu" {...register('clientPhone')} />
             </UIGroup>
             <UIGroup header="Email" error={errors.clientEmail} required>
               <UIInput placeholder="Wprowadź email" {...register('clientEmail')} />
-            </UIGroup>
-            <UIGroup header="Wartość" error={errors.inTotal} required>
-              <UIInput
-                type="number"
-                placeholder="Wprowadź wartość wypożyczenia"
-                {...register('inTotal', { valueAsNumber: true })}
-              />
-            </UIGroup>
-          </div>
-          <div className="col-3">
-            <UIGroup header="Data wypożyczenia" error={errors.rentalDate} required>
-              <UIDatepicker
-                name="rentalDate"
-                type="datetime"
-                placeholder="Wybierz datę wypożyczenia"
-                control={control}
-              />
-            </UIGroup>
-            <UIGroup header="Data zwrotu" error={errors.returnDate} required>
-              <UIDatepicker name="returnDate" type="datetime" placeholder="Wybierz datę zwrotu" control={control} />
             </UIGroup>
           </div>
           <div className="col-3">
@@ -168,13 +170,47 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
             </UIGroup>
           </div>
           <div className="col-3">
+            <UIGroup header="Data wypożyczenia" error={errors.rentalDate} required>
+              <UIDatepicker
+                name="rentalDate"
+                type="datetime"
+                placeholder="Wybierz datę wypożyczenia"
+                control={control}
+              />
+            </UIGroup>
+            <UIGroup header="Data zwrotu" error={errors.returnDate} required>
+              <UIDatepicker name="returnDate" type="datetime" placeholder="Wybierz datę zwrotu" control={control} />
+            </UIGroup>
+            <UIGroup header="Koszt wypożyczenia" error={errors.inTotal} required>
+              <UIInput
+                type="number"
+                placeholder="Wprowadź wartość wypożyczenia"
+                {...register('inTotal', { valueAsNumber: true })}
+              />
+            </UIGroup>
+            <UIGroup header="Forma płatności" error={errors.paymentForm} required>
+              <UISelect
+                name="paymentForm"
+                placeholder="Wybierz formę płatności"
+                options={paymentForms}
+                control={control}
+              />
+            </UIGroup>
+            <UIGroup header="Zamówienie opłacone" error={errors.isPaid}>
+              <UITogglebox {...register('isPaid')} />
+            </UIGroup>
+          </div>
+          <div className="col-3">
             <UIGroup header="Uwagi" error={errors.notes}>
-              <UITextarea rows={4} placeholder="Uwagi do wypożyczenia" {...register('notes')} />
+              <UITextarea rows={3} placeholder="Uwagi do wypożyczenia" {...register('notes')} />
             </UIGroup>
           </div>
         </div>
-
-        <RentWidget availableDevices={availableDevices} control={control} errors={errors} setValue={setValue} />
+        {rentalDate && returnDate ? (
+          <RentWidget availableDevices={availableDevices} control={control} errors={errors} setValue={setValue} />
+        ) : (
+          <p className="mark">Wybierz datę wypożyczenia i zwrotu, aby dodać urządzenia do wypożyczenia.</p>
+        )}
       </form>
     </UICard>
   );

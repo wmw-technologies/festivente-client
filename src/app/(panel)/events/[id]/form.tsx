@@ -19,12 +19,13 @@ import UIDatepicker from '@/src/components/UI/Datepicker';
 
 const schema = z.object({
   eventName: z.string().min(3).max(64),
+  city: z.string().min(3).max(64),
+  location: z.string().min(3).max(64),
+  date: z.date(),
   clientName: z.string().min(3).max(64),
   clientEmail: z.string().email(),
   clientPhone: z.string().min(9).max(16),
-  date: z.date(),
   description: z.string().max(256).optional(),
-  location: z.string().min(3).max(64),
   budget: z
     .number()
     .refine((val) => val >= 0, { message: 'Amount must be positive' })
@@ -128,10 +129,10 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
         <div className="row">
           <div className="col-4">
             <UIGroup header="Nazwa wydarzenia" error={errors.eventName} required>
-              <UIInput placeholder="Wprowadź nazwę" autocomplete="name" {...register('eventName')} />
+              <UIInput placeholder="Wprowadź nazwę wydarzenia" autocomplete="name" {...register('eventName')} />
             </UIGroup>
-            <UIGroup header="Data wydarzenia" error={errors.date} required>
-              <UIDatepicker name="date" placeholder="Wprowadź data wydarzenia" control={control} />
+            <UIGroup header="Miasto wydarzenia" error={errors.city} required>
+              <UIInput placeholder="Wprowadź miasto wydarzenia" {...register('city')} />
             </UIGroup>
             <UIGroup header="Miejsce wydarzenia" error={errors.location} required>
               <UIInput
@@ -140,8 +141,11 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
                 {...register('location')}
               />
             </UIGroup>
+            <UIGroup header="Data wydarzenia" error={errors.date} required>
+              <UIDatepicker name="date" placeholder="Wprowadź data wydarzenia" control={control} />
+            </UIGroup>
             <UIGroup header="Opis wydarzenia" error={errors.description}>
-              <UITextarea rows={4} placeholder="Wprowadź opis wydarzenia" {...register('description')} />
+              <UITextarea rows={3} placeholder="Wprowadź opis wydarzenia" {...register('description')} />
             </UIGroup>
             <UIGroup header="Nazwa klienta" error={errors.clientName} required>
               <UIInput placeholder="Wprowadź nazwę klienta" autocomplete="name" {...register('clientName')} />
@@ -181,7 +185,7 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
               />
             </UIGroup>
             <UIGroup header="Uwagi" error={errors.notes}>
-              <UITextarea rows={4} placeholder="Wprowadź uwagi" {...register('notes')} />
+              <UITextarea rows={3} placeholder="Wprowadź uwagi" {...register('notes')} />
             </UIGroup>
           </div>
         </div>

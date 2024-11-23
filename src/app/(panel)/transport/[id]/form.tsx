@@ -141,7 +141,7 @@ export default function Form({ id, isEdit, data, vehicles, employees, events }: 
           </div>
           <div className="col-4">
             <UIGroup header="Notatki" error={errors.notes}>
-              <UITextarea rows={4} placeholder="Wprowadź opis wydarzenia" {...register('notes')} />
+              <UITextarea rows={3} placeholder="Wprowadź opis wydarzenia" {...register('notes')} />
             </UIGroup>
           </div>
         </div>

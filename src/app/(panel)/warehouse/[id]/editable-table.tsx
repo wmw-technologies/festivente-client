@@ -17,7 +17,6 @@ interface EditableTableProps {
   trigger: UseFormTrigger<Schema>;
   errors: FieldErrors<Schema>;
   control: Control<Schema>;
-  isSerialTracked?: boolean;
   isSubmitted: boolean;
 }
 
@@ -27,44 +26,30 @@ const defaultEmptyItem = {
   description: ''
 };
 
-export default function EditableTable({
-  register,
-  resetField,
-  trigger,
-  errors,
-  control,
-  isSerialTracked,
-  isSubmitted
-}: EditableTableProps) {
+export default function EditableTable({ register, trigger, errors, control, isSubmitted }: EditableTableProps) {
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'devices'
   });
 
-  useEffect(() => {
-    if (!isSerialTracked) {
-      fields.forEach((_, index) => {
-        resetField(`devices.${index}.serialNumber`);
-      });
-    }
+  const handleAddItem = () => {
+    append(defaultEmptyItem);
+  };
 
+  useEffect(() => {
     if (isSubmitted) {
       trigger('devices');
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSerialTracked, fields]);
-
-  const handleAddItem = () => {
-    append(defaultEmptyItem);
-  };
+  }, [fields]);
 
   return (
     <>
       <table className={`${styles.table} mb-4`}>
         <thead className={styles.thead}>
           <tr>
-            {isSerialTracked && <th>Numer urządzenia *</th>}
+            <th>Numer urządzenia *</th>
             <th>Lokalizacja *</th>
             <th>Opis </th>
             <th style={{ width: 64 }}></th>
@@ -73,17 +58,15 @@ export default function EditableTable({
         <tbody className={styles.tbody}>
           {fields.map((field, index) => (
             <tr key={field.id}>
-              {isSerialTracked && (
-                <td>
-                  <UIGroup error={errors.devices?.[index]?.serialNumber} nospace>
-                    <UIInput
-                      placeholder="Wprowadź numer seryjny"
-                      type="text"
-                      {...register(`devices.${index}.serialNumber`)}
-                    />
-                  </UIGroup>
-                </td>
-              )}
+              <td>
+                <UIGroup error={errors.devices?.[index]?.serialNumber} nospace>
+                  <UIInput
+                    placeholder="Wprowadź numer seryjny"
+                    type="text"
+                    {...register(`devices.${index}.serialNumber`)}
+                  />
+                </UIGroup>
+              </td>
               <td>
                 <UIGroup error={errors.devices?.[index]?.location} nospace>
                   <UIInput placeholder="Wprowadź lokalizację" type="text" {...register(`devices.${index}.location`)} />
@@ -103,7 +86,7 @@ export default function EditableTable({
           ))}
           {fields.length === 0 && (
             <tr>
-              <td colSpan={isSerialTracked ? 4 : 3} className={styles.empty}>
+              <td colSpan={4} className={styles.empty}>
                 Dodaj urządzenie, aby zobaczyć listę
               </td>
             </tr>
