@@ -86,6 +86,7 @@ export interface Device {
   description?: string;
   warehouseId: Warehouse;
   rentalId?: Rental;
+  serviceId?: Service;
   createdAt: string;
   updatedAt: string;
 }
@@ -93,18 +94,21 @@ export interface Device {
 export interface Rental {
   _id: string;
   clientName: string;
+  clientNIP: string;
+  clientPhone: string;
+  clientEmail: string;
   clientCity: string;
   clientStreet: string;
   clientPostCode: string;
-  clientPhone: string;
-  clientEmail: string;
   rentalDate: string;
   returnDate: string;
+  paymentForm: string;
+  isPaid: boolean;
+  devices: Array<Device>;
   inTotal: number;
   notes?: string;
   status: string;
   createdBy: User;
-  devices: Array<Device>;
   createdAt: string;
   updatedAt: string;
 }

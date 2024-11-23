@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { Column, ResponseAPI, Pager, Pagination, Warehouse } from '@/src/types';
+import { Column, ResponseAPI, Pager, Pagination, Warehouse, Device } from '@/src/types';
 import { getPager } from '@/src/utils/pager';
 import { warehouseCategories } from '@/src/constants';
 import { dashIfEmpty } from '@/src/utils/format';
@@ -42,6 +42,16 @@ async function fetchData(pager: Pager) {
   return data.data?.items ?? [];
 }
 
+function countRentals(devices: Array<Device>) {
+  if (!devices) return 0;
+  return devices.filter((item) => item.rentalId?._id).length;
+}
+
+function countServices(devices: Array<Device>) {
+  if (!devices) return 0;
+  return devices.filter((item) => item.serviceId?._id).length;
+}
+
 export default async function WarehousePage({ searchParams }: WarehouseProps) {
   const pager = getPager(searchParams);
   const data = await fetchData(pager);
@@ -73,25 +83,27 @@ export default async function WarehousePage({ searchParams }: WarehouseProps) {
     {
       id: 5,
       header: 'Ilość ogółem',
-      item: (item: Warehouse) => <span>{item.devices?.length ?? 0}</span>,
+      item: (item: Warehouse) => <span>{item.devices.length}</span>,
       align: 'right'
     },
     {
       id: 6,
       header: 'Ilość dostępnych',
-      item: (item: Warehouse) => <span>{item.devices?.length ?? 0}</span>,
+      item: (item: Warehouse) => (
+        <span>{item.devices.length - countRentals(item.devices) - countServices(item.devices)}</span>
+      ),
       align: 'right'
     },
     {
       id: 7,
       header: 'Ilość wypożyczonych',
-      item: (item: Warehouse) => <span>{item.devices?.length ?? 0}</span>,
+      item: (item: Warehouse) => <span>{countRentals(item.devices)}</span>,
       align: 'right'
     },
     {
       id: 8,
       header: 'Ilość w serwisie',
-      item: (item: Warehouse) => <span>{item.devices?.length ?? 0}</span>,
+      item: (item: Warehouse) => <span>{countServices(item.devices)}</span>,
       align: 'right'
     },
     {

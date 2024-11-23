@@ -1,13 +1,14 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { useDebounce } from '@uidotdev/usehooks';
 import { Device, Rental } from '@/src/types';
 import { paymentForms } from '@/src/constants';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { create, update } from './actions';
+import { create, update, availableDevices } from './actions';
 import toast from 'react-hot-toast';
 import RentWidget from './rent-widget';
 import UIPanel from '@/src/components/UI/Panel';
@@ -22,12 +23,12 @@ import UITogglebox from '@/src/components/UI/Togglebox';
 
 const schema = z.object({
   clientName: z.string().min(1, 'Nazwa klienta jest wymagana'),
-  clientNip: z.string().min(1, 'NIP jest wymagany'),
+  clientNIP: z.string().optional(),
+  clientPhone: z.string().min(1, 'Numer telefonu jest wymagany'),
+  clientEmail: z.string().email('Nieprawidłowy adres e-mail'),
   clientCity: z.string().min(1, 'Miasto jest wymagane'),
   clientStreet: z.string().min(1, 'Ulica jest wymagana'),
   clientPostCode: z.string().regex(/^\d{2}-\d{3}$/, 'Kod pocztowy musi być w formacie XX-XXX'),
-  clientPhone: z.string().min(1, 'Numer telefonu jest wymagany'),
-  clientEmail: z.string().email('Nieprawidłowy adres e-mail'),
   rentalDate: z.date(),
   returnDate: z.date(),
   paymentForm: z.string().min(1, 'Płatność jest wymagana'),
@@ -45,11 +46,15 @@ export type Schema = z.infer<typeof schema>;
 type FormProps = {
   isEdit: boolean;
   data: Rental | null;
-  availableDevices: Device[];
   id: string;
 };
 
-export default function Form({ id, isEdit, data, availableDevices }: FormProps) {
+async function fetchAvailableDevices(_id: string, rentalDate: Date, returnDate: Date) {
+  return await availableDevices(_id, rentalDate, returnDate);
+}
+
+export default function Form({ id, isEdit, data }: FormProps) {
+  const [availableDevices, setAvailableDevices] = useState<Device[]>([]);
   const router = useRouter();
   const title = isEdit ? `Formularz edycji wypożyczenia: ${data?.clientName}` : 'Formularz dodawania wypożyczenia';
 
@@ -67,6 +72,9 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
 
   const rentalDate = watch('rentalDate');
   const returnDate = watch('returnDate');
+
+  const debouncedRentalDate = useDebounce(rentalDate, 1000);
+  const debouncedReturnDate = useDebounce(returnDate, 1000);
 
   async function onSubmit(form: Schema) {
     try {
@@ -93,19 +101,22 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
     if (!data) return;
 
     setValue('clientName', data.clientName);
+    setValue('clientNIP', data.clientNIP);
     setValue('clientPhone', data.clientPhone);
-    setValue('rentalDate', new Date(data.rentalDate));
-    setValue('returnDate', new Date(data.returnDate));
-    setValue('inTotal', data.inTotal);
+    setValue('clientEmail', data.clientEmail);
     setValue('clientCity', data.clientCity);
     setValue('clientStreet', data.clientStreet);
     setValue('clientPostCode', data.clientPostCode);
-    setValue('clientEmail', data.clientEmail);
-    setValue('notes', data.notes);
+    setValue('rentalDate', new Date(data.rentalDate));
+    setValue('returnDate', new Date(data.returnDate));
+    setValue('paymentForm', data.paymentForm);
+    setValue('isPaid', data.isPaid);
     setValue(
       'devices',
       data.devices.map((device) => device._id)
     );
+    setValue('inTotal', data.inTotal);
+    setValue('notes', data.notes);
   }
 
   useEffect(() => {
@@ -114,13 +125,18 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
   }, []);
 
   useEffect(() => {
-    if (rentalDate && returnDate) {
-      console.log('rentalDate', rentalDate);
-      // setValue('devices', []);
+    async function fetchData(id: string, rentalDate: Date, returnDate: Date) {
+      const response = await fetchAvailableDevices(id, rentalDate, returnDate);
+
+      setAvailableDevices(response);
     }
-    console.log('useEffect', rentalDate, returnDate);
+
+    if (debouncedRentalDate && debouncedReturnDate) {
+      fetchData(id, debouncedRentalDate, debouncedReturnDate);
+    }
+    console.log('debouncedRentalDate', debouncedRentalDate);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rentalDate, returnDate]);
+  }, [debouncedRentalDate, debouncedReturnDate]);
 
   return (
     <UICard
@@ -148,8 +164,8 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
             <UIGroup header="Nazwa klienta" error={errors.clientName} required>
               <UIInput placeholder="Wprowadź nazwę klienta" {...register('clientName')} />
             </UIGroup>
-            <UIGroup header="NIP" error={errors.clientNip} required>
-              <UIInput placeholder="Wprowadź NIP" {...register('clientNip')} />
+            <UIGroup header="NIP" error={errors.clientNIP}>
+              <UIInput placeholder="Wprowadź NIP" {...register('clientNIP')} />
             </UIGroup>
             <UIGroup header="Numer telefonu" error={errors.clientPhone} required>
               <UIInput placeholder="Wprowadź numer telefonu" {...register('clientPhone')} />
@@ -170,7 +186,16 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
             </UIGroup>
           </div>
           <div className="col-3">
-            <UIGroup header="Data wypożyczenia" error={errors.rentalDate} required>
+            <UIGroup
+              header="Data wypożyczenia"
+              help={
+                rentalDate && returnDate
+                  ? 'Zmieniając datę wypożyczenia zawartość Twojego koszyka zostanie usunięta'
+                  : ''
+              }
+              error={errors.rentalDate}
+              required
+            >
               <UIDatepicker
                 name="rentalDate"
                 type="datetime"
@@ -178,7 +203,14 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
                 control={control}
               />
             </UIGroup>
-            <UIGroup header="Data zwrotu" error={errors.returnDate} required>
+            <UIGroup
+              header="Data zwrotu"
+              help={
+                rentalDate && returnDate ? 'Zmieniając datę zwrotu zawartość Twojego koszyka zostanie usunięta' : ''
+              }
+              error={errors.returnDate}
+              required
+            >
               <UIDatepicker name="returnDate" type="datetime" placeholder="Wybierz datę zwrotu" control={control} />
             </UIGroup>
             <UIGroup header="Koszt wypożyczenia" error={errors.inTotal} required>
@@ -206,7 +238,7 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
             </UIGroup>
           </div>
         </div>
-        {rentalDate && returnDate ? (
+        {debouncedRentalDate && debouncedReturnDate ? (
           <RentWidget availableDevices={availableDevices} control={control} errors={errors} setValue={setValue} />
         ) : (
           <p className="mark">Wybierz datę wypożyczenia i zwrotu, aby dodać urządzenia do wypożyczenia.</p>
