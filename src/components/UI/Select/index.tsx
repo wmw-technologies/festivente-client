@@ -26,9 +26,9 @@ export default function UISelect({ name, placeholder, multiselect, options = [],
   const show = () => setVisible(true);
   const hide = () => setVisible(false);
 
-  const value: string[] | string | null = field.value;
+  const value: string[] | string | undefined = field.value;
 
-  function getSelectedText(value: string | string[] | null) {
+  function getSelectedText(value: string | string[] | undefined) {
     return options.find((item) => item.value === value)?.text;
   }
 
@@ -40,7 +40,7 @@ export default function UISelect({ name, placeholder, multiselect, options = [],
   function handleClearValue(e: MouseEvent) {
     e.preventDefault();
     e.stopPropagation();
-    field.onChange(null);
+    field.onChange(undefined);
   }
 
   function handleSelectValue(e: MouseEvent, item: Option) {

@@ -18,6 +18,7 @@ export interface Column {
   item: (item: any, index: number) => ReactNode;
   width?: number;
   sort?: string;
+  align?: 'left' | 'center' | 'right';
 }
 
 export interface Option {
@@ -116,7 +117,12 @@ export interface Employee {
   email: string;
   phone?: string;
   position: string;
-  dailyRate?: number;
+  dailyRate: number;
+  overtime: {
+    first: number;
+    second: number;
+    third: number;
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -142,6 +148,8 @@ export interface Event {
 
 export interface Vehicle {
   _id: string;
+  brand: string;
+  model: string;
   registrationNumber: string;
   pricePerKm: number;
   insuranceDate: string;
@@ -174,9 +182,9 @@ export interface Transport {
 export interface Service {
   _id: string;
   returnDate: string;
-  serviceDate: string;
-  repairPrice: number;
-  servicePerson: Employee;
+  serviceDate?: string;
+  repairPrice?: number;
+  servicePerson?: Employee;
   device: Device;
   description: string;
   status: 'Available' | 'Out of stock';

@@ -75,18 +75,19 @@ export default function Form({ id, isEdit, data }: FormProps) {
     try {
       const response = !isEdit ? await create(form) : await update(id, form);
 
-      if (response?.ok) {
-        router.push('/warehouse');
-        toast.success(response?.message);
-      } else {
-        if (response?.errors) {
-          Object.keys(response?.errors).map((key) => {
-            setError(key as any, { message: (response?.errors as any)[key] });
-          });
-        }
+      if (!response?.ok) throw response;
+
+      router.push('/warehouse');
+      toast.success(response?.message);
+    } catch (ex: any) {
+      if (ex.status === 422 && ex?.errors) {
+        Object.keys(ex?.errors).map((key) => {
+          setError(key as any, { message: (ex.errors as any)[key] });
+        });
+
+        return;
       }
-    } catch (error) {
-      toast.error('Error saving the device');
+      toast.error('Wystąpił błąd podczas zapisywania urządzenia');
     }
   }
 
@@ -105,7 +106,7 @@ export default function Form({ id, isEdit, data }: FormProps) {
 
   useEffect(() => {
     init();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -152,9 +153,9 @@ export default function Form({ id, isEdit, data }: FormProps) {
               />
             </UIGroup>
             <UIGroup header="Opis" error={errors.description}>
-              <UITextarea placeholder="Wprowadź opis" {...register('description')} />
+              <UITextarea rows={4} placeholder="Wprowadź opis" {...register('description')} />
             </UIGroup>
-            <UIGroup header="Występowanie numerów seryjnych" error={errors.isSerialTracked}>
+            <UIGroup header="Występowanie numerów urządzenia" error={errors.isSerialTracked}>
               <UITogglebox {...register('isSerialTracked')} />
             </UIGroup>
           </div>

@@ -57,13 +57,11 @@ const toastOptions: DefaultToastOptions = {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="pl">
-      <body className={inter.className}>
+      <body className={`${inter.className} ${styles.body}`}>
         <HolyLoader color="#812538" />
         <Toaster toastOptions={toastOptions} />
-        <main className={styles.main}>
-          {children}
-          <SystemFooter />
-        </main>
+        <main className={styles.main}>{children}</main>
+        <SystemFooter />
       </body>
     </html>
   );

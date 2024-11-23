@@ -78,5 +78,5 @@ export default async function TransportForm({ params }: EventsFormProps) {
   const employees = await fetchEmployees();
   const events = await fetchEvents();
 
-  return <Form id={id} isEdit={isEdit} data={data} employees={employees} events={events} />;
+  return <Form id={id} isEdit={isEdit} data={data} vehicles={[]} employees={employees} events={events} />;
 }

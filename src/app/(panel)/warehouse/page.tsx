@@ -77,26 +77,30 @@ export default async function WarehousePage({ searchParams }: WarehouseProps) {
     },
     {
       id: 5,
-      header: 'Ilość',
-      item: (item: Warehouse) => <span>{item.devices?.length ?? 0}</span>
+      header: 'Ilość ogółem',
+      item: (item: Warehouse) => <span>{item.devices?.length ?? 0}</span>,
+      align: 'right'
     },
     {
       id: 6,
-      header: 'Wartość wynajmu',
-      item: (item: Warehouse) => <span>{formatCurrency(item.rentalValue)}</span>,
-      sort: 'rentalValue'
+      header: 'Ilość dostępnych',
+      item: (item: Warehouse) => <span>{item.devices?.length ?? 0}</span>,
+      align: 'right'
     },
     {
       id: 7,
-      header: 'Status',
-      item: (item: Warehouse) => (
-        <UIBadge variant={item.status === 'Available' ? 'success' : 'secondary'}>
-          {getStatusName(item.status) ?? '-'}
-        </UIBadge>
-      )
+      header: 'Ilość wypożyczonych',
+      item: (item: Warehouse) => <span>{item.devices?.length ?? 0}</span>,
+      align: 'right'
     },
     {
       id: 8,
+      header: 'Ilość w serwisie',
+      item: (item: Warehouse) => <span>{item.devices?.length ?? 0}</span>,
+      align: 'right'
+    },
+    {
+      id: 9,
       header: '',
       item: (item: Warehouse) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>

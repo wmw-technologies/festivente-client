@@ -64,7 +64,7 @@ export default function EditableTable({
       <table className={`${styles.table} mb-4`}>
         <thead className={styles.thead}>
           <tr>
-            {isSerialTracked && <th>Numer seryjny *</th>}
+            {isSerialTracked && <th>Numer urządzenia *</th>}
             <th>Lokalizacja *</th>
             <th>Opis </th>
             <th style={{ width: 64 }}></th>

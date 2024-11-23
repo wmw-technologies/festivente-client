@@ -58,7 +58,7 @@ export default function UITable({ columns, pager, data, noHeader }: UITableProps
         {data.map((item, index) => (
           <tr key={index}>
             {columns.map((column) => (
-              <td key={column.id} style={{ width: column.width }}>
+              <td key={column.id} style={{ width: column.width, textAlign: column.align }}>
                 {column.item(item, index)}
               </td>
             ))}

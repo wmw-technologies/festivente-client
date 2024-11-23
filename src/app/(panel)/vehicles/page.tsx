@@ -44,18 +44,30 @@ export default async function Vehicles({ searchParams }: VehiclesProps) {
   const columns: Array<Column> = [
     {
       id: 1,
+      header: 'Marka',
+      item: (item: Vehicle) => <span>{dashIfEmpty(item.brand)}</span>,
+      sort: 'brand'
+    },
+    {
+      id: 2,
+      header: 'Model',
+      item: (item: Vehicle) => <span>{dashIfEmpty(item.model)}</span>,
+      sort: 'model'
+    },
+    {
+      id: 3,
       header: 'Numer rejestracyjny',
       item: (item: Vehicle) => <span>{dashIfEmpty(item.registrationNumber)}</span>,
       sort: 'registrationNumber'
     },
     {
-      id: 2,
+      id: 4,
       header: 'Cena za km (PLN)',
       item: (item: Vehicle) => <span>{formatCurrency(item.pricePerKm)}</span>,
-      sort: 'date'
+      sort: 'pricePerKm'
     },
     {
-      id: 3,
+      id: 5,
       header: '',
       item: (item: Vehicle) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>

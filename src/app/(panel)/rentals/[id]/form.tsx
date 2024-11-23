@@ -8,13 +8,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { create, update } from './actions';
 import toast from 'react-hot-toast';
+import RentWidget from './rent-widget';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
 import UICard from '@/src/components/UI/Card';
 import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
 import UITextarea from '@/src/components/UI/Textarea';
-import RentWidget from './rent-widget';
+import UIDatepicker from '@/src/components/UI/Datepicker';
 
 const schema = z.object({
   clientName: z.string().min(1, 'Nazwa klienta jest wymagana'),
@@ -23,8 +24,8 @@ const schema = z.object({
   clientPostCode: z.string().regex(/^\d{2}-\d{3}$/, 'Kod pocztowy musi być w formacie XX-XXX'),
   clientPhone: z.string().min(1, 'Numer telefonu jest wymagany'),
   clientEmail: z.string().email('Nieprawidłowy adres e-mail'),
-  rentalDate: z.string().date().min(1, 'Data wypożyczenia jest wymagana'),
-  returnDate: z.string().date().min(1, 'Data zwrotu jest wymagana'),
+  rentalDate: z.date(),
+  returnDate: z.date(),
   devices: z.array(z.string()).min(1, 'W wypożyczeniu musi być przynajmniej jedno urządzenie'),
   inTotal: z
     .number()
@@ -61,18 +62,20 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
     try {
       const response = !isEdit ? await create(form) : await update(id, form);
 
-      if (response?.ok) {
-        router.push('/rentals');
-        toast.success(response?.message);
-      } else {
-        if (response?.errors) {
-          Object.keys(response?.errors).map((key) => {
-            setError(key as any, { message: (response?.errors as any)[key] });
-          });
-        }
+      if (!response?.ok) throw response;
+
+      router.push('/rentals');
+      toast.success(response?.message);
+    } catch (ex: any) {
+      if (ex.status === 422 || (ex.status === 400 && ex?.errors)) {
+        Object.keys(ex?.errors).map((key) => {
+          setError(key as any, { message: (ex.errors as any)[key] });
+        });
+
+        return;
       }
-    } catch (error) {
-      toast.error('Error saving the device');
+
+      toast.error('Wystąpił błąd podczas zapisywania wypożyczenia');
     }
   }
 
@@ -81,8 +84,8 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
 
     setValue('clientName', data.clientName);
     setValue('clientPhone', data.clientPhone);
-    setValue('rentalDate', data.rentalDate.split('T')[0]);
-    setValue('returnDate', data.returnDate.split('T')[0]);
+    setValue('rentalDate', new Date(data.rentalDate));
+    setValue('returnDate', new Date(data.returnDate));
     setValue('inTotal', data.inTotal);
     setValue('clientCity', data.clientCity);
     setValue('clientStreet', data.clientStreet);
@@ -142,10 +145,15 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
           </div>
           <div className="col-3">
             <UIGroup header="Data wypożyczenia" error={errors.rentalDate} required>
-              <UIInput type="date" {...register('rentalDate')} />
+              <UIDatepicker
+                name="rentalDate"
+                type="datetime"
+                placeholder="Wybierz datę wypożyczenia"
+                control={control}
+              />
             </UIGroup>
             <UIGroup header="Data zwrotu" error={errors.returnDate} required>
-              <UIInput type="date" {...register('returnDate')} />
+              <UIDatepicker name="returnDate" type="datetime" placeholder="Wybierz datę zwrotu" control={control} />
             </UIGroup>
           </div>
           <div className="col-3">
@@ -161,7 +169,7 @@ export default function Form({ id, isEdit, data, availableDevices }: FormProps) 
           </div>
           <div className="col-3">
             <UIGroup header="Uwagi" error={errors.notes}>
-              <UITextarea rows={3} placeholder="Uwagi do wypożyczenia" {...register('notes')} />
+              <UITextarea rows={4} placeholder="Uwagi do wypożyczenia" {...register('notes')} />
             </UIGroup>
           </div>
         </div>
