@@ -78,8 +78,8 @@ export default function RentWidget({ availableDevices, control, errors, setValue
   };
 
   useEffect(() => {
-    setRentalDays(calculateRentalDays(rentalDate.value, returnDate.value));
-    if (rentalDays) setValue('inTotal', countInTotal * calculateRentalDays(rentalDate.value, returnDate.value));
+    // setRentalDays(calculateRentalDays(rentalDate.value, returnDate.value));
+    // if (rentalDays) setValue('inTotal', countInTotal * calculateRentalDays(rentalDate.value, returnDate.value));
   }, [rentalDate.value, returnDate.value]);
 
   useEffect(() => {
