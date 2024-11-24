@@ -38,6 +38,8 @@ const schema = z.object({
     .number()
     .refine((val) => val >= 0, { message: 'Amount must be positive' })
     .refine((val) => val <= 100000, { message: 'Amount must be less than or equal to 100,000 PLN' }),
+  discount: z.number().min(0, 'Minimum 0%').max(100, 'Maksimum 100%').optional(),
+  methodOfPayment: z.string().optional().nullable(),
   notes: z.string().optional()
 });
 
@@ -167,6 +169,7 @@ export default function Form({ id, isEdit, data }: FormProps) {
             <UIGroup header="NIP" error={errors.clientNIP}>
               <UIInput placeholder="Wprowadź NIP" {...register('clientNIP')} />
             </UIGroup>
+
             <UIGroup header="Numer telefonu" error={errors.clientPhone} required>
               <UIInput placeholder="Wprowadź numer telefonu" {...register('clientPhone')} />
             </UIGroup>
@@ -218,6 +221,13 @@ export default function Form({ id, isEdit, data }: FormProps) {
                 type="number"
                 placeholder="Wprowadź wartość wypożyczenia"
                 {...register('inTotal', { valueAsNumber: true })}
+              />
+            </UIGroup>
+            <UIGroup header="Procent zniżki" error={errors.discount}>
+              <UIInput
+                type="number"
+                placeholder="Wprowadź procent zniżki"
+                {...register('discount', { valueAsNumber: true })}
               />
             </UIGroup>
             <UIGroup header="Forma płatności" error={errors.paymentForm} required>

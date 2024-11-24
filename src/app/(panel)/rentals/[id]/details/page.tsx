@@ -98,6 +98,14 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
     { detailName: 'Data zwrotu', detailData: formatDateTime(data?.returnDate) },
     { detailName: 'Data dodania', detailData: formatDateTime(data?.createdAt) },
     { detailName: 'Data ostatniej aktualizacji', detailData: formatDateTime(data?.updatedAt) },
+    {
+      detailName: 'Dodane przez',
+      detailData: dashIfEmpty(
+        data?.createdBy.first_name || data?.createdBy.last_name === undefined
+          ? undefined
+          : `${data?.createdBy.first_name} ${data?.createdBy.last_name}`
+      )
+    },
     { detailName: 'Status', detailData: data?.status },
     { detailName: 'Opis', detailData: data?.notes }
   ];

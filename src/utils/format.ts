@@ -30,3 +30,7 @@ export function formatCurrency(value?: number, currency: string = 'PLN') {
 export function dashIfEmpty(value: string | null | number | undefined) {
   return value !== null && value !== undefined && value !== '' ? value : '-';
 }
+
+export function twoDecimals(value: number) {
+  return parseFloat(value.toFixed(2));
+}

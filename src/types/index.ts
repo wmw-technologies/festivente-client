@@ -102,7 +102,7 @@ export interface Rental {
   clientPostCode: string;
   rentalDate: string;
   returnDate: string;
-  paymentForm: string;
+  paymentForm: 'cash' | 'transfer' | 'card' | 'other';
   isPaid: boolean;
   devices: Array<Device>;
   inTotal: number;

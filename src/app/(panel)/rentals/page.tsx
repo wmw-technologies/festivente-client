@@ -45,35 +45,41 @@ export default async function Rentals({ searchParams }: RentalsProps) {
   const columns: Array<Column> = [
     {
       id: 1,
+      header: 'ID wypożyczenia',
+      item: (item: Rental) => <span>{item._id}</span>,
+      sort: '_id'
+    },
+    {
+      id: 2,
       header: 'Nazwa kilenta',
       item: (item: Rental) => <span>{dashIfEmpty(item.clientName)}</span>,
       sort: 'clientName'
     },
     {
-      id: 2,
+      id: 3,
       header: 'Data wypożyczenia',
       item: (item: Rental) => <span>{formatDate(item.rentalDate)}</span>,
       sort: 'rentalDate'
     },
     {
-      id: 3,
+      id: 4,
       header: 'Data zwrotu',
       item: (item: Rental) => <span>{formatDate(item.returnDate)}</span>,
       sort: 'returnDate'
     },
     {
-      id: 4,
+      id: 5,
       header: 'Wartość',
       item: (item: Rental) => <span>{formatCurrency(item.inTotal)}</span>,
       sort: 'inTotal'
     },
     {
-      id: 5,
+      id: 6,
       header: 'Status',
       item: (item: Rental) => <UIBadge variant={item.status === 'Available' ? 'success' : 'secondary'}>asd</UIBadge>
     },
     {
-      id: 6,
+      id: 7,
       header: '',
       item: (item: Rental) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>

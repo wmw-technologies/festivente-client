@@ -1,3 +1,5 @@
+'use client';
+import { useEffect, useRef } from 'react';
 import styles from './index.module.scss';
 
 type Detail = {
@@ -11,12 +13,32 @@ type DetailsComponentProps = {
 };
 
 export default function UIDetails({ details, header }: DetailsComponentProps) {
+  const detailsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const detailsContainer = detailsRef.current;
+    if (detailsContainer) {
+      const items = Array.from(detailsContainer.children) as HTMLElement[];
+      items.forEach((item) => item.classList.remove(styles['details__item--no-border']));
+
+      let rowTopOffset = items[0]?.offsetTop;
+      items.forEach((item, index) => {
+        if (item.offsetTop !== rowTopOffset) {
+          items[index - 1].classList.add(styles['details__item--no-border']);
+          rowTopOffset = item.offsetTop;
+        }
+      });
+      items[items.length - 1].classList.add(styles['details__item--no-border']);
+      detailsContainer.style.visibility = 'visible';
+    }
+  }, [details]);
+
   return (
     <div className={styles['details-container']}>
       <h2>{header}</h2>
-      <div className={styles.details}>
+      <div className={styles.details} ref={detailsRef}>
         {details.map((detail, index) => (
-          <div key={index}>
+          <div className={styles.details__item} key={index}>
             <span>{detail.detailName}:</span>
             <p>{detail.detailData}</p>
           </div>
