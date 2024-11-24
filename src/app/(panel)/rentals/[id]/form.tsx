@@ -223,6 +223,13 @@ export default function Form({ id, isEdit, data }: FormProps) {
                 {...register('inTotal', { valueAsNumber: true })}
               />
             </UIGroup>
+            <UIGroup header="Procent zniżki" error={errors.discount}>
+              <UIInput
+                type="number"
+                placeholder="Wprowadź procent zniżki"
+                {...register('discount', { valueAsNumber: true })}
+              />
+            </UIGroup>
             <UIGroup header="Forma płatności" error={errors.paymentForm} required>
               <UISelect
                 name="paymentForm"

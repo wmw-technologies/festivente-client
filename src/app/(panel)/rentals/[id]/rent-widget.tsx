@@ -2,7 +2,7 @@ import { use, useEffect, useState } from 'react';
 import { Device } from '@/src/types';
 import { Schema } from './form';
 import { FieldErrors, useController, Control, UseFormSetValue, set } from 'react-hook-form';
-import { formatCurrency } from '@/src/utils/format';
+import { formatCurrency, twoDecimals } from '@/src/utils/format';
 import styles from './rent-widget.module.scss';
 import UIInput from '@/src/components/UI/Input';
 import UIIcon from '@/src/components/UI/Icon';
@@ -69,9 +69,9 @@ export default function RentWidget({ availableDevices, control, errors, setValue
 
     deviceIds.onChange([...deviceIds.value, device._id]);
     setAddedDevices([...addedDevices, device]);
-    const totalWithoutDiscount = countInTotal + device.warehouseId.rentalValue;
+    const totalWithoutDiscount = (countInTotal + device.warehouseId.rentalValue) * rentalDays;
     const discountAmount = ((discount.value ?? 0) / 100) * totalWithoutDiscount;
-    setValue('inTotal', totalWithoutDiscount - discountAmount);
+    setValue('inTotal', twoDecimals(totalWithoutDiscount - discountAmount));
   };
 
   const removeDeviceFromRental = (device: Device) => {
@@ -81,9 +81,9 @@ export default function RentWidget({ availableDevices, control, errors, setValue
 
     deviceIds.onChange(deviceIds.value.filter((id: string) => id !== device._id));
     setAddedDevices(addedDevices.filter((addedDevice) => addedDevice._id !== device._id));
-    const totalWithoutDiscount = countInTotal - device.warehouseId.rentalValue;
+    const totalWithoutDiscount = (countInTotal - device.warehouseId.rentalValue) * rentalDays;
     const discountAmount = ((discount.value ?? 0) / 100) * totalWithoutDiscount;
-    setValue('inTotal', totalWithoutDiscount - discountAmount);
+    setValue('inTotal', twoDecimals(totalWithoutDiscount - discountAmount));
   };
 
   useEffect(() => {
@@ -91,7 +91,7 @@ export default function RentWidget({ availableDevices, control, errors, setValue
     if (rentalDays) {
       const totalWithoutDiscount = countInTotal * calculateRentalDays(rentalDate.value, returnDate.value);
       const discountAmount = ((discount.value ?? 0) / 100) * totalWithoutDiscount;
-      setValue('inTotal', totalWithoutDiscount - discountAmount);
+      setValue('inTotal', twoDecimals(totalWithoutDiscount - discountAmount));
     }
   }, [rentalDate.value, returnDate.value, discount.value]);
 
