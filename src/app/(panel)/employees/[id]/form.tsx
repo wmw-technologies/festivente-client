@@ -3,11 +3,12 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { Employee } from '@/src/types';
+import { Employee, Column } from '@/src/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { create, update } from './actions';
 import { positions } from '@/src/constants';
+import styles from './form.module.scss';
 import toast from 'react-hot-toast';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
@@ -15,6 +16,7 @@ import UICard from '@/src/components/UI/Card';
 import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
 import UISelect from '@/src/components/UI/Select';
+import UITable from '@/src/components/UI/Table';
 
 const schema = z.object({
   firstName: z.string().min(3).max(64),
@@ -28,7 +30,12 @@ const schema = z.object({
     .transform((val) => parseFloat(val))
     .refine((val) => val >= 0, { message: 'Amount must be positive' })
     .refine((val) => val <= 100000, { message: 'Amount must be less than or equal to 100,000 PLN' })
-    .transform((val) => val.toFixed(2))
+    .transform((val) => val.toFixed(2)),
+  overtime: z.object({
+    first: z.number().min(0).max(10),
+    second: z.number().min(0).max(10),
+    third: z.number().min(0).max(10)
+  })
 });
 
 export type Schema = z.infer<typeof schema>;
@@ -38,6 +45,21 @@ type FormProps = {
   data: Employee | null;
   id: string;
 };
+
+const overtimeData = [
+  {
+    id: 1,
+    header: '12h - 16h'
+  },
+  {
+    id: 2,
+    header: '16h - 22h'
+  },
+  {
+    id: 3,
+    header: '22h - x'
+  }
+];
 
 export default function Form({ id, isEdit, data }: FormProps) {
   const router = useRouter();
@@ -56,32 +78,62 @@ export default function Form({ id, isEdit, data }: FormProps) {
     resolver: zodResolver(schema)
   });
 
+  const overtimeColumns: Array<Column> = [
+    {
+      id: 1,
+      item: (item) => <span className="mark">{item.header}</span>,
+      width: 100
+    },
+    {
+      id: 2,
+      item: (_, index) => (
+        <UIGroup error={errors.overtime?.[index === 0 ? 'first' : index === 1 ? 'second' : 'third']} nospace>
+          <UIInput
+            type="number"
+            step={0.1}
+            placeholder="Wprowadź mnożnik stawki"
+            {...register(index === 0 ? 'overtime.first' : index === 1 ? 'overtime.second' : 'overtime.third', {
+              valueAsNumber: true
+            })}
+          />
+        </UIGroup>
+      )
+    }
+  ];
+
   async function onSubmit(form: Schema) {
     try {
       const response = !isEdit ? await create(form) : await update(id, form);
-      if (response?.ok) {
-        router.push('/employees');
-        toast.success(response?.message);
-      } else {
-        if (response?.errors) {
-          Object.keys(response?.errors).map((key) => {
-            setError(key as any, { message: (response?.errors as any)[key] });
-          });
-        }
+
+      if (!response?.ok) throw response;
+
+      router.push('/employees');
+      toast.success(response?.message);
+    } catch (ex: any) {
+      if (ex.status === 422 && ex?.errors) {
+        Object.keys(ex?.errors).map((key) => {
+          setError(key as any, { message: (ex.errors as any)[key] });
+        });
+
+        return;
       }
-    } catch (error) {
+
       toast.error('Wystąpił błąd podczas zapisywania roli');
     }
   }
 
   function init() {
     if (!data) return;
+
     setValue('firstName', data?.firstName);
     setValue('lastName', data?.lastName);
     setValue('email', data?.email);
     setValue('phone', data?.phone ?? '');
     setValue('position', data?.position);
     setValue('dailyRate', data?.dailyRate?.toFixed?.(2) ?? '');
+    setValue('overtime.first', data?.overtime?.first ?? '');
+    setValue('overtime.second', data?.overtime?.second ?? '');
+    setValue('overtime.third', data?.overtime?.third ?? '');
   }
 
   useEffect(() => {
@@ -127,8 +179,17 @@ export default function Form({ id, isEdit, data }: FormProps) {
             <UIGroup header="Stanowisko" error={errors.position} required>
               <UISelect name="position" placeholder="Wybierz stanowisko" options={positions} control={control} />
             </UIGroup>
-            <UIGroup header="Stawka dzienna (PLN)" error={errors.dailyRate} required>
+            <UIGroup header="Stawka dzienna (PLN)" help="Stawka dzienna = 12h" error={errors.dailyRate} required>
               <UIInput type="number" placeholder="Wprowadź stawkę dzienną" {...register('dailyRate')} />
+            </UIGroup>
+            <UIGroup
+              header="Nadgodziny"
+              help="Obliczanie stawki w przypadku kiedy dzień pracy przekroczy 12h np. dla 12h - 16h wartość mnożnika może wynosić '1.1'"
+              required
+            >
+              <div className={styles.overtime}>
+                <UITable data={overtimeData} columns={overtimeColumns} noHeader />
+              </div>
             </UIGroup>
           </div>
         </div>

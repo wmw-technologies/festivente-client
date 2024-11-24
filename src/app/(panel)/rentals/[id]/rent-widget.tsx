@@ -50,12 +50,12 @@ export default function RentWidget({ availableDevices, control, errors, setValue
       !deviceIds.value.includes(device._id)
   );
 
-  function calculateRentalDays(rentalDate: string, returnDate: string): number {
-    const startDate = new Date(rentalDate);
-    const endDate = new Date(returnDate);
-    const timeDifference = endDate.getTime() - startDate.getTime();
+  function calculateRentalDays(rentalDate: Date, returnDate: Date): number {
+    // const startDate = new Date(rentalDate);
+    // const endDate = new Date(returnDate);
+    const timeDifference = returnDate.getTime() - rentalDate.getTime();
     const dayDifference = timeDifference / (1000 * 3600 * 24);
-    console.log(startDate, endDate, timeDifference, dayDifference);
+    console.log(timeDifference, dayDifference);
 
     return dayDifference ? Math.ceil(dayDifference) : 1;
   }

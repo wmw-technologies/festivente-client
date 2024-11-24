@@ -36,7 +36,10 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
   const data = await fetchData(id);
 
   const details = [
-    { detailName: 'Osoba serwisująca', detailData: `${data?.servicePerson.firstName} ${data?.servicePerson.lastName}` }
+    {
+      detailName: 'Osoba serwisująca',
+      detailData: `${data?.servicePerson!.firstName} ${data?.servicePerson!.lastName}`
+    }
   ];
 
   return (

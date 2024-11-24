@@ -7,11 +7,20 @@ type UIGroupProps = {
   required?: boolean;
   nospace?: boolean;
   error?: GlobalError;
+  help?: string;
   className?: string;
   children: ReactNode;
 };
 
-export default function UIGroup({ header, required, nospace = false, error, className = '', children }: UIGroupProps) {
+export default function UIGroup({
+  header,
+  required,
+  nospace = false,
+  error,
+  help,
+  className = '',
+  children
+}: UIGroupProps) {
   return (
     <div className={`${className} ${!nospace ? 'mb-5' : ''}`}>
       <label className={styles.group}>
@@ -21,6 +30,7 @@ export default function UIGroup({ header, required, nospace = false, error, clas
           {required && <span className={styles.asterisk}>*</span>}
         </span>
       </label>
+      {help && <span className={styles.help}>{help}</span>}
       {error && <span className={styles.error}>{error.message}</span>}
     </div>
   );

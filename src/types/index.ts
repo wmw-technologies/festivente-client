@@ -18,6 +18,7 @@ export interface Column {
   item: (item: any, index: number) => ReactNode;
   width?: number;
   sort?: string;
+  align?: 'left' | 'center' | 'right';
 }
 
 export interface Option {
@@ -71,21 +72,21 @@ export interface Warehouse {
   rentalValue: number;
   category?: string;
   description?: string | undefined;
-  isSerialTracked: boolean;
+  devices: Array<Device>;
   status: 'Available' | 'Out of stock';
   createdBy: User;
-  devices: Array<Device>;
   updatedAt: string;
   createdAt: string;
 }
 
 export interface Device {
   _id: string;
-  serialNumber?: string;
+  serialNumber: string;
   location: string;
   description?: string;
   warehouseId: Warehouse;
   rentalId?: Rental;
+  serviceId?: Service;
   createdAt: string;
   updatedAt: string;
 }
@@ -93,20 +94,21 @@ export interface Device {
 export interface Rental {
   _id: string;
   clientName: string;
-  clientNIP?: string;
+  clientNIP: string;
+  clientPhone: string;
+  clientEmail: string;
   clientCity: string;
   clientStreet: string;
   clientPostCode: string;
-  clientPhone: string;
-  clientEmail: string;
   rentalDate: string;
   returnDate: string;
-  methodOfPayment: 'Cash' | 'Card' | 'Transfer';
+  paymentForm: 'cash' | 'transfer' | 'card' | 'other';
+  isPaid: boolean;
+  devices: Array<Device>;
   inTotal: number;
   notes?: string;
   status: string;
   createdBy: User;
-  devices: Array<Device>;
   createdAt: string;
   updatedAt: string;
 }
@@ -118,7 +120,12 @@ export interface Employee {
   email: string;
   phone?: string;
   position: string;
-  dailyRate?: number;
+  dailyRate: number;
+  overtime: {
+    first: number;
+    second: number;
+    third: number;
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -144,6 +151,8 @@ export interface Event {
 
 export interface Vehicle {
   _id: string;
+  brand: string;
+  model: string;
   registrationNumber: string;
   pricePerKm: number;
   insuranceDate: string;
@@ -176,9 +185,9 @@ export interface Transport {
 export interface Service {
   _id: string;
   returnDate: string;
-  serviceDate: string;
-  repairPrice: number;
-  servicePerson: Employee;
+  serviceDate?: string;
+  repairPrice?: number;
+  servicePerson?: Employee;
   device: Device;
   description: string;
   status: 'Available' | 'Out of stock';

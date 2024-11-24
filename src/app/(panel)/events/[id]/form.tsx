@@ -15,15 +15,17 @@ import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
 import UISelect from '@/src/components/UI/Select';
 import UITextarea from '@/src/components/UI/Textarea';
+import UIDatepicker from '@/src/components/UI/Datepicker';
 
 const schema = z.object({
   eventName: z.string().min(3).max(64),
+  city: z.string().min(3).max(64),
+  location: z.string().min(3).max(64),
+  date: z.date(),
   clientName: z.string().min(3).max(64),
   clientEmail: z.string().email(),
   clientPhone: z.string().min(9).max(16),
-  date: z.string().date(),
   description: z.string().max(256).optional(),
-  location: z.string().min(3).max(64),
   budget: z
     .number()
     .refine((val) => val >= 0, { message: 'Amount must be positive' })
@@ -62,17 +64,19 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
     try {
       const response = !isEdit ? await create(form) : await update(id, form);
 
-      if (response?.ok) {
-        router.push('/events');
-        toast.success(response?.message);
-      } else {
-        if (response?.errors) {
-          Object.keys(response?.errors).map((key) => {
-            setError(key as any, { message: (response?.errors as any)[key] });
-          });
-        }
+      if (!response?.ok) throw response;
+
+      router.push('/events');
+      toast.success(response?.message);
+    } catch (ex: any) {
+      if (ex.status === 422 && ex?.errors) {
+        Object.keys(ex?.errors).map((key) => {
+          setError(key as any, { message: (ex.errors as any)[key] });
+        });
+
+        return;
       }
-    } catch (error) {
+
       toast.error('Wystąpił błąd podczas zapisywania wydarzenia');
     }
   }
@@ -83,7 +87,7 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
     setValue('clientName', data.clientName);
     setValue('clientEmail', data.clientEmail);
     setValue('clientPhone', data.clientPhone);
-    setValue('date', data.date.split('T')[0]);
+    setValue('date', new Date(data.date));
     setValue('description', data.description);
     setValue('location', data.location);
     setValue('budget', data.budget);
@@ -98,7 +102,7 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
 
   useEffect(() => {
     init();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -125,10 +129,10 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
         <div className="row">
           <div className="col-4">
             <UIGroup header="Nazwa wydarzenia" error={errors.eventName} required>
-              <UIInput placeholder="Wprowadź nazwę" autocomplete="name" {...register('eventName')} />
+              <UIInput placeholder="Wprowadź nazwę wydarzenia" autocomplete="name" {...register('eventName')} />
             </UIGroup>
-            <UIGroup header="Data wydarzenia" error={errors.date} required>
-              <UIInput type="date" placeholder="Wprowadź data wydarzenia" {...register('date')} />
+            <UIGroup header="Miasto wydarzenia" error={errors.city} required>
+              <UIInput placeholder="Wprowadź miasto wydarzenia" {...register('city')} />
             </UIGroup>
             <UIGroup header="Miejsce wydarzenia" error={errors.location} required>
               <UIInput
@@ -136,6 +140,9 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
                 autocomplete="street-address"
                 {...register('location')}
               />
+            </UIGroup>
+            <UIGroup header="Data wydarzenia" error={errors.date} required>
+              <UIDatepicker name="date" placeholder="Wprowadź data wydarzenia" control={control} />
             </UIGroup>
             <UIGroup header="Opis wydarzenia" error={errors.description}>
               <UITextarea rows={3} placeholder="Wprowadź opis wydarzenia" {...register('description')} />

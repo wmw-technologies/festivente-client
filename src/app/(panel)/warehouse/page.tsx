@@ -1,13 +1,12 @@
 import { cookies } from 'next/headers';
-import { Column, ResponseAPI, Pager, Pagination, Warehouse } from '@/src/types';
+import { Column, ResponseAPI, Pager, Pagination, Warehouse, Device } from '@/src/types';
 import { getPager } from '@/src/utils/pager';
-import { warehouseCategories, warehouseStatuses } from '@/src/constants';
-import { formatCurrency, dashIfEmpty } from '@/src/utils/format';
+import { warehouseCategories } from '@/src/constants';
+import { dashIfEmpty } from '@/src/utils/format';
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
 import UITable from '@/src/components/UI/Table';
-import UIBadge from '@/src/components/UI/Badge';
 import UIPagination from '@/src/components/UI/Pagination';
 import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 
@@ -17,10 +16,6 @@ type WarehouseProps = {
 
 function getCategoryName(value?: string) {
   return warehouseCategories.find((item) => item.value === value)?.text ?? '';
-}
-
-function getStatusName(value?: string) {
-  return warehouseStatuses.find((item) => item.value === value)?.text ?? '';
 }
 
 async function fetchData(pager: Pager) {
@@ -45,6 +40,16 @@ async function fetchData(pager: Pager) {
 
   pager.total = data.data?.totalRows ?? 0;
   return data.data?.items ?? [];
+}
+
+function countRentals(devices: Array<Device>) {
+  if (!devices) return 0;
+  return devices.filter((item) => item.rentalId?._id).length;
+}
+
+function countServices(devices: Array<Device>) {
+  if (!devices) return 0;
+  return devices.filter((item) => item.serviceId?._id).length;
 }
 
 export default async function WarehousePage({ searchParams }: WarehouseProps) {
@@ -77,26 +82,32 @@ export default async function WarehousePage({ searchParams }: WarehouseProps) {
     },
     {
       id: 5,
-      header: 'Ilość',
-      item: (item: Warehouse) => <span>{item.devices?.length ?? 0}</span>
+      header: 'Ilość ogółem',
+      item: (item: Warehouse) => <span>{item.devices.length}</span>,
+      align: 'right'
     },
     {
       id: 6,
-      header: 'Wartość wynajmu',
-      item: (item: Warehouse) => <span>{formatCurrency(item.rentalValue)}</span>,
-      sort: 'rentalValue'
+      header: 'Ilość dostępnych',
+      item: (item: Warehouse) => (
+        <span>{item.devices.length - countRentals(item.devices) - countServices(item.devices)}</span>
+      ),
+      align: 'right'
     },
     {
       id: 7,
-      header: 'Status',
-      item: (item: Warehouse) => (
-        <UIBadge variant={item.status === 'Available' ? 'success' : 'secondary'}>
-          {getStatusName(item.status) ?? '-'}
-        </UIBadge>
-      )
+      header: 'Ilość wypożyczonych',
+      item: (item: Warehouse) => <span>{countRentals(item.devices)}</span>,
+      align: 'right'
     },
     {
       id: 8,
+      header: 'Ilość w serwisie',
+      item: (item: Warehouse) => <span>{countServices(item.devices)}</span>,
+      align: 'right'
+    },
+    {
+      id: 9,
       header: '',
       item: (item: Warehouse) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>

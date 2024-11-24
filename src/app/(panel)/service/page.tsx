@@ -45,26 +45,31 @@ export default async function ServicePage({ searchParams }: ServiceProps) {
   const columns: Array<Column> = [
     {
       id: 1,
+      header: 'Urządzenie',
+      item: (item: Service) => <span>{item.device._id}</span>
+    },
+    {
+      id: 2,
       header: 'Data przyjęcia urządzenia',
       item: (item: Service) => <span>{formatDateTime(item.returnDate)}</span>
     },
     {
-      id: 2,
+      id: 3,
       header: 'Data zakończenia serwisu',
       item: (item: Service) => <span>{formatDateTime(item.serviceDate)}</span>
     },
     {
-      id: 3,
+      id: 4,
       header: 'Koszt naprawy',
       item: (item: Service) => <span>{formatCurrency(item.repairPrice)}</span>
     },
     {
-      id: 4,
+      id: 5,
       header: 'Status',
       item: (item: Service) => <UIBadge variant={item.status === 'Available' ? 'success' : 'secondary'}>asd</UIBadge>
     },
     {
-      id: 5,
+      id: 6,
       header: '',
       item: (item: Service) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>

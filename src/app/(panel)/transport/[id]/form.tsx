@@ -7,7 +7,6 @@ import { Transport, Option } from '@/src/types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { create, update } from './actions';
-import { vehicleTypes } from '@/src/constants';
 import toast from 'react-hot-toast';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
@@ -15,19 +14,15 @@ import UICard from '@/src/components/UI/Card';
 import UIGroup from '@/src/components/UI/Group';
 import UISelect from '@/src/components/UI/Select';
 import UIInput from '@/src/components/UI/Input';
+import UIDatepicker from '@/src/components/UI/Datepicker';
 import UITextarea from '@/src/components/UI/Textarea';
 
 const schema = z.object({
-  vehicleType: z.string(),
-  vehicleDetails: z.object({
-    brand: z.string().min(3).max(64),
-    model: z.string().min(3).max(64),
-    registrationNumber: z.string().min(3).max(64)
-  }),
+  vehicle: z.string(),
   driver: z.string(),
   event: z.string(),
   departureTime: z.date(),
-  arrivalTime: z.any().optional().nullable(),
+  arrivalTime: z.date().optional(),
   departureLocation: z.string().min(3).max(64),
   destinationLocation: z.string().min(3).max(64),
   notes: z.string().max(256).optional()
@@ -41,9 +36,10 @@ type FormProps = {
   data: Transport | null;
   employees: Option[];
   events: Option[];
+  vehicles: Option[];
 };
 
-export default function Form({ id, isEdit, data, employees, events }: FormProps) {
+export default function Form({ id, isEdit, data, vehicles, employees, events }: FormProps) {
   const router = useRouter();
   const title = isEdit
     ? `Formularz edycji transportu: ${data?.departureLocation} - ${data?.destinationLocation} | ${data?.vehicleDetails.registrationNumber}`
@@ -81,26 +77,13 @@ export default function Form({ id, isEdit, data, employees, events }: FormProps)
     }
   }
 
-  function localZone(date?: string) {
-    if (!date) return;
-
-    const utcDate = new Date(date);
-    const localDate = new Date(utcDate.getTime() - utcDate.getTimezoneOffset() * 60000);
-
-    return localDate.toISOString().slice(0, 16);
-  }
-
   function init() {
     if (!data) return;
 
-    setValue('vehicleType', data.vehicleType);
-    setValue('vehicleDetails.brand', data.vehicleDetails.brand);
-    setValue('vehicleDetails.model', data.vehicleDetails.model);
-    setValue('vehicleDetails.registrationNumber', data.vehicleDetails.registrationNumber);
     setValue('driver', data.driver._id);
     setValue('event', data.event._id);
-    setValue('departureTime', localZone(data.departureTime) as any);
-    setValue('arrivalTime', localZone(data.arrivalTime) as any);
+    setValue('departureTime', new Date(data.departureTime));
+    setValue('arrivalTime', data.arrivalTime ? new Date(data.arrivalTime) : undefined);
     setValue('departureLocation', data.departureLocation);
     setValue('destinationLocation', data.destinationLocation);
     setValue('notes', data.notes ?? '');
@@ -134,31 +117,20 @@ export default function Form({ id, isEdit, data, employees, events }: FormProps)
       <form id="transport-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
           <div className="col-4">
-            <UIGroup header="Typ pojazdu" error={errors.vehicleType} required>
-              <UISelect name="vehicleType" placeholder="Wybierz typ pojazdu" options={vehicleTypes} control={control} />
+            <UIGroup header="Pojazd" error={errors.vehicle} required>
+              <UISelect name="vehicle" placeholder="Wybierz typ pojazdu" options={vehicles} control={control} />
             </UIGroup>
-            <UIGroup header="Marka pojazdu" error={errors.vehicleDetails?.brand} required>
-              <UIInput placeholder="Wprowadź markę pojazdu" {...register('vehicleDetails.brand')} />
-            </UIGroup>
-            <UIGroup header="Model pojazdu" error={errors.vehicleDetails?.model} required>
-              <UIInput placeholder="Wprowadź model pojazdu" {...register('vehicleDetails.model')} />
-            </UIGroup>
-            <UIGroup header="Rejestracja pojazdu" error={errors.vehicleDetails?.registrationNumber} required>
-              <UIInput placeholder="Wprowadź rejestrację pojazdu" {...register('vehicleDetails.registrationNumber')} />
-            </UIGroup>
-            <UIGroup header="Kierowca" error={errors.driver} required>
+            {/* <UIGroup header="Kierowca" error={errors.driver} required>
               <UISelect name="driver" placeholder="Wybierz kierowcę" options={employees} control={control} />
-            </UIGroup>
+            </UIGroup> */}
             <UIGroup header="Wydarzenie" error={errors.event} required>
               <UISelect name="event" placeholder="Wybierz wydarzenie" options={events} control={control} />
             </UIGroup>
-          </div>
-          <div className="col-4">
             <UIGroup header="Odjazd" error={errors.departureTime} required>
-              <UIInput type="datetime-local" {...register('departureTime', { valueAsDate: true })} />
+              <UIDatepicker name="departureTime" type="datetime" placeholder="Wybierz datę odjazu" control={control} />
             </UIGroup>
             <UIGroup header="Przyjazd" error={errors.arrivalTime}>
-              <UIInput type="datetime-local" {...register('arrivalTime', { valueAsDate: true })} />
+              <UIDatepicker name="arrivalTime" type="datetime" placeholder="Wybierz datę przyjazdu" control={control} />
             </UIGroup>
             <UIGroup header="Miejsce odjazdu" error={errors.departureLocation} required>
               <UIInput placeholder="Wprowadź miejsce odjazdu" {...register('departureLocation')} />
@@ -166,6 +138,8 @@ export default function Form({ id, isEdit, data, employees, events }: FormProps)
             <UIGroup header="Miejsce przyjazdu" error={errors.destinationLocation} required>
               <UIInput placeholder="Wprowadź miejsce odjazdu" {...register('destinationLocation', {})} />
             </UIGroup>
+          </div>
+          <div className="col-4">
             <UIGroup header="Notatki" error={errors.notes}>
               <UITextarea rows={3} placeholder="Wprowadź opis wydarzenia" {...register('notes')} />
             </UIGroup>

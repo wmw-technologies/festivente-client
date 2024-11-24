@@ -17,7 +17,6 @@ import UIGroup from '@/src/components/UI/Group';
 import UIInput from '@/src/components/UI/Input';
 import UISelect from '@/src/components/UI/Select';
 import UITextarea from '@/src/components/UI/Textarea';
-import UITogglebox from '@/src/components/UI/Togglebox';
 
 const schema = z.object({
   name: z.string().min(3).max(64),
@@ -32,11 +31,10 @@ const schema = z.object({
     .transform((val) => val.toFixed(2)),
   category: z.string().optional().nullable(),
   description: z.string().optional(),
-  isSerialTracked: z.boolean().optional(),
   devices: z.array(
     z.object({
       _id: z.string().optional(),
-      serialNumber: z.string().min(1).optional(),
+      serialNumber: z.string().min(1),
       location: z.string().min(1),
       description: z.string().optional()
     })
@@ -57,7 +55,6 @@ export default function Form({ id, isEdit, data }: FormProps) {
 
   const {
     register,
-    watch,
     control,
     formState: { errors, isSubmitting, isValid, isSubmitted },
     resetField,
@@ -69,24 +66,23 @@ export default function Form({ id, isEdit, data }: FormProps) {
     resolver: zodResolver(schema)
   });
 
-  const isSerialTracked = watch('isSerialTracked', false);
-
   async function onSubmit(form: Schema) {
     try {
       const response = !isEdit ? await create(form) : await update(id, form);
 
-      if (response?.ok) {
-        router.push('/warehouse');
-        toast.success(response?.message);
-      } else {
-        if (response?.errors) {
-          Object.keys(response?.errors).map((key) => {
-            setError(key as any, { message: (response?.errors as any)[key] });
-          });
-        }
+      if (!response?.ok) throw response;
+
+      router.push('/warehouse');
+      toast.success(response?.message);
+    } catch (ex: any) {
+      if (ex.status === 422 && ex?.errors) {
+        Object.keys(ex?.errors).map((key) => {
+          setError(key as any, { message: (ex.errors as any)[key] });
+        });
+
+        return;
       }
-    } catch (error) {
-      toast.error('Error saving the device');
+      toast.error('Wystąpił błąd podczas zapisywania urządzenia');
     }
   }
 
@@ -99,13 +95,12 @@ export default function Form({ id, isEdit, data }: FormProps) {
     setValue('rentalValue', data?.rentalValue.toFixed(2));
     setValue('category', data?.category);
     setValue('description', data?.description);
-    setValue('isSerialTracked', data?.isSerialTracked);
     setValue('devices', data?.devices);
   }
 
   useEffect(() => {
     init();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, []);
 
   return (
@@ -152,10 +147,7 @@ export default function Form({ id, isEdit, data }: FormProps) {
               />
             </UIGroup>
             <UIGroup header="Opis" error={errors.description}>
-              <UITextarea placeholder="Wprowadź opis" {...register('description')} />
-            </UIGroup>
-            <UIGroup header="Występowanie numerów seryjnych" error={errors.isSerialTracked}>
-              <UITogglebox {...register('isSerialTracked')} />
+              <UITextarea rows={3} placeholder="Wprowadź opis" {...register('description')} />
             </UIGroup>
           </div>
           <div className="col-8">
@@ -165,7 +157,6 @@ export default function Form({ id, isEdit, data }: FormProps) {
               trigger={trigger}
               errors={errors}
               control={control}
-              isSerialTracked={isSerialTracked}
               isSubmitted={isSubmitted}
             />
           </div>

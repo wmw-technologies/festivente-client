@@ -17,6 +17,8 @@ import UIDatepicker from '@/src/components/UI/Datepicker';
 import UITextarea from '@/src/components/UI/Textarea';
 
 const schema = z.object({
+  brand: z.string().min(3).max(64),
+  model: z.string().max(64).optional(),
   registrationNumber: z.string().min(5).max(15),
   pricePerKm: z.number().min(0),
   inspectionDate: z.date().optional(),
@@ -39,7 +41,6 @@ export default function Form({ id, isEdit, data }: FormProps) {
   const {
     register,
     control,
-    watch,
     formState: { errors, isSubmitting, isValid, isSubmitted },
     setValue,
     setError,
@@ -71,6 +72,9 @@ export default function Form({ id, isEdit, data }: FormProps) {
 
   function init() {
     if (!data) return;
+
+    setValue('brand', data.brand);
+    setValue('model', data.model);
     setValue('registrationNumber', data.registrationNumber);
     setValue('pricePerKm', data.pricePerKm);
     setValue('inspectionDate', data.inspectionDate ? new Date(data.inspectionDate) : undefined);
@@ -106,6 +110,12 @@ export default function Form({ id, isEdit, data }: FormProps) {
       <form id="vehicles-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
           <div className="col-4">
+            <UIGroup header="Marka pojazdu" error={errors.brand} required>
+              <UIInput placeholder="Wprowadź markę pojazdu" {...register('brand')} />
+            </UIGroup>
+            <UIGroup header="Model pojazdu" error={errors.model}>
+              <UIInput placeholder="Wprowadź model pojazdu" {...register('model')} />
+            </UIGroup>
             <UIGroup header="Numer rejestracyjny" error={errors.registrationNumber} required>
               <UIInput placeholder="Wprowadź numer rejestracyjny" {...register('registrationNumber')} />
             </UIGroup>

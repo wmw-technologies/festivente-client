@@ -8,12 +8,13 @@ type UIInputProps = {
   name?: string;
   placeholder?: string;
   disabled?: boolean;
+  step?: string | number;
   autocomplete?: HTMLInputAutoCompleteAttribute;
   onChange?: ChangeEventHandler<HTMLInputElement> | undefined;
 };
 
 const UIInput = forwardRef<HTMLInputElement, UIInputProps>(function UIInput(
-  { type = 'text', name, placeholder, disabled, autocomplete, onChange },
+  { type = 'text', name, placeholder, disabled, step = 'any', autocomplete, onChange },
   ref
 ) {
   return (
@@ -26,7 +27,7 @@ const UIInput = forwardRef<HTMLInputElement, UIInputProps>(function UIInput(
       disabled={disabled}
       autoComplete={autocomplete}
       className={styles.input}
-      step={type === 'number' ? 'any' : undefined}
+      step={type === 'number' ? step : undefined}
       onChange={onChange}
     />
   );

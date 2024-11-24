@@ -39,6 +39,9 @@ export default function UICard({ name, type = 'date', placeholder, control }: UI
         placeholderText={placeholder}
         showTimeSelect={type === 'datetime'}
         onChange={(date) => field.onChange(date)}
+        popperProps={{
+          strategy: 'fixed'
+        }}
       />
       <div className="buttons">
         {field.value != null ? (
