@@ -118,7 +118,13 @@ export default function Form({ id, isEdit, data, vehicles, employees, events }: 
         <div className="row">
           <div className="col-4">
             <UIGroup header="Pojazd" error={errors.vehicle} required>
-              <UISelect name="vehicle" placeholder="Wybierz typ pojazdu" options={vehicles} control={control} />
+              <UISelect
+                name="vehicle"
+                placeholder="Wybierz typ pojazdu"
+                multiselect
+                options={vehicles}
+                control={control}
+              />
             </UIGroup>
             {/* <UIGroup header="Kierowca" error={errors.driver} required>
               <UISelect name="driver" placeholder="Wybierz kierowcę" options={employees} control={control} />

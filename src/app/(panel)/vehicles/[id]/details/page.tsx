@@ -34,8 +34,17 @@ async function fetchData(id: string) {
 export default async function RentalsDetailsPage({ params }: DetailsProps) {
   const { id } = params;
   const data = await fetchData(id);
+  console.log(data?.inspectionDate);
 
-  const details = [{ detailName: 'Numer rejestracyjny', detailData: data?.registrationNumber }];
+  const details = [
+    { detailName: 'Numer rejestracyjny', detailData: data?.registrationNumber },
+    { detailName: 'Data przeglądu', detailData: formatDateTime(data?.inspectionDate) },
+    { detailName: 'Data ubezpieczenia', detailData: formatDateTime(data?.insuranceDate) },
+    { detailName: 'Cena za km', detailData: formatCurrency(data?.pricePerKm) },
+    { detailName: 'Utworzono', detailData: formatDateTime(data?.createdAt) },
+    { detailName: 'Zaktualizowano', detailData: formatDateTime(data?.updatedAt) },
+    { detailName: 'Opis', detailData: dashIfEmpty(data?.description) }
+  ];
 
   return (
     <UICard
@@ -47,7 +56,7 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
         </UIPanel>
       }
     >
-      <UIDetails header={data?._id} details={details} />
+      <UIDetails header={`${data?.brand} ${data?.model}`} details={details} />
     </UICard>
   );
 }

@@ -165,11 +165,7 @@ export interface Vehicle {
 export interface Transport {
   _id: string;
   vehicleType: string;
-  vehicleDetails: {
-    brand: string;
-    model: string;
-    registrationNumber: string;
-  };
+  vehicleDetails: Array<Vehicle>;
   driver: Employee;
   event: Event;
   departureTime: string;
@@ -190,7 +186,7 @@ export interface Service {
   servicePerson?: Employee;
   device: Device;
   description: string;
-  status: 'Available' | 'Out of stock';
+  status: 'Accepted' | 'In service' | 'Repaired' | 'Finished';
   createdAt: string;
   updatedAt: string;
 }
