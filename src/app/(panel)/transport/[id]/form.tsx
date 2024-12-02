@@ -18,7 +18,7 @@ import UIDatepicker from '@/src/components/UI/Datepicker';
 import UITextarea from '@/src/components/UI/Textarea';
 
 const schema = z.object({
-  vehicle: z.string(),
+  vehicle: z.array(z.string()).min(1),
   driver: z.string(),
   event: z.string(),
   departureTime: z.date(),
@@ -42,7 +42,7 @@ type FormProps = {
 export default function Form({ id, isEdit, data, vehicles, employees, events }: FormProps) {
   const router = useRouter();
   const title = isEdit
-    ? `Formularz edycji transportu: ${data?.departureLocation} - ${data?.destinationLocation} | ${data?.vehicleDetails.registrationNumber}`
+    ? `Formularz edycji transportu: ${data?.departureLocation} - ${data?.destinationLocation} | ${data?.vehicleDetails.map((v) => v.registrationNumber).join(', ')}`
     : 'Formularz dodawania transportu';
 
   const {
@@ -79,7 +79,10 @@ export default function Form({ id, isEdit, data, vehicles, employees, events }: 
 
   function init() {
     if (!data) return;
-
+    setValue(
+      'vehicle',
+      data.vehicleDetails.map((v) => v._id)
+    );
     setValue('driver', data.driver._id);
     setValue('event', data.event._id);
     setValue('departureTime', new Date(data.departureTime));
@@ -118,7 +121,13 @@ export default function Form({ id, isEdit, data, vehicles, employees, events }: 
         <div className="row">
           <div className="col-4">
             <UIGroup header="Pojazd" error={errors.vehicle} required>
-              <UISelect name="vehicle" placeholder="Wybierz typ pojazdu" options={vehicles} control={control} />
+              <UISelect
+                name="vehicle"
+                placeholder="Wybierz typ pojazdu"
+                multiselect
+                options={vehicles}
+                control={control}
+              />
             </UIGroup>
             {/* <UIGroup header="Kierowca" error={errors.driver} required>
               <UISelect name="driver" placeholder="Wybierz kierowcę" options={employees} control={control} />

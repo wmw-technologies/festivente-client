@@ -92,6 +92,7 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
           <UIButton href="/events" icon="ArrowLongLeftIcon" variant="gray">
             Powrót
           </UIButton>
+          <UIButton href={`/events/${id}`}>Edytuj</UIButton>
         </UIPanel>
       }
     >

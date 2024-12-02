@@ -34,11 +34,60 @@ async function fetchData(id: string) {
 export default async function RentalsDetailsPage({ params }: DetailsProps) {
   const { id } = params;
   const data = await fetchData(id);
+  console.log(data?.device.warehouseId.name);
 
   const details = [
     {
+      detailName: 'Nazwa urządzenia',
+      detailData: data?.device.warehouseId.name
+    },
+    {
+      detailName: 'SKU',
+      detailData: data?.device.warehouseId.skuNumber
+    },
+    {
+      detailName: 'Numer seryjny',
+      detailData: data?.device.serialNumber
+    },
+    {
+      detailName: 'Lokalizacja',
+      detailData: data?.device.location
+    },
+    {
+      detailName: 'Koszt naprawy',
+      detailData: formatCurrency(data?.repairPrice)
+    },
+    {
+      detailName: 'Data przyjęcia',
+      detailData: formatDateTime(data?.returnDate)
+    },
+    {
+      detailName: 'Data zakończenia serwisu',
+      detailData: formatDateTime(data?.serviceDate)
+    },
+    {
+      detailName: 'Status',
+      detailData: dashIfEmpty(data?.status)
+    },
+    {
       detailName: 'Osoba serwisująca',
       detailData: `${data?.servicePerson!.firstName} ${data?.servicePerson!.lastName}`
+    },
+    {
+      detailName: 'Utworzono',
+      detailData: formatDateTime(data?.createdAt)
+    },
+    {
+      detailName: 'Zaktualizowano',
+      detailData: formatDateTime(data?.updatedAt)
+    },
+    {
+      detailName: 'Opis urządzenia',
+      detailData: dashIfEmpty(data?.device.description)
+    },
+    {
+      detailName: 'Opis serwisu',
+      detailData: dashIfEmpty(data?.description)
     }
   ];
 
@@ -46,7 +95,7 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
     <UICard
       header={
         <UIPanel header="Szczegóły">
-          <UIButton href="/transport" icon="ArrowLongLeftIcon" variant="gray">
+          <UIButton href="/service" icon="ArrowLongLeftIcon" variant="gray">
             Powrót
           </UIButton>
         </UIPanel>

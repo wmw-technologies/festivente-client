@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import { ResponseAPI, Pagination, Employee, Event, Transport, Option } from '@/src/types';
+import { ResponseAPI, Pagination, Employee, Event, Transport, Option, Vehicle } from '@/src/types';
 import Form from './form';
 
 type EventsFormProps = {
@@ -71,12 +71,35 @@ async function fetchEvents() {
   })) as Option[];
 }
 
+async function fetchVechicle() {
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  const authCookie = cookies().get('auth')?.value;
+  if (!authCookie) return [];
+
+  const accessToken = JSON.parse(authCookie).accessToken;
+  const response = await fetch(`${url}/vehicle/list`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + accessToken
+    }
+  });
+
+  if (!response.ok) return [];
+
+  const data: ResponseAPI<Pagination<Vehicle>> = await response.json();
+  return (data.data?.items ?? []).map((vehicle) => ({
+    text: `${vehicle.brand} ${vehicle.model} (${vehicle.registrationNumber})`,
+    value: vehicle._id
+  })) as Option[];
+}
+
 export default async function TransportForm({ params }: EventsFormProps) {
   const { id } = params;
   const isEdit = id !== 'add';
   const data = isEdit ? await fetchData(id) : null;
   const employees = await fetchEmployees();
   const events = await fetchEvents();
+  const vehicles = await fetchVechicle();
 
-  return <Form id={id} isEdit={isEdit} data={data} vehicles={[]} employees={employees} events={events} />;
+  return <Form id={id} isEdit={isEdit} data={data} vehicles={vehicles} employees={employees} events={events} />;
 }

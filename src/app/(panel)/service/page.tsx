@@ -41,35 +41,41 @@ async function fetchData(pager: Pager) {
 export default async function ServicePage({ searchParams }: ServiceProps) {
   const pager = getPager(searchParams);
   const data = await fetchData(pager);
+  console.log(data.forEach((item) => console.log(item.device)));
 
   const columns: Array<Column> = [
     {
       id: 1,
-      header: 'Urządzenie',
+      header: 'ID urządzenia',
       item: (item: Service) => <span>{item.device._id}</span>
     },
     {
       id: 2,
+      header: 'Numer seryjny',
+      item: (item: Service) => <span>{item.device.serialNumber}</span>
+    },
+    {
+      id: 3,
       header: 'Data przyjęcia urządzenia',
       item: (item: Service) => <span>{formatDateTime(item.returnDate)}</span>
     },
     {
-      id: 3,
+      id: 4,
       header: 'Data zakończenia serwisu',
       item: (item: Service) => <span>{formatDateTime(item.serviceDate)}</span>
     },
     {
-      id: 4,
+      id: 5,
       header: 'Koszt naprawy',
       item: (item: Service) => <span>{formatCurrency(item.repairPrice)}</span>
     },
     {
-      id: 5,
+      id: 6,
       header: 'Status',
-      item: (item: Service) => <UIBadge variant={item.status === 'Available' ? 'success' : 'secondary'}>asd</UIBadge>
+      item: (item: Service) => <UIBadge variant={item.status === 'Finished' ? 'success' : 'secondary'}>asd</UIBadge>
     },
     {
-      id: 6,
+      id: 7,
       header: '',
       item: (item: Service) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>
