@@ -6,6 +6,7 @@ import { Column, ResponseAPI, Transport, Vehicle } from '@/src/types';
 import { dashIfEmpty, formatCurrency, formatDateTime } from '@/src/utils/format';
 import UIDetails from '@/src/components/UI/Details';
 import UITable from '@/src/components/UI/Table';
+import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 
 type DetailsProps = {
   params: {
@@ -66,6 +67,17 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
       id: 6,
       header: 'Data ubezpieczenia',
       item: (item: Vehicle) => <span>{formatDateTime(item.insuranceDate)}</span>
+    },
+    {
+      id: 7,
+      header: '',
+      item: (item: Vehicle) => (
+        <UIDropdown icon="EllipsisHorizontalIcon" smaller>
+          <UIDropdownItem href={`/vehicles/${item._id}/details`}>Szczegóły</UIDropdownItem>
+          <UIDropdownItem href={`/vehicles/${item._id}`}>Edytuj</UIDropdownItem>
+        </UIDropdown>
+      ),
+      width: 36
     }
   ];
 
@@ -84,8 +96,6 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
     { detailName: 'Opis', detailData: dashIfEmpty(data?.notes) }
   ];
 
-  console.log(data?.vehicleDetails);
-
   return (
     <UICard
       header={
@@ -99,7 +109,7 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
     >
       <UIDetails header={data?._id} details={details} />
 
-      {/* <UITable columns={columns} data={data?.vehicleDetails ?? []} /> */}
+      <UITable columns={columns} data={data?.vehicleDetails ?? []} />
     </UICard>
   );
 }
