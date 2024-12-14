@@ -16,6 +16,7 @@ const MAX_PAGES_TO_SHOW = 3;
 export default function UIPagination({ pager }: UIPaginationProps) {
   const router = useRouter();
   const totalPages = Math.ceil(pager.total / pager.perPage);
+  console.log(pager.total);
 
   const getPageRange = () => {
     const currentPage = pager.page;
@@ -40,7 +41,7 @@ export default function UIPagination({ pager }: UIPaginationProps) {
     router.push(`?page=1&perPage=${value}&sort=${pager.sort}&order=${pager.order}`);
   };
 
-  return (
+  return pager.total ? (
     <div className={styles.pagination}>
       <div className={styles['pagination__set-page']}>
         <button className={styles.button} disabled={pager.page === 1} onClick={() => handleChangePage(pager.page - 1)}>
@@ -90,5 +91,7 @@ export default function UIPagination({ pager }: UIPaginationProps) {
         </select>
       </div>
     </div>
+  ) : (
+    ''
   );
 }
