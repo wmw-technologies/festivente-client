@@ -38,7 +38,7 @@ const schema = z.object({
     .number()
     .refine((val) => val >= 0, { message: 'Amount must be positive' })
     .refine((val) => val <= 100000, { message: 'Amount must be less than or equal to 100,000 PLN' }),
-  discount: z.number().min(0, 'Minimum 0%').max(100, 'Maksimum 100%').optional(),
+  discount: z.union([z.number().int().positive().min(0, 'Minimum 0%').max(100, 'Maksimum 100%'), z.nan()]).optional(),
   methodOfPayment: z.string().optional().nullable(),
   notes: z.string().optional()
 });
@@ -74,6 +74,7 @@ export default function Form({ id, isEdit, data }: FormProps) {
 
   const rentalDate = watch('rentalDate');
   const returnDate = watch('returnDate');
+  const isPaid = watch('isPaid');
 
   const debouncedRentalDate = useDebounce(rentalDate, 1000);
   const debouncedReturnDate = useDebounce(returnDate, 1000);
@@ -96,6 +97,13 @@ export default function Form({ id, isEdit, data }: FormProps) {
       }
 
       toast.error('Wystąpił błąd podczas zapisywania wypożyczenia');
+    }
+  }
+
+  async function handleEndRental() {
+    if (window.confirm('Czy na pewno chcesz zakończyć wypożyczenie?')) {
+      // add end status to rental
+      handleSubmit(onSubmit)();
     }
   }
 
@@ -157,6 +165,11 @@ export default function Form({ id, isEdit, data }: FormProps) {
           >
             Zapisz
           </UIButton>
+          {isEdit && isPaid && (
+            <UIButton onClick={handleEndRental} loading={isSubmitting} disabled={!isValid && isSubmitted}>
+              Zakończ wypożyczenie
+            </UIButton>
+          )}
         </UIPanel>
       }
     >
