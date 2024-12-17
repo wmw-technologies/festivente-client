@@ -6,6 +6,7 @@ import styles from './layout.module.scss';
 import { Toaster, DefaultToastOptions } from 'react-hot-toast';
 import HolyLoader from 'holy-loader';
 import SystemFooter from '@/src/components/System/Footer';
+import { z } from 'zod';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -53,6 +54,58 @@ const toastOptions: DefaultToastOptions = {
     }
   }
 };
+
+// Definiowanie własnej mapy błędów
+// const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
+//   if (issue.code === z.ZodIssueCode.invalid_type) {
+//     if (issue.expected === 'string') {
+//       return { message: 'bad type!' };
+//     }
+//   }
+//   if (issue.code === z.ZodIssueCode.too_small && issue.type === 'string') {
+//     return { message: `String is too short. Minimum length is ${issue.minimum}` };
+//   }
+//   if (issue.code === z.ZodIssueCode.custom) {
+//     return { message: `less-than-${(issue.params || {}).minimum}` };
+//   }
+//   return { message: ctx.defaultError };
+// };
+
+// z.setErrorMap(customErrorMap);
+
+export const CustonerrorMap: z.ZodErrorMap = (issue, _ctx) => {
+  switch (issue.code) {
+    case z.ZodIssueCode.invalid_type:
+      return { message: 'Nieprawidłowy typ' };
+    case z.ZodIssueCode.invalid_literal:
+      return { message: `Wartość musi być równa ${issue.expected}` };
+    case z.ZodIssueCode.unrecognized_keys:
+      return { message: 'Nierozpoznane klucze w obiekcie' };
+    case z.ZodIssueCode.invalid_union:
+      return { message: 'Nieprawidłowa wartość dla unii' };
+    case z.ZodIssueCode.invalid_enum_value:
+      return { message: `Wartość musi być jedną z: ${issue.options.join(', ')}` };
+    case z.ZodIssueCode.invalid_arguments:
+      return { message: 'Nieprawidłowe argumenty funkcji' };
+    case z.ZodIssueCode.invalid_return_type:
+      return { message: 'Nieprawidłowy typ zwracany przez funkcję' };
+    case z.ZodIssueCode.invalid_date:
+      return { message: 'Nieprawidłowa data' };
+    case z.ZodIssueCode.invalid_string:
+      return { message: 'Nieprawidłowy ciąg znaków' };
+    case z.ZodIssueCode.too_small:
+      return { message: `Wartość jest za mała. Minimalna wartość to ${issue.minimum}` };
+    case z.ZodIssueCode.too_big:
+      return { message: `Wartość jest za duża. Maksymalna wartość to ${issue.maximum}` };
+    case z.ZodIssueCode.custom:
+      return { message: 'Nieprawidłowa wartość' };
+    default:
+      return { message: 'Nieprawidłowa wartość' };
+  }
+};
+
+// Ustawienie globalnej mapy błędów
+z.setErrorMap(CustonerrorMap);
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (

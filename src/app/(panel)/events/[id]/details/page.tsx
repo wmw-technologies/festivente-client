@@ -1,11 +1,5 @@
-import UICard from '@/src/components/UI/Card';
-import UIPanel from '@/src/components/UI/Panel';
-import UIButton from '@/src/components/UI/Button';
 import { cookies } from 'next/headers';
-import { ResponseAPI, Event, Column, Employee } from '@/src/types';
-import { dashIfEmpty, formatCurrency, formatDateTime } from '@/src/utils/format';
-import UIDetails from '@/src/components/UI/Details';
-import UITable from '@/src/components/UI/Table';
+import { ResponseAPI, Event } from '@/src/types';
 import Details from './details';
 
 type DetailsProps = {

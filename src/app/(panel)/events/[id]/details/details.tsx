@@ -7,6 +7,7 @@ import UIPanel from '@/src/components/UI/Panel';
 import UITable from '@/src/components/UI/Table';
 import { Column, Employee, Event } from '@/src/types';
 import { dashIfEmpty, formatCurrency, formatDateTime } from '@/src/utils/format';
+import { exportToExcel } from '@/src/utils/globalFunctions';
 import { utils, writeFile } from 'xlsx';
 
 type DetailsProps = {
@@ -64,28 +65,27 @@ export default function Details({ id, data }: DetailsProps) {
     { detailName: 'Opis', detailData: dashIfEmpty(data?.description) }
   ];
 
-  const excelHeader = ['ID', 'Nazwa', 'Wartość'];
+  // function exportToExcel(data: any) {
+  //   const excelHeader = ['ID', 'Nazwa', 'Wartość'];
+  //   // Add an ID column with auto-generated numbers
+  //   const dataWithId = data.map((row: any, index: number) => ({
+  //     ID: index + 1,
+  //     ...row
+  //   }));
+  //   const worksheet = utils.json_to_sheet(dataWithId);
+  //   const workbook = utils.book_new();
+  //   utils.book_append_sheet(workbook, worksheet, 'Event');
+  //   utils.sheet_add_aoa(worksheet, [excelHeader], { origin: 'A1' });
 
-  function exportToExcel(data: any) {
-    // Add an ID column with auto-generated numbers
-    const dataWithId = data.map((row: any, index: number) => ({
-      ID: index + 1,
-      ...row
-    }));
-    const worksheet = utils.json_to_sheet(dataWithId);
-    const workbook = utils.book_new();
-    utils.book_append_sheet(workbook, worksheet, 'Event');
-    utils.sheet_add_aoa(worksheet, [excelHeader], { origin: 'A1' });
+  //   // Calculate the maximum width for each column
+  //   const maxLengths = excelHeader.map((header, index) => {
+  //     return Math.max(header.length, ...dataWithId.map((row: any) => row[Object.keys(row)[index]].toString().length));
+  //   });
 
-    // Calculate the maximum width for each column
-    const maxLengths = excelHeader.map((header, index) => {
-      return Math.max(header.length, ...dataWithId.map((row: any) => row[Object.keys(row)[index]].toString().length));
-    });
-
-    // Set the column width in the worksheet
-    worksheet['!cols'] = maxLengths.map((length) => ({ wch: length }));
-    writeFile(workbook, 'Event.xlsx', { compression: true });
-  }
+  //   // Set the column width in the worksheet
+  //   worksheet['!cols'] = maxLengths.map((length) => ({ wch: length }));
+  //   writeFile(workbook, 'Event.xlsx', { compression: true });
+  // }
 
   return (
     <UICard
@@ -95,7 +95,7 @@ export default function Details({ id, data }: DetailsProps) {
             Powrót
           </UIButton>
           <UIButton href={`/events/${id}`}>Edytuj</UIButton>
-          <UIButton type="button" variant="black" onClick={() => exportToExcel(details)}>
+          <UIButton type="button" variant="black" onClick={() => exportToExcel(details, 'Wydarzenie')}>
             Eksport do excel
           </UIButton>
         </UIPanel>

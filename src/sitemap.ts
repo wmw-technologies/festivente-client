@@ -174,6 +174,11 @@ export const SITEMAP: Array<SitemapItem> = [
         name: 'Edytuj transport',
         path: '/transport/:id',
         visible: false
+      },
+      {
+        name: 'Szczegóły transportu',
+        path: '/transport/:id/details',
+        visible: false
       }
     ]
   },
@@ -191,6 +196,11 @@ export const SITEMAP: Array<SitemapItem> = [
       {
         name: 'Edytuj urządzenie w serwisie',
         path: '/service/:id',
+        visible: false
+      },
+      {
+        name: 'Szczegóły serwisu',
+        path: '/service/:id/details',
         visible: false
       }
     ]
