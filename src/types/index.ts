@@ -164,16 +164,15 @@ export interface Vehicle {
 
 export interface Transport {
   _id: string;
-  vehicleType: string;
-  vehicleDetails: Array<Vehicle>;
-  driver: Employee;
+  vehicles: Array<Vehicle>;
   event: Event;
   departureTime: string;
   arrivalTime?: string;
   departureLocation: string;
   destinationLocation: string;
+  phoneNumber?: string;
   notes?: string;
-  status: 'Pending' | 'Confirmed' | 'Cancelled';
+  status: 'Scheduled' | 'In Progress' | 'Completed';
   createdAt: string;
   updatedAt: string;
 }

@@ -55,7 +55,7 @@ export default function RentWidget({ availableDevices, control, errors, setValue
     // const endDate = new Date(returnDate);
     const timeDifference = returnDate.getTime() - rentalDate.getTime();
     const dayDifference = timeDifference / (1000 * 3600 * 24);
-    console.log(timeDifference, dayDifference);
+    // console.log(timeDifference, dayDifference);
 
     return dayDifference ? Math.ceil(dayDifference) : 1;
   }
@@ -93,7 +93,7 @@ export default function RentWidget({ availableDevices, control, errors, setValue
       const discountAmount = ((discount.value ? discount.value : 0) / 100) * totalWithoutDiscount;
       setValue('inTotal', twoDecimals(totalWithoutDiscount - discountAmount));
     }
-  }, [rentalDate.value, returnDate.value, discount.value]);
+  }, [rentalDate.value, returnDate.value]);
 
   useEffect(() => {
     if (deviceIds.value)

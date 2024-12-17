@@ -3,14 +3,13 @@ import styles from './index.module.scss';
 import UIIcon from '@/src/components/UI/Icon';
 
 type UIBadgeProps = {
-  variant?: 'primary' | 'secondary' | 'success';
+  variant?: 'primary' | 'secondary' | 'success' | 'info' | 'warning';
   children: ReactNode;
   onClick?: () => void;
 };
 
 export default function UIBadge({ variant = 'primary', children, onClick }: UIBadgeProps) {
-  const classVariant =
-    variant === 'primary' ? styles.primary : variant === 'secondary' ? styles.secondary : styles.success;
+  const classVariant = styles[variant];
 
   function handleClick(e: MouseEvent<HTMLDivElement>) {
     e.preventDefault();

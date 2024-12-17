@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { getPager } from '@/src/utils/pager';
 import { ResponseAPI, Column, Pager, Pagination, Transport } from '@/src/types';
-import { formatDateTime } from '@/src/utils/format';
+import { formatDateTime, dashIfEmpty } from '@/src/utils/format';
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
@@ -13,6 +13,32 @@ import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 type TransportProps = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
+
+function getStatus(status: string) {
+  switch (status) {
+    case 'Scheduled':
+      return 'Zaplanowany';
+    case 'In Progress':
+      return 'W trakcie';
+    case 'Completed':
+      return 'Zakończony';
+    default:
+      return 'Nieznany';
+  }
+}
+
+function getStatusVariant(status: string) {
+  switch (status) {
+    case 'Scheduled':
+      return 'info';
+    case 'In Progress':
+      return 'warning';
+    case 'Completed':
+      return 'success';
+    default:
+      return 'info';
+  }
+}
 
 async function fetchData(pager: Pager) {
   const url = process.env.NEXT_PUBLIC_API_URL;
@@ -69,8 +95,8 @@ export default async function TransportPage({ searchParams }: TransportProps) {
     },
     {
       id: 5,
-      header: 'Kierowca',
-      item: (item: Transport) => <span>{`${item.driver.firstName} ${item.driver.lastName}`}</span>
+      header: 'Kontakt (numer telefonu)',
+      item: (item: Transport) => <span>{dashIfEmpty(item.phoneNumber)}</span>
     },
     {
       id: 6,
@@ -80,7 +106,7 @@ export default async function TransportPage({ searchParams }: TransportProps) {
     {
       id: 7,
       header: 'Status',
-      item: (item: Transport) => <UIBadge>{item.status}</UIBadge>
+      item: (item: Transport) => <UIBadge variant={getStatusVariant(item.status)}>{getStatus(item.status)}</UIBadge>
     },
     {
       id: 8,

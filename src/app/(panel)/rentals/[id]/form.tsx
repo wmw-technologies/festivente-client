@@ -74,12 +74,13 @@ export default function Form({ id, isEdit, data }: FormProps) {
 
   const rentalDate = watch('rentalDate');
   const returnDate = watch('returnDate');
-  const isPaid = watch('isPaid');
+  // const isPaid = watch('isPaid');
 
   const debouncedRentalDate = useDebounce(rentalDate, 1000);
   const debouncedReturnDate = useDebounce(returnDate, 1000);
 
   async function onSubmit(form: Schema) {
+    console.log('form', form);
     try {
       const response = !isEdit ? await create(form) : await update(id, form);
 
@@ -100,12 +101,12 @@ export default function Form({ id, isEdit, data }: FormProps) {
     }
   }
 
-  async function handleEndRental() {
-    if (window.confirm('Czy na pewno chcesz zakończyć wypożyczenie?')) {
-      // add end status to rental
-      handleSubmit(onSubmit)();
-    }
-  }
+  // async function handleEndRental() {
+  //   if (window.confirm('Czy na pewno chcesz zakończyć wypożyczenie?')) {
+  //     // add end status to rental
+  //     handleSubmit(onSubmit)();
+  //   }
+  // }
 
   function init() {
     if (!data) return;
@@ -138,13 +139,15 @@ export default function Form({ id, isEdit, data }: FormProps) {
     async function fetchData(id: string, rentalDate: Date, returnDate: Date) {
       const response = await fetchAvailableDevices(id, rentalDate, returnDate);
 
+      console.log('availableDevices', response);
+
       setAvailableDevices(response);
     }
 
     if (debouncedRentalDate && debouncedReturnDate) {
       fetchData(id, debouncedRentalDate, debouncedReturnDate);
     }
-    console.log('debouncedRentalDate', debouncedRentalDate);
+    // console.log('debouncedRentalDate', debouncedRentalDate);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedRentalDate, debouncedReturnDate]);
 
@@ -165,11 +168,11 @@ export default function Form({ id, isEdit, data }: FormProps) {
           >
             Zapisz
           </UIButton>
-          {isEdit && isPaid && (
+          {/* {isEdit && isPaid && (
             <UIButton onClick={handleEndRental} loading={isSubmitting} disabled={!isValid && isSubmitted}>
               Zakończ wypożyczenie
             </UIButton>
-          )}
+          )} */}
         </UIPanel>
       }
     >
@@ -264,7 +267,7 @@ export default function Form({ id, isEdit, data }: FormProps) {
         {debouncedRentalDate && debouncedReturnDate ? (
           <RentWidget availableDevices={availableDevices} control={control} errors={errors} setValue={setValue} />
         ) : (
-          <p className="mark">Wybierz datę wypożyczenia i zwrotu, aby dodać urządzenia do wypożyczenia.</p>
+          <p className="mark">Wybierz datę wypożyczenia i zwrotu, aby zobaczyć dostępne urządzenia do wypożyczenia</p>
         )}
       </form>
     </UICard>
