@@ -39,6 +39,18 @@
     color: var(--f-green);
   }
 
+  &.info {
+    border: 1px solid var(--f-blue-light);
+    background: var(--f-blue-light);
+    color: var(--f-blue);
+  }
+
+  &.warning {
+    border: 1px solid var(--f-yellow-light);
+    background: var(--f-yellow-light);
+    color: var(--f-yellow);
+  }
+
   .clear {
     display: flex;
     margin-right: -4px;

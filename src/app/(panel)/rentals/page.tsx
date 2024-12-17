@@ -8,7 +8,7 @@ import UITable from '@/src/components/UI/Table';
 import UIBadge from '@/src/components/UI/Badge';
 import UIPagination from '@/src/components/UI/Pagination';
 import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
-import { dashIfEmpty, formatCurrency, formatDate } from '@/src/utils/format';
+import { dashIfEmpty, formatCurrency, formatDate, formatDateTime } from '@/src/utils/format';
 
 type RentalsProps = {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -58,13 +58,13 @@ export default async function Rentals({ searchParams }: RentalsProps) {
     {
       id: 3,
       header: 'Data wypożyczenia',
-      item: (item: Rental) => <span>{formatDate(item.rentalDate)}</span>,
+      item: (item: Rental) => <span>{formatDateTime(item.rentalDate)}</span>,
       sort: 'rentalDate'
     },
     {
       id: 4,
       header: 'Data zwrotu',
-      item: (item: Rental) => <span>{formatDate(item.returnDate)}</span>,
+      item: (item: Rental) => <span>{formatDateTime(item.returnDate)}</span>,
       sort: 'returnDate'
     },
     {

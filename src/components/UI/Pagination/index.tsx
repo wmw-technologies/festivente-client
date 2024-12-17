@@ -16,7 +16,6 @@ const MAX_PAGES_TO_SHOW = 3;
 export default function UIPagination({ pager }: UIPaginationProps) {
   const router = useRouter();
   const totalPages = Math.ceil(pager.total / pager.perPage);
-  console.log(pager.total);
 
   const getPageRange = () => {
     const currentPage = pager.page;

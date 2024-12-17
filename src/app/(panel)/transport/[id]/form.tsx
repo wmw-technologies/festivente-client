@@ -18,13 +18,13 @@ import UIDatepicker from '@/src/components/UI/Datepicker';
 import UITextarea from '@/src/components/UI/Textarea';
 
 const schema = z.object({
-  vehicle: z.array(z.string()).min(1),
-  driver: z.string(),
+  vehicles: z.array(z.string()).min(1),
   event: z.string(),
   departureTime: z.date(),
   arrivalTime: z.date().optional(),
   departureLocation: z.string().min(3).max(64),
   destinationLocation: z.string().min(3).max(64),
+  phoneNumber: z.string().optional(),
   notes: z.string().max(256).optional()
 });
 
@@ -34,15 +34,14 @@ type FormProps = {
   id: string;
   isEdit: boolean;
   data: Transport | null;
-  employees: Option[];
   events: Option[];
   vehicles: Option[];
 };
 
-export default function Form({ id, isEdit, data, vehicles, employees, events }: FormProps) {
+export default function Form({ id, isEdit, data, vehicles, events }: FormProps) {
   const router = useRouter();
   const title = isEdit
-    ? `Formularz edycji transportu: ${data?.departureLocation} - ${data?.destinationLocation} | ${data?.vehicleDetails.map((v) => v.registrationNumber).join(', ')}`
+    ? `Formularz edycji transportu: ${data?.departureLocation} - ${data?.destinationLocation} | ${(data?.vehicles ?? []).map((v) => v.registrationNumber).join(', ')}`
     : 'Formularz dodawania transportu';
 
   const {
@@ -80,15 +79,15 @@ export default function Form({ id, isEdit, data, vehicles, employees, events }: 
   function init() {
     if (!data) return;
     setValue(
-      'vehicle',
-      data.vehicleDetails.map((v) => v._id)
+      'vehicles',
+      data.vehicles.map((v) => v._id)
     );
-    setValue('driver', data.driver._id);
     setValue('event', data.event._id);
     setValue('departureTime', new Date(data.departureTime));
     setValue('arrivalTime', data.arrivalTime ? new Date(data.arrivalTime) : undefined);
     setValue('departureLocation', data.departureLocation);
     setValue('destinationLocation', data.destinationLocation);
+    setValue('phoneNumber', data.phoneNumber ?? '');
     setValue('notes', data.notes ?? '');
   }
 
@@ -120,18 +119,15 @@ export default function Form({ id, isEdit, data, vehicles, employees, events }: 
       <form id="transport-form" onSubmit={handleSubmit(onSubmit)}>
         <div className="row">
           <div className="col-4">
-            <UIGroup header="Pojazd" error={errors.vehicle} required>
+            <UIGroup header="Pojazd/y" error={errors.vehicles} required>
               <UISelect
-                name="vehicle"
+                name="vehicles"
                 placeholder="Wybierz typ pojazdu"
                 multiselect
                 options={vehicles}
                 control={control}
               />
             </UIGroup>
-            {/* <UIGroup header="Kierowca" error={errors.driver} required>
-              <UISelect name="driver" placeholder="Wybierz kierowcę" options={employees} control={control} />
-            </UIGroup> */}
             <UIGroup header="Wydarzenie" error={errors.event} required>
               <UISelect name="event" placeholder="Wybierz wydarzenie" options={events} control={control} />
             </UIGroup>
@@ -145,7 +141,14 @@ export default function Form({ id, isEdit, data, vehicles, employees, events }: 
               <UIInput placeholder="Wprowadź miejsce odjazdu" {...register('departureLocation')} />
             </UIGroup>
             <UIGroup header="Miejsce przyjazdu" error={errors.destinationLocation} required>
-              <UIInput placeholder="Wprowadź miejsce odjazdu" {...register('destinationLocation', {})} />
+              <UIInput placeholder="Wprowadź miejsce odjazdu" {...register('destinationLocation')} />
+            </UIGroup>
+            <UIGroup
+              header="Numer telefonu do kierowcy/ów"
+              error={errors.phoneNumber}
+              help="Numery powinny być oddzielone przecinkiem"
+            >
+              <UIInput placeholder="Wprowadź numer telefonu do kierowcy/ów" {...register('phoneNumber')} />
             </UIGroup>
           </div>
           <div className="col-4">
