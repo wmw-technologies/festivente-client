@@ -19,23 +19,26 @@ import UISelect from '@/src/components/UI/Select';
 import UITextarea from '@/src/components/UI/Textarea';
 
 const schema = z.object({
-  name: z.string().min(3).max(64),
+  name: z
+    .string()
+    .min(3, { message: 'Nazwa musi mieć co najmniej 3 znaki' })
+    .max(64, { message: 'Nazwa może mieć maksymalnie 64 znaki' }),
   manufacturer: z.string().optional(),
-  skuNumber: z.string().min(1),
+  skuNumber: z.string().min(1, { message: 'Numer SKU jest wymagany' }),
   rentalValue: z
     .string()
-    .regex(/^\d+(\.\d{1,2})?$/, { message: 'Must be a valid PLN amount (e.g., 99 or 999.99)' })
+    .regex(/^\d+(\.\d{1,2})?$/, { message: 'Musi być prawidłową kwotą PLN (np. 99 lub 999.99)' })
     .transform((val) => parseFloat(val))
-    .refine((val) => val >= 0, { message: 'Amount must be positive' })
-    .refine((val) => val <= 100000, { message: 'Amount must be less than or equal to 100,000 PLN' })
+    .refine((val) => val >= 0, { message: 'Kwota musi być dodatnia' })
+    .refine((val) => val <= 100000, { message: 'Kwota musi być mniejsza lub równa 100 000 PLN' })
     .transform((val) => val.toFixed(2)),
   category: z.string().optional().nullable(),
   description: z.string().optional(),
   devices: z.array(
     z.object({
       _id: z.string().optional(),
-      serialNumber: z.string().min(1),
-      location: z.string().min(1),
+      serialNumber: z.string().min(1, { message: 'Numer seryjny jest wymagany' }),
+      location: z.string().min(1, { message: 'Lokalizacja jest wymagana' }),
       description: z.string().optional()
     })
   )

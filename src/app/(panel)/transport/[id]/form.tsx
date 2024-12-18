@@ -18,14 +18,23 @@ import UIDatepicker from '@/src/components/UI/Datepicker';
 import UITextarea from '@/src/components/UI/Textarea';
 
 const schema = z.object({
-  vehicles: z.array(z.string()).min(1),
-  event: z.string(),
-  departureTime: z.date(),
+  vehicles: z.array(z.string(), { message: 'Musi być przypisany przynajmniej jeden pojazd' }).min(1),
+  event: z.string({ message: 'Wydarzenie jest wymagane' }).min(1),
+  departureTime: z.date({ message: 'Nieprawidłowa data odjazdu' }),
   arrivalTime: z.date().optional(),
-  departureLocation: z.string().min(3).max(64),
-  destinationLocation: z.string().min(3).max(64),
-  phoneNumber: z.string().optional(),
-  notes: z.string().max(256).optional()
+  departureLocation: z
+    .string()
+    .min(3, { message: 'Miejsce wyjazdu musi mieć co najmniej 3 znaki' })
+    .max(64, { message: 'Miejsce wyjazdu może mieć maksymalnie 64 znaki' }),
+  destinationLocation: z
+    .string()
+    .min(3, { message: 'Miejsce przyjazdu musi mieć co najmniej 3 znaki' })
+    .max(64, { message: 'Miejsce przyjazdu może mieć maksymalnie 64 znaki' }),
+  phoneNumber: z
+    .string()
+    .min(9, { message: 'Numer telefonu musi mieć co najmniej 9 znaków' })
+    .max(16, { message: 'Numer telefonu może mieć maksymalnie 16 znaków' }),
+  notes: z.string().max(256, { message: 'Notatki mogą mieć maksymalnie 256 znaków' }).optional()
 });
 
 export type Schema = z.infer<typeof schema>;

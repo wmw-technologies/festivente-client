@@ -16,13 +16,23 @@ import UIInput from '@/src/components/UI/Input';
 import UISelect from '@/src/components/UI/Select';
 
 const schema = z.object({
-  first_name: z.string().min(3).max(64),
-  last_name: z.string().min(3).max(64),
-  email: z.string().email().trim(),
-  phone: z.string().min(9).max(16).optional(),
+  first_name: z
+    .string({ message: 'Wprowadź imie' })
+    .min(3, { message: 'Minimum 3 znaki' })
+    .max(64, { message: 'Maksymalnie 64 znaki' }),
+  last_name: z
+    .string({ message: 'Wprowadź nazwisko' })
+    .min(3, { message: 'Minimum 3 znaki' })
+    .max(64, { message: 'Maksymalnie 64 znaki' }),
+  email: z.string().email({ message: 'Błedny adres email' }).trim(),
+  phone: z
+    .string({ message: 'Podaj właściwy numer telefonu' })
+    .min(9, { message: 'Błedny numer telefonu' })
+    .max(16, { message: 'Błedny numer telefonu' })
+    .optional(),
   role: z.string({ message: 'Wybierz rolę' }),
-  password: z.string().min(8),
-  confirm_password: z.string().min(8)
+  password: z.string({ message: 'Wprowadź hasło' }).min(8, { message: 'Minimum 8 znaków' }),
+  confirm_password: z.string({ message: 'Powtórz hasło' }).min(8, { message: 'Minimum 8 znaków' })
 });
 
 export type Schema = z.infer<typeof schema>;

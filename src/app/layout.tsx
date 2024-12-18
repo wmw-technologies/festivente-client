@@ -6,6 +6,7 @@ import styles from './layout.module.scss';
 import { Toaster, DefaultToastOptions } from 'react-hot-toast';
 import HolyLoader from 'holy-loader';
 import SystemFooter from '@/src/components/System/Footer';
+import { z } from 'zod';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -53,6 +54,26 @@ const toastOptions: DefaultToastOptions = {
     }
   }
 };
+
+const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
+  if (issue.code === z.ZodIssueCode.invalid_type) {
+    if (issue.expected === 'string') {
+      return { message: 'bad type!' };
+    }
+  }
+  if (issue.code === z.ZodIssueCode.too_small && issue.type === 'string') {
+    return { message: `String is too short. Minimum length is ${issue.minimum}` };
+  }
+  if (issue.code === z.ZodIssueCode.custom) {
+    return { message: `less-than-${(issue.params || {}).minimum}` };
+  }
+  if (issue.code === z.ZodIssueCode.too_small && issue.type === 'number') {
+    return { message: `too-small-${issue.minimum}` };
+  }
+  return { message: ctx.defaultError };
+};
+
+z.setErrorMap(customErrorMap);
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
