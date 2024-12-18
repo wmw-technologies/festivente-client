@@ -23,23 +23,22 @@ import UITogglebox from '@/src/components/UI/Togglebox';
 
 const schema = z.object({
   clientName: z.string().min(1, 'Nazwa klienta jest wymagana'),
-  clientNIP: z.string().optional(),
+  clientNIP: z.string().max(10, { message: 'Podaj 10 cyfr' }).optional(),
   clientPhone: z.string().min(1, 'Numer telefonu jest wymagany'),
   clientEmail: z.string().email('Nieprawidłowy adres e-mail'),
   clientCity: z.string().min(1, 'Miasto jest wymagane'),
   clientStreet: z.string().min(1, 'Ulica jest wymagana'),
   clientPostCode: z.string().regex(/^\d{2}-\d{3}$/, 'Kod pocztowy musi być w formacie XX-XXX'),
-  rentalDate: z.date(),
-  returnDate: z.date(),
-  paymentForm: z.string().min(1, 'Płatność jest wymagana'),
+  rentalDate: z.date({ message: 'Data wypożyczenia jest wymagana' }),
+  returnDate: z.date({ message: 'Data zwrotu jest wymagana' }),
+  paymentForm: z.string({ message: 'Wprowadź forme płatności' }).min(1),
   isPaid: z.boolean(),
   devices: z.array(z.string()).min(1, 'W wypożyczeniu musi być przynajmniej jedno urządzenie'),
   inTotal: z
-    .number()
-    .refine((val) => val >= 0, { message: 'Amount must be positive' })
-    .refine((val) => val <= 100000, { message: 'Amount must be less than or equal to 100,000 PLN' }),
-  discount: z.union([z.number().int().positive().min(0, 'Minimum 0%').max(100, 'Maksimum 100%'), z.nan()]).optional(),
-  methodOfPayment: z.string().optional().nullable(),
+    .number({ message: 'Wprowadź wartość wypożyczenia' })
+    .refine((val) => val >= 0, { message: 'Kwota musi być dodatnia' })
+    .refine((val) => val <= 100000, { message: 'Kwota maksymalna to 100,000 PLN' }),
+  discount: z.union([z.number().int().min(0, 'Minimum 0%').max(100, 'Maksimum 100%'), z.nan()]).optional(),
   notes: z.string().optional()
 });
 

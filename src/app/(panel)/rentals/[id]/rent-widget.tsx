@@ -93,7 +93,7 @@ export default function RentWidget({ availableDevices, control, errors, setValue
       const discountAmount = ((discount.value ? discount.value : 0) / 100) * totalWithoutDiscount;
       setValue('inTotal', twoDecimals(totalWithoutDiscount - discountAmount));
     }
-  }, [rentalDate.value, returnDate.value]);
+  }, [rentalDate.value, returnDate.value, discount.value]);
 
   useEffect(() => {
     if (deviceIds.value)

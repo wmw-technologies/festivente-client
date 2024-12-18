@@ -19,22 +19,42 @@ import UISelect from '@/src/components/UI/Select';
 import UITable from '@/src/components/UI/Table';
 
 const schema = z.object({
-  firstName: z.string().min(3).max(64),
-  lastName: z.string().min(3).max(64),
-  email: z.string().email().optional(),
-  phone: z.string().min(9).max(16).optional().or(z.literal('')),
-  position: z.string(),
+  firstName: z
+    .string()
+    .min(3, { message: 'Imię musi mieć co najmniej 3 znaki' })
+    .max(64, { message: 'Imię może mieć maksymalnie 64 znaki' }),
+  lastName: z
+    .string()
+    .min(3, { message: 'Nazwisko musi mieć co najmniej 3 znaki' })
+    .max(64, { message: 'Nazwisko może mieć maksymalnie 64 znaki' }),
+  email: z.string().email({ message: 'Nieprawidłowy adres e-mail' }).optional(),
+  phone: z
+    .string()
+    .min(9, { message: 'Numer telefonu musi mieć co najmniej 9 znaków' })
+    .max(16, { message: 'Numer telefonu może mieć maksymalnie 16 znaków' })
+    .optional()
+    .or(z.literal('')),
+  position: z.string({ message: 'Stanowisko jest wymagane' }).min(1),
   dailyRate: z
     .string()
-    .regex(/^\d+(\.\d{1,2})?$/, { message: 'Must be a valid PLN amount (e.g., 99 or 999.99)' })
+    .regex(/^\d+(\.\d{1,2})?$/, { message: 'Musi być prawidłową kwotą PLN (np. 99 lub 999.99)' })
     .transform((val) => parseFloat(val))
-    .refine((val) => val >= 0, { message: 'Amount must be positive' })
-    .refine((val) => val <= 100000, { message: 'Amount must be less than or equal to 100,000 PLN' })
+    .refine((val) => val >= 0, { message: 'Kwota musi być dodatnia' })
+    .refine((val) => val <= 100000, { message: 'Kwota musi być mniejsza lub równa 100 000 PLN' })
     .transform((val) => val.toFixed(2)),
   overtime: z.object({
-    first: z.number().min(0).max(10),
-    second: z.number().min(0).max(10),
-    third: z.number().min(0).max(10)
+    first: z
+      .number({ message: 'Wartość musi być liczbą' })
+      .min(0, { message: 'Wartość musi być większa lub równa 0' })
+      .max(10, { message: 'Wartość musi być mniejsza lub równa 10' }),
+    second: z
+      .number({ message: 'Wartość musi być liczbą' })
+      .min(0, { message: 'Wartość musi być większa lub równa 0' })
+      .max(10, { message: 'Wartość musi być mniejsza lub równa 10' }),
+    third: z
+      .number({ message: 'Wartość musi być liczbą' })
+      .min(0, { message: 'Wartość musi być większa lub równa 0' })
+      .max(10, { message: 'Wartość musi być mniejsza lub równa 10' })
   })
 });
 

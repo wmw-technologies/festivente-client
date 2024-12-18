@@ -17,13 +17,21 @@ import UIDatepicker from '@/src/components/UI/Datepicker';
 import UITextarea from '@/src/components/UI/Textarea';
 
 const schema = z.object({
-  brand: z.string().min(3).max(64),
-  model: z.string().max(64).optional(),
-  registrationNumber: z.string().min(5).max(15),
-  pricePerKm: z.number().min(0),
+  brand: z
+    .string()
+    .min(3, { message: 'Marka musi mieć co najmniej 3 znaki' })
+    .max(64, { message: 'Marka może mieć maksymalnie 64 znaki' }),
+  model: z.string().max(64, { message: 'Model może mieć maksymalnie 64 znaki' }).optional(),
+  registrationNumber: z
+    .string()
+    .min(5, { message: 'Numer rejestracyjny musi mieć co najmniej 5 znaków' })
+    .max(15, { message: 'Numer rejestracyjny może mieć maksymalnie 15 znaków' }),
+  pricePerKm: z
+    .number({ message: 'Wartość musi być liczbą' })
+    .min(0, { message: 'Cena za kilometr musi być dodatnia' }),
   inspectionDate: z.date().optional(),
   insuranceDate: z.date().optional(),
-  description: z.string().max(256).optional()
+  description: z.string().max(256, { message: 'Opis może mieć maksymalnie 256 znaków' }).optional()
 });
 
 export type Schema = z.infer<typeof schema>;

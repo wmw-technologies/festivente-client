@@ -18,7 +18,7 @@ import UIInput from '@/src/components/UI/Input';
 import UIAccordion from '@/src/components/UI/Accordion';
 
 const schema = z.object({
-  name: z.string().min(3).max(64)
+  name: z.string().min(3, { message: 'Minimum 3 znaki' }).max(64, { message: 'Maksymalnie 64 znaki' })
 });
 
 export type Schema = z.infer<typeof schema>;

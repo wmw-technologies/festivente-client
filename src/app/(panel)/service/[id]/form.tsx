@@ -22,8 +22,8 @@ const schema = z.object({
   serviceDate: z.date().optional(),
   repairPrice: z.number().min(0).optional(),
   servicePerson: z.string().optional(),
-  device: z.string(),
-  description: z.string().max(256).optional()
+  device: z.string({ message: 'Urządzenie jest wymagane' }),
+  description: z.string().max(256, { message: 'Opis może mieć maksymalnie 256 znaków' }).optional()
 });
 
 export type Schema = z.infer<typeof schema>;
