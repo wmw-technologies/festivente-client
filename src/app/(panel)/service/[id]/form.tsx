@@ -20,10 +20,10 @@ import UITextarea from '@/src/components/UI/Textarea';
 const schema = z.object({
   returnDate: z.date(),
   serviceDate: z.date().optional(),
-  repairPrice: z.number().min(0).optional(),
+  repairPrice: z.number().min(0, { message: 'Cena naprawy musi być dodatnia' }).optional(),
   servicePerson: z.string().optional(),
   device: z.string({ message: 'Wybierz urządzenie serwisowane' }),
-  description: z.string().max(256).optional()
+  description: z.string().max(256, { message: 'Opis może mieć maksymalnie 256 znaków' }).optional()
 });
 
 export type Schema = z.infer<typeof schema>;
