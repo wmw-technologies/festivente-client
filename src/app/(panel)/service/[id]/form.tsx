@@ -22,7 +22,7 @@ const schema = z.object({
   serviceDate: z.date().optional(),
   repairPrice: z.number().min(0).optional(),
   servicePerson: z.string().optional(),
-  device: z.string(),
+  device: z.string({ message: 'Wybierz urządzenie serwisowane' }),
   description: z.string().max(256).optional()
 });
 
