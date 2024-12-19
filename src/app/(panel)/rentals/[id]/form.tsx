@@ -79,7 +79,6 @@ export default function Form({ id, isEdit, data }: FormProps) {
   const debouncedReturnDate = useDebounce(returnDate, 1000);
 
   async function onSubmit(form: Schema) {
-    console.log('form', form);
     try {
       const response = !isEdit ? await create(form) : await update(id, form);
 
