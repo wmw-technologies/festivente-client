@@ -6,6 +6,7 @@ import { Column, Device, ResponseAPI, Warehouse } from '@/src/types';
 import { dashIfEmpty, formatCurrency, formatDateTime } from '@/src/utils/format';
 import UITable from '@/src/components/UI/Table';
 import UIDetails from '@/src/components/UI/Details';
+import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 
 type DetailsProps = {
   params: {
@@ -35,37 +36,42 @@ const columns: Array<Column> = [
   {
     id: 1,
     header: 'Id urządzenia',
-    item: (item: Device) => <span>{item._id}</span>,
-    sort: '_id'
+    item: (item: Device) => <span>{item._id}</span>
   },
   {
     id: 2,
     header: 'Id wynajmu',
-    item: (item: Device) => <span>{dashIfEmpty(String(item.rentalId))}</span>,
-    sort: 'rentalId'
+    item: (item: Device) => <span>{dashIfEmpty(String(item.rentalId))}</span>
   },
   {
     id: 3,
     header: 'Lokalizacja',
-    item: (item: Device) => <span>{item.location}</span>,
-    sort: 'location'
+    item: (item: Device) => <span>{item.location}</span>
   },
   {
     id: 4,
     header: 'Numer seryjny',
-    item: (item: Device) => <span>{dashIfEmpty(item.serialNumber)}</span>,
-    sort: 'serialNumber'
+    item: (item: Device) => <span>{dashIfEmpty(item.serialNumber)}</span>
   },
   {
     id: 5,
     header: 'Ostatnia aktualizacja',
-    item: (item: Device) => <span>{formatDateTime(item.updatedAt)}</span>,
-    sort: 'updatedAt'
+    item: (item: Device) => <span>{formatDateTime(item.updatedAt)}</span>
   },
   {
     id: 6,
     header: 'Opis',
     item: (item: Device) => <span>{dashIfEmpty(item.description)}</span>
+  },
+  {
+    id: 7,
+    header: '',
+    item: (item: Device) => (
+      <UIDropdown icon="EllipsisHorizontalIcon" smaller>
+        <UIDropdownItem href={`/rentals/${item.rentalId}/details`}>Edytuj</UIDropdownItem>
+      </UIDropdown>
+    ),
+    width: 36
   }
 ];
 
@@ -91,6 +97,7 @@ export default async function WarehouseDetailsPage({ params }: DetailsProps) {
           <UIButton href="/warehouse" icon="ArrowLongLeftIcon" variant="gray">
             Powrót
           </UIButton>
+          <UIButton href={`/warehouse/${id}`}>Edytuj</UIButton>
         </UIPanel>
       }
     >
