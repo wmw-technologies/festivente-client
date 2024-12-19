@@ -58,35 +58,12 @@ export async function update(id: string, form: Schema) {
 }
 
 export async function availableDevices(id: string, rentalDate: Date, returnDate: Date) {
-  console.log('id', id);
-  console.log('rentalDate', rentalDate instanceof Date);
-  console.log('returnDate', returnDate);
-  // const url = process.env.NEXT_PUBLIC_API_URL;
-  // const authCookie = cookies().get('auth')?.value;
-  // if (!authCookie) return [];
-
-  // const accessToken = JSON.parse(authCookie).accessToken;
-  // const idQuery = id === 'add' ? '' : `?id=${id}`;
-
-  // const response = await fetch(`${url}/rental/available-devices${idQuery}`, {
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     Authorization: 'Bearer ' + accessToken
-  //   }
-  // });
-
-  // if (!response.ok) return [];
-
-  // const json: ResponseAPI<any> = await response.json();
-
-  // return json.data ?? [];
-
   const url = process.env.NEXT_PUBLIC_API_URL;
   const authCookie = cookies().get('auth')?.value;
   if (!authCookie) return [];
   const accessToken = JSON.parse(authCookie).accessToken;
 
-  console.log('url', url);
+  // console.log('url', url);
   // const idQuery = _id === 'add' ? '' : `?id=${_id}`;
   const response = await fetch(`${url}/rental/available-devices`, {
     headers: {

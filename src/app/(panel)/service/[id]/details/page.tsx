@@ -34,7 +34,6 @@ async function fetchData(id: string) {
 export default async function RentalsDetailsPage({ params }: DetailsProps) {
   const { id } = params;
   const data = await fetchData(id);
-  console.log(data?.device.warehouseId.name);
 
   const details = [
     {

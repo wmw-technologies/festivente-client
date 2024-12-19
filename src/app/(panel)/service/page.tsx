@@ -41,7 +41,6 @@ async function fetchData(pager: Pager) {
 export default async function ServicePage({ searchParams }: ServiceProps) {
   const pager = getPager(searchParams);
   const data = await fetchData(pager);
-  console.log(data.forEach((item) => console.log(item.device)));
 
   const columns: Array<Column> = [
     {

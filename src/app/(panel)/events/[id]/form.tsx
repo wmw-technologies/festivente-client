@@ -86,8 +86,6 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
   });
 
   async function onSubmit(form: Schema) {
-    console.log(form);
-
     try {
       const response = !isEdit ? await create(form) : await update(id, form);
 
