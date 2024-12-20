@@ -39,7 +39,7 @@ type FormProps = {
 export default function Form({ id, isEdit, data, employees, devices }: FormProps) {
   const router = useRouter();
   const title = isEdit
-    ? `Formularz edycji urządzenia serwisowanego: ${data?.device?.warehouseId}`
+    ? `Formularz edycji urządzenia serwisowanego: ${data?.device?.warehouseId?.name} ${data?.device?.warehouseId?.skuNumber} | ${data?.device?.serialNumber}`
     : 'Formularz dodawania urządzenia w serwisie';
 
   const {
@@ -53,13 +53,17 @@ export default function Form({ id, isEdit, data, employees, devices }: FormProps
     resolver: zodResolver(schema)
   });
 
+  const disabled = isSubmitting || data?.status === 'Completed';
+
   async function onSubmit(form: Schema) {
     try {
       const response = !isEdit ? await create(form) : await update(id, form);
 
       if (!response?.ok) throw response;
 
-      router.push('/service');
+      const serviceId = response?.data?._id as any;
+
+      router.push(`/service/${serviceId}/details`);
       toast.success(response.message);
     } catch (ex: any) {
       if (ex.status === 422 && ex?.errors) {
@@ -70,7 +74,9 @@ export default function Form({ id, isEdit, data, employees, devices }: FormProps
         return;
       }
 
-      toast.error('Wystąpił błąd podczas zapisywania serwisu');
+      const message = ex?.message || 'Wystąpił błąd podczas zapisywania wypożyczenia';
+
+      toast.error(message);
     }
   }
 
@@ -114,52 +120,54 @@ export default function Form({ id, isEdit, data, employees, devices }: FormProps
       }
     >
       <form id="service-form" onSubmit={handleSubmit(onSubmit)}>
-        <div className="row">
-          <div className="col-4">
-            <UIGroup header="Data przyjęcia urządzenia" error={errors.returnDate} required>
-              <UIDatepicker
-                name="returnDate"
-                type="datetime"
-                placeholder="Wybierz datę przyjęcia urządzenia"
-                control={control}
-              />
-            </UIGroup>
-            <UIGroup header="Data zakończenia serwisu" error={errors.serviceDate}>
-              <UIDatepicker
-                name="serviceDate"
-                type="datetime"
-                placeholder="Wybierz datę zakończenia serwisu"
-                control={control}
-              />
-            </UIGroup>
-            <UIGroup header="Koszt naprawy (PLN)" error={errors.repairPrice}>
-              <UIInput
-                placeholder="Wprowadź koszt naprawy"
-                type="number"
-                {...register('repairPrice', { setValueAs: (v) => (v ? parseFloat(v) : undefined) })}
-              />
-            </UIGroup>
-            <UIGroup header="Osoba serwisująca" error={errors.servicePerson}>
-              <UISelect
-                name="servicePerson"
-                placeholder="Wybierz osobę serwisującą"
-                options={employees}
-                control={control}
-              />
-            </UIGroup>
-            <UIGroup header="Urządzenie serwisowane" error={errors.device} required>
-              <UISelect
-                name="device"
-                placeholder="Wybierz urządzenie serwisowane"
-                options={devices}
-                control={control}
-              />
-            </UIGroup>
-            <UIGroup header="Opis" error={errors.description}>
-              <UITextarea rows={3} placeholder="Wprowadź opis" {...register('description')} />
-            </UIGroup>
+        <fieldset disabled={disabled}>
+          <div className="row">
+            <div className="col-4">
+              <UIGroup header="Data przyjęcia urządzenia" error={errors.returnDate} required>
+                <UIDatepicker
+                  name="returnDate"
+                  type="datetime"
+                  placeholder="Wybierz datę przyjęcia urządzenia"
+                  control={control}
+                />
+              </UIGroup>
+              <UIGroup header="Data zakończenia serwisu" error={errors.serviceDate}>
+                <UIDatepicker
+                  name="serviceDate"
+                  type="datetime"
+                  placeholder="Wybierz datę zakończenia serwisu"
+                  control={control}
+                />
+              </UIGroup>
+              <UIGroup header="Koszt naprawy (PLN)" error={errors.repairPrice}>
+                <UIInput
+                  placeholder="Wprowadź koszt naprawy"
+                  type="number"
+                  {...register('repairPrice', { setValueAs: (v) => (v ? parseFloat(v) : undefined) })}
+                />
+              </UIGroup>
+              <UIGroup header="Osoba serwisująca" error={errors.servicePerson}>
+                <UISelect
+                  name="servicePerson"
+                  placeholder="Wybierz osobę serwisującą"
+                  options={employees}
+                  control={control}
+                />
+              </UIGroup>
+              <UIGroup header="Urządzenie serwisowane" error={errors.device} required>
+                <UISelect
+                  name="device"
+                  placeholder="Wybierz urządzenie serwisowane"
+                  options={devices}
+                  control={control}
+                />
+              </UIGroup>
+              <UIGroup header="Opis" error={errors.description}>
+                <UITextarea rows={3} placeholder="Wprowadź opis" {...register('description')} />
+              </UIGroup>
+            </div>
           </div>
-        </div>
+        </fieldset>
       </form>
     </UICard>
   );

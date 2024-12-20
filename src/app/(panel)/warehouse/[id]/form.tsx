@@ -75,7 +75,9 @@ export default function Form({ id, isEdit, data }: FormProps) {
 
       if (!response?.ok) throw response;
 
-      router.push('/warehouse');
+      const warehouseId = response?.data?._id as any;
+
+      router.push(`/warehouse/${warehouseId}/details`);
       toast.success(response?.message);
     } catch (ex: any) {
       if (ex.status === 422 && ex?.errors) {

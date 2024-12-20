@@ -42,15 +42,15 @@ async function fetchData(pager: Pager) {
   return data.data?.items ?? [];
 }
 
-function countRentals(devices: Array<Device>) {
-  if (!devices) return 0;
-  return devices.filter((item) => item.rentalId?._id).length;
-}
+// function countRentals(devices: Array<Device>) {
+//   if (!devices) return 0;
+//   return devices.filter((item) => item.rentalId?._id).length;
+// }
 
-function countServices(devices: Array<Device>) {
-  if (!devices) return 0;
-  return devices.filter((item) => item.serviceId?._id).length;
-}
+// function countServices(devices: Array<Device>) {
+//   if (!devices) return 0;
+//   return devices.filter((item) => item.serviceId?._id).length;
+// }
 
 export default async function WarehousePage({ searchParams }: WarehouseProps) {
   const pager = getPager(searchParams);
@@ -82,30 +82,30 @@ export default async function WarehousePage({ searchParams }: WarehouseProps) {
     },
     {
       id: 5,
-      header: 'Ilość ogółem',
+      header: 'Ilość',
       item: (item: Warehouse) => <span>{item.devices.length}</span>,
       align: 'right'
     },
-    {
-      id: 6,
-      header: 'Ilość dostępnych',
-      item: (item: Warehouse) => (
-        <span>{item.devices.length - countRentals(item.devices) - countServices(item.devices)}</span>
-      ),
-      align: 'right'
-    },
-    {
-      id: 7,
-      header: 'Ilość wypożyczonych',
-      item: (item: Warehouse) => <span>{countRentals(item.devices)}</span>,
-      align: 'right'
-    },
-    {
-      id: 8,
-      header: 'Ilość w serwisie',
-      item: (item: Warehouse) => <span>{countServices(item.devices)}</span>,
-      align: 'right'
-    },
+    // {
+    //   id: 6,
+    //   header: 'Ilość dostępnych',
+    //   item: (item: Warehouse) => (
+    //     <span>{item.devices.length - (item.devicesInRental ?? 0) - (item.devicesInService ?? 0)}</span>
+    //   ),
+    //   align: 'right'
+    // },
+    // {
+    //   id: 7,
+    //   header: 'Ilość wypożyczonych',
+    //   item: (item: Warehouse) => <span>{item.devicesInRental ?? 0}</span>,
+    //   align: 'right'
+    // },
+    // {
+    //   id: 8,
+    //   header: 'Ilość w serwisie',
+    //   item: (item: Warehouse) => <span>{item.devicesInService ?? 0}</span>,
+    //   align: 'right'
+    // },
     {
       id: 9,
       header: '',

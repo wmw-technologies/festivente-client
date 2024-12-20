@@ -73,6 +73,8 @@ export interface Warehouse {
   category?: string;
   description?: string | undefined;
   devices: Array<Device>;
+  devicesInService: number;
+  devicesInRental: number;
   status: 'Available' | 'Out of stock';
   createdBy: User;
   updatedAt: string;
@@ -85,8 +87,6 @@ export interface Device {
   location: string;
   description?: string;
   warehouseId: Warehouse;
-  rentalId?: Rental;
-  serviceId?: Service;
   createdAt: string;
   updatedAt: string;
 }
@@ -134,6 +134,7 @@ export interface Employee {
 export interface Event {
   _id: string;
   eventName: string;
+  city: string;
   clientName: string;
   clientEmail: string;
   clientPhone: string;
@@ -145,7 +146,7 @@ export interface Event {
   estimatedHours?: number;
   actualHours?: number;
   notes?: string;
-  status: 'Pending' | 'Confirmed' | 'Cancelled';
+  status: 'Pending' | 'Confirmed' | 'Completed';
   createdAt: string;
   updatedAt: string;
 }
@@ -186,7 +187,7 @@ export interface Service {
   servicePerson?: Employee;
   device: Device;
   description: string;
-  status: 'Accepted' | 'In service' | 'Repaired' | 'Finished';
+  status: 'Accepted' | 'Completed' | 'In Progress';
   createdAt: string;
   updatedAt: string;
 }
