@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 import { Column, ResponseAPI, Event, Pager, Pagination } from '@/src/types';
 import { getPager } from '@/src/utils/pager';
 import { formatDate } from '@/src/utils/format';
+import { getStatus, getStatusVariant } from './utils';
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
@@ -71,7 +72,7 @@ export default async function Events({ searchParams }: EventsProps) {
     {
       id: 5,
       header: 'Status',
-      item: (item: Event) => <UIBadge>{item.status}</UIBadge>
+      item: (item: Event) => <UIBadge variant={getStatusVariant(item.status)}>{getStatus(item.status)}</UIBadge>
     },
     {
       id: 6,

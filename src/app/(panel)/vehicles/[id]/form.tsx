@@ -63,7 +63,9 @@ export default function Form({ id, isEdit, data }: FormProps) {
 
       if (!response?.ok) throw response;
 
-      router.push('/vehicles');
+      const vehicleId = response?.data?._id as any;
+
+      router.push(`/vehicles/${vehicleId}/details`);
       toast.success(response?.message);
     } catch (ex: any) {
       if (ex.status === 422 && ex?.errors) {

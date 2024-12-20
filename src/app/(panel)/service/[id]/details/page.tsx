@@ -3,6 +3,7 @@ import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
 import { cookies } from 'next/headers';
 import { ResponseAPI, Service } from '@/src/types';
+import { getStatus } from '../../utils';
 import { dashIfEmpty, formatCurrency, formatDateTime } from '@/src/utils/format';
 import UIDetails from '@/src/components/UI/Details';
 
@@ -66,11 +67,13 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
     },
     {
       detailName: 'Status',
-      detailData: dashIfEmpty(data?.status)
+      detailData: getStatus(data?.status!)
     },
     {
       detailName: 'Osoba serwisująca',
-      detailData: `${data?.servicePerson!.firstName} ${data?.servicePerson!.lastName}`
+      detailData: data?.servicePerson?.firstName
+        ? `${data?.servicePerson?.firstName} ${data?.servicePerson?.lastName}`
+        : '-'
     },
     {
       detailName: 'Utworzono',

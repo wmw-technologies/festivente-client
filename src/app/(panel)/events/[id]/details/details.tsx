@@ -114,7 +114,7 @@ export default function Details({ id, data, transport }: DetailsProps) {
     { detailName: 'Budżet', detailData: formatCurrency(data?.budget) },
     { detailName: 'Przewidywana ilość godzin', detailData: dashIfEmpty(data?.estimatedHours) },
     { detailName: 'Prawdziwa ilość godzin', detailData: dashIfEmpty(data?.actualHours) },
-    { detailName: 'Status', detailData: data?.status },
+    { detailName: 'Status', detailData: getStatus(data?.status!) },
     { detailName: 'Utworzono', detailData: formatDateTime(data?.createdAt) },
     { detailName: 'Zaktualizowano', detailData: formatDateTime(data?.updatedAt) },
     { detailName: 'Notatki', detailData: dashIfEmpty(data?.notes) },
@@ -128,9 +128,11 @@ export default function Details({ id, data, transport }: DetailsProps) {
           <UIButton href="/events" icon="ArrowLongLeftIcon" variant="gray">
             Powrót
           </UIButton>
-          <UIButton href={`/events/${id}`} icon="PencilSquareIcon">
-            Edytuj
-          </UIButton>
+          {data?.status === 'Confirmed' ? (
+            <UIButton icon="PencilSquareIcon" href={`/events/${id}`}>
+              Edytuj
+            </UIButton>
+          ) : null}
           <UIButton
             icon="TableCellsIcon"
             type="button"

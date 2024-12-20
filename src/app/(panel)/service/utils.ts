@@ -1,13 +1,12 @@
 export function getStatus(status: string) {
+  console.log('status', status);
   switch (status) {
-    case 'Scheduled':
-      return 'Zaplanowany';
+    case 'Accepted':
+      return 'Przyjęty';
     case 'In Progress':
       return 'W trakcie';
-    case 'Completed Paid':
-      return 'Zakończony zapłacony';
-    case 'Complated Not Paid':
-      return 'Zakończony niezapłacony';
+    case 'Completed':
+      return 'Zakończony';
     default:
       return 'Nieznany';
   }
@@ -15,14 +14,12 @@ export function getStatus(status: string) {
 
 export function getStatusVariant(status: string) {
   switch (status) {
-    case 'Scheduled':
+    case 'Accepted':
       return 'info';
     case 'In Progress':
       return 'warning';
-    case 'Completed Paid':
+    case 'Completed':
       return 'success';
-    case 'Complated Not Paid':
-      return 'danger';
     default:
       return 'info';
   }

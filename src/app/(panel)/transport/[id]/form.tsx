@@ -64,13 +64,17 @@ export default function Form({ id, isEdit, data, vehicles, events }: FormProps) 
     resolver: zodResolver(schema)
   });
 
+  const disabled = isSubmitting || data?.status === 'In Progress' || data?.status === 'Completed';
+
   async function onSubmit(form: Schema) {
     try {
       const response = !isEdit ? await create(form) : await update(id, form);
 
       if (!response?.ok) throw response;
 
-      router.push('/transport');
+      const transportId = response?.data?._id as any;
+
+      router.push(`/transport/${transportId}/details`);
       toast.success(response.message);
     } catch (ex: any) {
       if (ex.status === 422 && ex?.errors) {
@@ -81,7 +85,8 @@ export default function Form({ id, isEdit, data, vehicles, events }: FormProps) 
         return;
       }
 
-      toast.error('Wystąpił błąd podczas zapisywania transportu');
+      const message = ex?.message || 'Wystąpił błąd podczas zapisywania wypożyczenia';
+      toast.error(message);
     }
   }
 
@@ -126,46 +131,58 @@ export default function Form({ id, isEdit, data, vehicles, events }: FormProps) 
       }
     >
       <form id="transport-form" onSubmit={handleSubmit(onSubmit)}>
-        <div className="row">
-          <div className="col-4">
-            <UIGroup header="Pojazd/y" error={errors.vehicles} required>
-              <UISelect
-                name="vehicles"
-                placeholder="Wybierz typ pojazdu"
-                multiselect
-                options={vehicles}
-                control={control}
-              />
-            </UIGroup>
-            <UIGroup header="Wydarzenie" error={errors.event} required>
-              <UISelect name="event" placeholder="Wybierz wydarzenie" options={events} control={control} />
-            </UIGroup>
-            <UIGroup header="Odjazd" error={errors.departureTime} required>
-              <UIDatepicker name="departureTime" type="datetime" placeholder="Wybierz datę odjazu" control={control} />
-            </UIGroup>
-            <UIGroup header="Przyjazd" error={errors.arrivalTime}>
-              <UIDatepicker name="arrivalTime" type="datetime" placeholder="Wybierz datę przyjazdu" control={control} />
-            </UIGroup>
-            <UIGroup header="Miejsce odjazdu" error={errors.departureLocation} required>
-              <UIInput placeholder="Wprowadź miejsce odjazdu" {...register('departureLocation')} />
-            </UIGroup>
-            <UIGroup header="Miejsce przyjazdu" error={errors.destinationLocation} required>
-              <UIInput placeholder="Wprowadź miejsce odjazdu" {...register('destinationLocation')} />
-            </UIGroup>
-            <UIGroup
-              header="Numer telefonu do kierowcy/ów"
-              error={errors.phoneNumber}
-              help="Numery powinny być oddzielone przecinkiem"
-            >
-              <UIInput placeholder="Wprowadź numer telefonu do kierowcy/ów" {...register('phoneNumber')} />
-            </UIGroup>
+        <fieldset disabled={disabled}>
+          <div className="row">
+            <div className="col-4">
+              <UIGroup header="Pojazd/y" error={errors.vehicles} required>
+                <UISelect
+                  name="vehicles"
+                  placeholder="Wybierz typ pojazdu"
+                  multiselect
+                  options={vehicles}
+                  control={control}
+                />
+              </UIGroup>
+              <UIGroup header="Wydarzenie" error={errors.event} required>
+                <UISelect name="event" placeholder="Wybierz wydarzenie" options={events} control={control} />
+              </UIGroup>
+              <UIGroup header="Odjazd" error={errors.departureTime} required>
+                <UIDatepicker
+                  name="departureTime"
+                  type="datetime"
+                  placeholder="Wybierz datę odjazu"
+                  control={control}
+                />
+              </UIGroup>
+              <UIGroup header="Przyjazd" error={errors.arrivalTime}>
+                <UIDatepicker
+                  name="arrivalTime"
+                  type="datetime"
+                  placeholder="Wybierz datę przyjazdu"
+                  control={control}
+                />
+              </UIGroup>
+              <UIGroup header="Miejsce odjazdu" error={errors.departureLocation} required>
+                <UIInput placeholder="Wprowadź miejsce odjazdu" {...register('departureLocation')} />
+              </UIGroup>
+              <UIGroup header="Miejsce przyjazdu" error={errors.destinationLocation} required>
+                <UIInput placeholder="Wprowadź miejsce odjazdu" {...register('destinationLocation')} />
+              </UIGroup>
+              <UIGroup
+                header="Numer telefonu do kierowcy/ów"
+                error={errors.phoneNumber}
+                help="Numery powinny być oddzielone przecinkiem"
+              >
+                <UIInput placeholder="Wprowadź numer telefonu do kierowcy/ów" {...register('phoneNumber')} />
+              </UIGroup>
+            </div>
+            <div className="col-4">
+              <UIGroup header="Notatki" error={errors.notes}>
+                <UITextarea rows={3} placeholder="Wprowadź opis wydarzenia" {...register('notes')} />
+              </UIGroup>
+            </div>
           </div>
-          <div className="col-4">
-            <UIGroup header="Notatki" error={errors.notes}>
-              <UITextarea rows={3} placeholder="Wprowadź opis wydarzenia" {...register('notes')} />
-            </UIGroup>
-          </div>
-        </div>
+        </fieldset>
       </form>
     </UICard>
   );

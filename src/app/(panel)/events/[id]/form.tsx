@@ -85,13 +85,17 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
     resolver: zodResolver(schema)
   });
 
+  const disabled = isSubmitting || data?.status === 'Pending' || data?.status === 'Completed';
+
   async function onSubmit(form: Schema) {
     try {
       const response = !isEdit ? await create(form) : await update(id, form);
 
       if (!response?.ok) throw response;
 
-      router.push('/events');
+      const eventId = response?.data?._id as any;
+
+      router.push(`/events/${eventId}/details`);
       toast.success(response?.message);
     } catch (ex: any) {
       if (ex.status === 422 && ex?.errors) {
@@ -109,6 +113,7 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
   function init() {
     if (!data) return;
     setValue('eventName', data.eventName);
+    setValue('city', data.city);
     setValue('clientName', data.clientName);
     setValue('clientEmail', data.clientEmail);
     setValue('clientPhone', data.clientPhone);
@@ -120,8 +125,8 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
       'assignedEmployees',
       data.assignedEmployees?.map?.((el) => el._id)
     );
-    setValue('estimatedHours', data.estimatedHours);
-    setValue('actualHours', data.actualHours);
+    data.estimatedHours != null && setValue('estimatedHours', data.estimatedHours);
+    data.actualHours != null && setValue('actualHours', data.actualHours);
     setValue('notes', data.notes);
   }
 
@@ -151,69 +156,75 @@ export default function Form({ id, isEdit, data, employees }: FormProps) {
       }
     >
       <form id="events-form" onSubmit={handleSubmit(onSubmit)}>
-        <div className="row">
-          <div className="col-4">
-            <UIGroup header="Nazwa wydarzenia" error={errors.eventName} required>
-              <UIInput placeholder="Wprowadź nazwę wydarzenia" autocomplete="name" {...register('eventName')} />
-            </UIGroup>
-            <UIGroup header="Miasto wydarzenia" error={errors.city} required>
-              <UIInput placeholder="Wprowadź miasto wydarzenia" {...register('city')} />
-            </UIGroup>
-            <UIGroup header="Miejsce wydarzenia" error={errors.location} required>
-              <UIInput
-                placeholder="Wprowadź miejsce wydarzenia"
-                autocomplete="street-address"
-                {...register('location')}
-              />
-            </UIGroup>
-            <UIGroup header="Data wydarzenia" error={errors.date} required>
-              <UIDatepicker name="date" placeholder="Wprowadź data wydarzenia" control={control} />
-            </UIGroup>
-            <UIGroup header="Opis wydarzenia" error={errors.description}>
-              <UITextarea rows={3} placeholder="Wprowadź opis wydarzenia" {...register('description')} />
-            </UIGroup>
-            <UIGroup header="Nazwa klienta" error={errors.clientName} required>
-              <UIInput placeholder="Wprowadź nazwę klienta" autocomplete="name" {...register('clientName')} />
-            </UIGroup>
-            <UIGroup header="Email klienta" error={errors.clientEmail} required>
-              <UIInput placeholder="Wprowadź email klienta" autocomplete="email" {...register('clientEmail')} />
-            </UIGroup>
-            <UIGroup header="Numer telefonu klienta" error={errors.clientPhone} required>
-              <UIInput placeholder="Wprowadź numer telefonu klienta" autocomplete="tel" {...register('clientPhone')} />
-            </UIGroup>
+        <fieldset disabled={disabled}>
+          <div className="row">
+            <div className="col-4">
+              <UIGroup header="Nazwa wydarzenia" error={errors.eventName} required>
+                <UIInput placeholder="Wprowadź nazwę wydarzenia" autocomplete="name" {...register('eventName')} />
+              </UIGroup>
+              <UIGroup header="Miasto wydarzenia" error={errors.city} required>
+                <UIInput placeholder="Wprowadź miasto wydarzenia" {...register('city')} />
+              </UIGroup>
+              <UIGroup header="Miejsce wydarzenia" error={errors.location} required>
+                <UIInput
+                  placeholder="Wprowadź miejsce wydarzenia"
+                  autocomplete="street-address"
+                  {...register('location')}
+                />
+              </UIGroup>
+              <UIGroup header="Data wydarzenia" error={errors.date} required>
+                <UIDatepicker name="date" placeholder="Wprowadź data wydarzenia" control={control} />
+              </UIGroup>
+              <UIGroup header="Opis wydarzenia" error={errors.description}>
+                <UITextarea rows={3} placeholder="Wprowadź opis wydarzenia" {...register('description')} />
+              </UIGroup>
+              <UIGroup header="Nazwa klienta" error={errors.clientName} required>
+                <UIInput placeholder="Wprowadź nazwę klienta" autocomplete="name" {...register('clientName')} />
+              </UIGroup>
+              <UIGroup header="Email klienta" error={errors.clientEmail} required>
+                <UIInput placeholder="Wprowadź email klienta" autocomplete="email" {...register('clientEmail')} />
+              </UIGroup>
+              <UIGroup header="Numer telefonu klienta" error={errors.clientPhone} required>
+                <UIInput
+                  placeholder="Wprowadź numer telefonu klienta"
+                  autocomplete="tel"
+                  {...register('clientPhone')}
+                />
+              </UIGroup>
+            </div>
+            <div className="col-4">
+              <UIGroup header="Budżet (PLN)" error={errors.budget} required>
+                <UIInput placeholder="Wprowadź budżet" type="number" {...register('budget', { valueAsNumber: true })} />
+              </UIGroup>
+              <UIGroup header="Pracownicy" error={errors.assignedEmployees} required>
+                <UISelect
+                  name="assignedEmployees"
+                  placeholder="Wybierz pracowników"
+                  multiselect
+                  options={employees}
+                  control={control}
+                />
+              </UIGroup>
+              <UIGroup header="Przewidywany czas w godzinach" error={errors.estimatedHours}>
+                <UIInput
+                  type="number"
+                  placeholder="Wprowadź przewidywany czas"
+                  {...register('estimatedHours', { valueAsNumber: true })}
+                />
+              </UIGroup>
+              <UIGroup header="Rzeczywisty czas w godzinach" error={errors.actualHours}>
+                <UIInput
+                  type="number"
+                  placeholder="Wprowadź rzeczywisty czas"
+                  {...register('actualHours', { valueAsNumber: true })}
+                />
+              </UIGroup>
+              <UIGroup header="Uwagi" error={errors.notes}>
+                <UITextarea rows={3} placeholder="Wprowadź uwagi" {...register('notes')} />
+              </UIGroup>
+            </div>
           </div>
-          <div className="col-4">
-            <UIGroup header="Budżet (PLN)" error={errors.budget} required>
-              <UIInput placeholder="Wprowadź budżet" type="number" {...register('budget', { valueAsNumber: true })} />
-            </UIGroup>
-            <UIGroup header="Pracownicy" error={errors.assignedEmployees} required>
-              <UISelect
-                name="assignedEmployees"
-                placeholder="Wybierz pracowników"
-                multiselect
-                options={employees}
-                control={control}
-              />
-            </UIGroup>
-            <UIGroup header="Przewidywany czas w godzinach" error={errors.estimatedHours}>
-              <UIInput
-                type="number"
-                placeholder="Wprowadź przewidywany czas"
-                {...register('estimatedHours', { valueAsNumber: true })}
-              />
-            </UIGroup>
-            <UIGroup header="Rzeczywisty czas w godzinach" error={errors.actualHours}>
-              <UIInput
-                type="number"
-                placeholder="Wprowadź rzeczywisty czas"
-                {...register('actualHours', { valueAsNumber: true })}
-              />
-            </UIGroup>
-            <UIGroup header="Uwagi" error={errors.notes}>
-              <UITextarea rows={3} placeholder="Wprowadź uwagi" {...register('notes')} />
-            </UIGroup>
-          </div>
-        </div>
+        </fieldset>
       </form>
     </UICard>
   );

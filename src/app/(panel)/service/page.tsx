@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 import { Column, ResponseAPI, Pager, Pagination, Service } from '@/src/types';
 import { getPager } from '@/src/utils/pager';
 import { formatDateTime, formatCurrency } from '@/src/utils/format';
+import { getStatus, getStatusVariant } from './utils';
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
@@ -71,7 +72,7 @@ export default async function ServicePage({ searchParams }: ServiceProps) {
     {
       id: 6,
       header: 'Status',
-      item: (item: Service) => <UIBadge variant={item.status === 'Finished' ? 'success' : 'secondary'}>asd</UIBadge>
+      item: (item: Service) => <UIBadge variant={getStatusVariant(item.status)}>{getStatus(item.status)}</UIBadge>
     },
     {
       id: 7,
