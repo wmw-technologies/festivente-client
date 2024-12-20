@@ -4,6 +4,7 @@ import UIButton from '@/src/components/UI/Button';
 import { cookies } from 'next/headers';
 import { Column, Device, Rental, ResponseAPI } from '@/src/types';
 import { dashIfEmpty, formatCurrency, formatDateTime } from '@/src/utils/format';
+import ConfirmPayment from './confirm-payment';
 import UITable from '@/src/components/UI/Table';
 import UIDetails from '@/src/components/UI/Details';
 
@@ -117,11 +118,11 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
           <UIButton href="/rentals" icon="ArrowLongLeftIcon" variant="gray">
             Powrót
           </UIButton>
+          <ConfirmPayment id={id} />
         </UIPanel>
       }
     >
       <UIDetails header={data?._id} details={details} />
-
       <UITable columns={columns} data={data?.devices ?? []} />
     </UICard>
   );

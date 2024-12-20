@@ -42,5 +42,10 @@
       background-color: var(--f-primary);
       transition: linear 0.4s;
     }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
   }
 }

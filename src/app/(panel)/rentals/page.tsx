@@ -33,8 +33,10 @@ function getStatusVariant(status: string) {
       return 'info';
     case 'In Progress':
       return 'warning';
-    case 'Completed':
+    case 'Completed Paid':
       return 'success';
+    case 'Complated Not Paid':
+      return 'danger';
     default:
       return 'info';
   }

@@ -74,8 +74,16 @@ export default function Form({ id, isEdit, data }: FormProps) {
   const rentalDate = watch('rentalDate');
   const returnDate = watch('returnDate');
 
+  const disabled =
+    isSubmitting ||
+    data?.status === 'In Progress' ||
+    data?.status === 'Completed Paid' ||
+    data?.status === 'Complated Not Paid';
+
   const debouncedRentalDate = useDebounce(rentalDate, 1000);
   const debouncedReturnDate = useDebounce(returnDate, 1000);
+
+  const allDevices = [...availableDevices, ...(data?.devices || [])];
 
   function handleRentalDateChange(_: Date) {
     setValue('devices', []);
@@ -102,7 +110,9 @@ export default function Form({ id, isEdit, data }: FormProps) {
         return;
       }
 
-      toast.error('Wystąpił błąd podczas zapisywania wypożyczenia');
+      const message = ex?.message || 'Wystąpił błąd podczas zapisywania wypożyczenia';
+
+      toast.error(message);
     }
   }
 
@@ -169,113 +179,109 @@ export default function Form({ id, isEdit, data }: FormProps) {
       }
     >
       <form id="rentals-form" onSubmit={handleSubmit(onSubmit)}>
-        <div className="row">
-          <div className="col-3">
-            <UIGroup header="Nazwa klienta" error={errors.clientName} required>
-              <UIInput placeholder="Wprowadź nazwę klienta" {...register('clientName')} />
-            </UIGroup>
-            <UIGroup header="NIP" error={errors.clientNIP}>
-              <UIInput placeholder="Wprowadź NIP" {...register('clientNIP')} />
-            </UIGroup>
+        <fieldset disabled={disabled}>
+          <div className="row">
+            <div className="col-3">
+              <UIGroup header="Nazwa klienta" error={errors.clientName} required>
+                <UIInput placeholder="Wprowadź nazwę klienta" {...register('clientName')} />
+              </UIGroup>
+              <UIGroup header="NIP" error={errors.clientNIP}>
+                <UIInput placeholder="Wprowadź NIP" {...register('clientNIP')} />
+              </UIGroup>
 
-            <UIGroup header="Numer telefonu" error={errors.clientPhone} required>
-              <UIInput placeholder="Wprowadź numer telefonu" {...register('clientPhone')} />
-            </UIGroup>
-            <UIGroup header="Email" error={errors.clientEmail} required>
-              <UIInput placeholder="Wprowadź email" {...register('clientEmail')} />
-            </UIGroup>
+              <UIGroup header="Numer telefonu" error={errors.clientPhone} required>
+                <UIInput placeholder="Wprowadź numer telefonu" {...register('clientPhone')} />
+              </UIGroup>
+              <UIGroup header="Email" error={errors.clientEmail} required>
+                <UIInput placeholder="Wprowadź email" {...register('clientEmail')} />
+              </UIGroup>
+            </div>
+            <div className="col-3">
+              <UIGroup header="Miasto" error={errors.clientCity} required>
+                <UIInput placeholder="Wprowadź miasto" {...register('clientCity')} />
+              </UIGroup>
+              <UIGroup header="Ulica" error={errors.clientStreet} required>
+                <UIInput placeholder="Wprowadź ulice" {...register('clientStreet')} />
+              </UIGroup>
+              <UIGroup header="Kod pocztowy" error={errors.clientPostCode} required>
+                <UIInput placeholder="Wprowadź kod pocztowy" {...register('clientPostCode')} />
+              </UIGroup>
+            </div>
+            <div className="col-3">
+              <UIGroup
+                header="Data wypożyczenia"
+                help={
+                  rentalDate && returnDate
+                    ? 'Zmieniając datę wypożyczenia zawartość Twojego koszyka zostanie usunięta'
+                    : ''
+                }
+                error={errors.rentalDate}
+                required
+              >
+                <UIDatepicker
+                  name="rentalDate"
+                  type="datetime"
+                  placeholder="Wybierz datę wypożyczenia"
+                  control={control}
+                  onChange={handleRentalDateChange}
+                />
+              </UIGroup>
+              <UIGroup
+                header="Data zwrotu"
+                help={
+                  rentalDate && returnDate ? 'Zmieniając datę zwrotu zawartość Twojego koszyka zostanie usunięta' : ''
+                }
+                error={errors.returnDate}
+                required
+              >
+                <UIDatepicker
+                  name="returnDate"
+                  type="datetime"
+                  placeholder="Wybierz datę zwrotu"
+                  control={control}
+                  onChange={handleReturnDateChange}
+                />
+              </UIGroup>
+              <UIGroup header="Koszt wypożyczenia" error={errors.inTotal} required>
+                <UIInput
+                  type="number"
+                  placeholder="Wprowadź wartość wypożyczenia"
+                  {...register('inTotal', { valueAsNumber: true })}
+                />
+              </UIGroup>
+              <UIGroup
+                header="Procent zniżki"
+                error={errors.discount}
+                help="Wprowadź 0 w przypadku braku zniżki"
+                required
+              >
+                <UIInput
+                  type="number"
+                  placeholder="Wprowadź procent zniżki"
+                  {...register('discount', { valueAsNumber: true })}
+                />
+              </UIGroup>
+              <UIGroup header="Forma płatności" error={errors.paymentForm} required>
+                <UISelect
+                  name="paymentForm"
+                  placeholder="Wybierz formę płatności"
+                  options={paymentForms}
+                  control={control}
+                />
+              </UIGroup>
+              <UIGroup header="Zamówienie opłacone" error={errors.isPaid}>
+                <UITogglebox {...register('isPaid')} />
+              </UIGroup>
+            </div>
+            <div className="col-3">
+              <UIGroup header="Uwagi" error={errors.notes}>
+                <UITextarea rows={3} placeholder="Uwagi do wypożyczenia" {...register('notes')} />
+              </UIGroup>
+            </div>
           </div>
-          <div className="col-3">
-            <UIGroup header="Miasto" error={errors.clientCity} required>
-              <UIInput placeholder="Wprowadź miasto" {...register('clientCity')} />
-            </UIGroup>
-            <UIGroup header="Ulica" error={errors.clientStreet} required>
-              <UIInput placeholder="Wprowadź ulice" {...register('clientStreet')} />
-            </UIGroup>
-            <UIGroup header="Kod pocztowy" error={errors.clientPostCode} required>
-              <UIInput placeholder="Wprowadź kod pocztowy" {...register('clientPostCode')} />
-            </UIGroup>
-          </div>
-          <div className="col-3">
-            <UIGroup
-              header="Data wypożyczenia"
-              help={
-                rentalDate && returnDate
-                  ? 'Zmieniając datę wypożyczenia zawartość Twojego koszyka zostanie usunięta'
-                  : ''
-              }
-              error={errors.rentalDate}
-              required
-            >
-              <UIDatepicker
-                name="rentalDate"
-                type="datetime"
-                placeholder="Wybierz datę wypożyczenia"
-                control={control}
-                onChange={handleRentalDateChange}
-              />
-            </UIGroup>
-            <UIGroup
-              header="Data zwrotu"
-              help={
-                rentalDate && returnDate ? 'Zmieniając datę zwrotu zawartość Twojego koszyka zostanie usunięta' : ''
-              }
-              error={errors.returnDate}
-              required
-            >
-              <UIDatepicker
-                name="returnDate"
-                type="datetime"
-                placeholder="Wybierz datę zwrotu"
-                control={control}
-                onChange={handleReturnDateChange}
-              />
-            </UIGroup>
-            <UIGroup header="Koszt wypożyczenia" error={errors.inTotal} required>
-              <UIInput
-                type="number"
-                placeholder="Wprowadź wartość wypożyczenia"
-                {...register('inTotal', { valueAsNumber: true })}
-              />
-            </UIGroup>
-            <UIGroup
-              header="Procent zniżki"
-              error={errors.discount}
-              help="Wprowadź 0 w przypadku braku zniżki"
-              required
-            >
-              <UIInput
-                type="number"
-                placeholder="Wprowadź procent zniżki"
-                {...register('discount', { valueAsNumber: true })}
-              />
-            </UIGroup>
-            <UIGroup header="Forma płatności" error={errors.paymentForm} required>
-              <UISelect
-                name="paymentForm"
-                placeholder="Wybierz formę płatności"
-                options={paymentForms}
-                control={control}
-              />
-            </UIGroup>
-            <UIGroup header="Zamówienie opłacone" error={errors.isPaid}>
-              <UITogglebox {...register('isPaid')} />
-            </UIGroup>
-          </div>
-          <div className="col-3">
-            <UIGroup header="Uwagi" error={errors.notes}>
-              <UITextarea rows={3} placeholder="Uwagi do wypożyczenia" {...register('notes')} />
-            </UIGroup>
-          </div>
-        </div>
+        </fieldset>
         {debouncedRentalDate && debouncedReturnDate ? (
-          <RentWidget
-            availableDevices={availableDevices}
-            devices={data?.devices}
-            control={control}
-            errors={errors}
-            setValue={setValue}
-          />
+          <RentWidget devices={allDevices} control={control} errors={errors} setValue={setValue} />
         ) : (
           <p className="mark">Wybierz datę wypożyczenia i zwrotu, aby zobaczyć dostępne urządzenia do wypożyczenia</p>
         )}

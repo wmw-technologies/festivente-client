@@ -76,6 +76,7 @@ export default function UISelect({ name, placeholder, multiselect, options = [],
 
   return (
     <div className={`${styles.selectContainer} ${visible ? 'active' : ''}`}>
+      <input type="hidden" />
       <Tippy
         placement={'bottom-start'}
         interactive

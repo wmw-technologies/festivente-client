@@ -3,7 +3,7 @@ import styles from './index.module.scss';
 import UIIcon from '@/src/components/UI/Icon';
 
 type UIBadgeProps = {
-  variant?: 'primary' | 'secondary' | 'success' | 'info' | 'warning';
+  variant?: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'danger';
   children: ReactNode;
   onClick?: () => void;
 };

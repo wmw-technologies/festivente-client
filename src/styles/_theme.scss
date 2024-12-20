@@ -196,6 +196,12 @@ input:-webkit-autofill:active {
   padding: 0 8px;
 }
 
+fieldset {
+  padding: 0;
+  border: none;
+  margin: 0;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

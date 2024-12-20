@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Device } from '@/src/types';
 import { Schema } from './form';
 import { FieldErrors, useController, Control, UseFormSetValue, set } from 'react-hook-form';
@@ -9,14 +9,13 @@ import UIIcon from '@/src/components/UI/Icon';
 import UITooltip from '@/src/components/UI/Tooltip';
 
 type RentWidegetProps = {
-  availableDevices: Device[];
-  devices?: Device[];
+  devices: Device[];
   control: Control<Schema>;
   errors: FieldErrors<Schema>;
   setValue: UseFormSetValue<Schema>;
 };
 
-export default function RentWidget({ availableDevices, devices, control, errors, setValue }: RentWidegetProps) {
+export default function RentWidget({ devices, control, errors, setValue }: RentWidegetProps) {
   const { field: deviceIds } = useController({
     control,
     name: 'devices',
@@ -39,10 +38,9 @@ export default function RentWidget({ availableDevices, devices, control, errors,
   });
 
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [addedDevices, setAddedDevices] = useState<Device[]>([]);
   const [rentalDays, setRentalDays] = useState<number>(0);
 
-  const filteredDevices = availableDevices.filter(
+  const filteredDevices = devices.filter(
     (device) =>
       (searchQuery === '' ||
         device.warehouseId.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -50,6 +48,8 @@ export default function RentWidget({ availableDevices, devices, control, errors,
         device.serialNumber?.toLowerCase?.().includes?.(searchQuery.toLowerCase())) &&
       !deviceIds.value.includes(device._id)
   );
+
+  const addedDevices = devices.filter((device) => deviceIds.value.includes(device._id));
 
   function calculateRentalDays(rentalDate: Date, returnDate: Date): number {
     const timeDifference = returnDate.getTime() - rentalDate.getTime();
@@ -65,8 +65,8 @@ export default function RentWidget({ availableDevices, devices, control, errors,
 
     if (isDeviceAdded) return;
 
+    // setAddedDevices([...addedDevices, device]);
     deviceIds.onChange([...deviceIds.value, device._id]);
-    setAddedDevices([...addedDevices, device]);
     const totalWithoutDiscount = (countInTotal + device.warehouseId.rentalValue) * rentalDays;
     const discountAmount = ((discount.value ? discount.value : 0) / 100) * totalWithoutDiscount;
     setValue('inTotal', twoDecimals(totalWithoutDiscount - discountAmount));
@@ -78,8 +78,6 @@ export default function RentWidget({ availableDevices, devices, control, errors,
     if (!isDeviceAdded) return;
 
     deviceIds.onChange(deviceIds.value.filter((id: string) => id !== device._id));
-    setAddedDevices(addedDevices.filter((addedDevice) => addedDevice._id !== device._id));
-
     const totalWithoutDiscount = (countInTotal - device.warehouseId.rentalValue) * rentalDays;
     const discountAmount = ((discount.value ? discount.value : 0) / 100) * totalWithoutDiscount;
     setValue('inTotal', twoDecimals(totalWithoutDiscount - discountAmount));
@@ -96,16 +94,6 @@ export default function RentWidget({ availableDevices, devices, control, errors,
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rentalDate.value, returnDate.value, discount.value]);
-
-  useEffect(() => {
-    if (devices) {
-      setAddedDevices(devices);
-      console.log('devices', devices);
-      // console.log("deviceIds.value", deviceIds.value);
-      // setAddedDevices(availableDevices.filter((device) => deviceIds.value.some((id: string) => id === device._id)));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [devices]);
 
   return (
     <div className="row">
