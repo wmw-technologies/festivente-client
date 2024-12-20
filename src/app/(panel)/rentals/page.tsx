@@ -9,38 +9,11 @@ import UIBadge from '@/src/components/UI/Badge';
 import UIPagination from '@/src/components/UI/Pagination';
 import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 import { dashIfEmpty, formatCurrency, formatDate, formatDateTime } from '@/src/utils/format';
+import { getStatus, getStatusVariant } from './utis';
 
 type RentalsProps = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
-
-function getStatus(status: string) {
-  switch (status) {
-    case 'Scheduled':
-      return 'Zaplanowany';
-    case 'In Progress':
-      return 'W trakcie';
-    case 'Completed':
-      return 'Zakończony';
-    default:
-      return 'Nieznany';
-  }
-}
-
-function getStatusVariant(status: string) {
-  switch (status) {
-    case 'Scheduled':
-      return 'info';
-    case 'In Progress':
-      return 'warning';
-    case 'Completed Paid':
-      return 'success';
-    case 'Complated Not Paid':
-      return 'danger';
-    default:
-      return 'info';
-  }
-}
 
 async function fetchData(pager: Pager) {
   const url = process.env.NEXT_PUBLIC_API_URL;

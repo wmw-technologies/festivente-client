@@ -9,7 +9,6 @@ import UIPanel from '@/src/components/UI/Panel';
 import { Column, Device, Rental, Warehouse } from '@/src/types';
 import { dashIfEmpty, formatCurrency, formatDateTime } from '@/src/utils/format';
 import React from 'react';
-import Link from 'next/link';
 
 type DetailsProps = {
   id: string;
