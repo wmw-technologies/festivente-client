@@ -9,6 +9,7 @@ import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 import UIDetails from '@/src/components/UI/Details';
 import UITable from '@/src/components/UI/Table';
 import { exportToExcel } from '@/src/utils/globalFunctions';
+import { getStatus } from '../../utils';
 
 type DetailsProps = {
   id: string;
@@ -62,14 +63,12 @@ export default function Details({ id, data }: DetailsProps) {
 
   const details = [
     { detailName: 'Nazwa imprezy', detailData: data?.event.eventName },
-    // { detailName: 'Rodzaj pojazdu', detailData: data?.vehicleType },
-    // { detailName: 'Kierowca', detailData: `${data?.driver.firstName} ${data?.driver.lastName}` },
     { detailName: 'Kontakt do kierwocy', detailData: `tel:${data?.phoneNumber}` },
     { detailName: 'Czas wyjazdu', detailData: formatDateTime(data?.departureTime) },
     { detailName: 'Czas przybycia', detailData: formatDateTime(data?.arrivalTime) },
     { detailName: 'Miesjce wyjazdu', detailData: data?.event.location },
     { detailName: 'Miejsce docelowe', detailData: data?.event.location },
-    { detailName: 'Status', detailData: data?.event.status },
+    { detailName: 'Status', detailData: getStatus(data?.status!) },
     { detailName: 'Utworzono', detailData: formatDateTime(data?.createdAt) },
     { detailName: 'Zaktualizowano', detailData: formatDateTime(data?.updatedAt) },
     { detailName: 'Opis', detailData: dashIfEmpty(data?.notes) }

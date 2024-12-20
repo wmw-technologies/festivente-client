@@ -39,7 +39,7 @@ export default function UITable({ columns, pager, data, noHeader }: UITableProps
           <thead className={styles.thead}>
             <tr>
               {columns.map((column) => (
-                <th key={column.id} style={{ width: column.width }}>
+                <th key={column.id} style={{ width: column.width, textAlign: column.align }}>
                   {column.sort ? (
                     <Link href={href(column.sort)} className={`${styles.sortButton} ${activeClass(column)}`}>
                       <span>{column.header}</span>

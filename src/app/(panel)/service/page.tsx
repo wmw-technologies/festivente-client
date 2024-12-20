@@ -47,12 +47,17 @@ export default async function ServicePage({ searchParams }: ServiceProps) {
     {
       id: 1,
       header: 'ID',
-      item: (item: Service) => <span>{item.device._id}</span>
+      item: (item: Service) => <span>{item._id}</span>,
+      sort: '_id'
     },
     {
       id: 2,
-      header: 'Numer seryjny',
-      item: (item: Service) => <span>{item.device.serialNumber}</span>
+      header: 'Urządzenie',
+      item: (item: Service) => (
+        <span>
+          {item.device?.warehouseId?.name} {item.device?.warehouseId?.skuNumber} | {item?.device?.serialNumber}
+        </span>
+      )
     },
     {
       id: 3,

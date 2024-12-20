@@ -2,6 +2,7 @@ import { cookies } from 'next/headers';
 import { getPager } from '@/src/utils/pager';
 import { ResponseAPI, Column, Pager, Pagination, Transport } from '@/src/types';
 import { formatDateTime, dashIfEmpty } from '@/src/utils/format';
+import { getStatus, getStatusVariant } from './utils';
 import UICard from '@/src/components/UI/Card';
 import UIPanel from '@/src/components/UI/Panel';
 import UIButton from '@/src/components/UI/Button';
@@ -13,32 +14,6 @@ import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 type TransportProps = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
-
-function getStatus(status: string) {
-  switch (status) {
-    case 'Scheduled':
-      return 'Zaplanowany';
-    case 'In Progress':
-      return 'W trakcie';
-    case 'Completed':
-      return 'Zakończony';
-    default:
-      return 'Nieznany';
-  }
-}
-
-function getStatusVariant(status: string) {
-  switch (status) {
-    case 'Scheduled':
-      return 'info';
-    case 'In Progress':
-      return 'warning';
-    case 'Completed':
-      return 'success';
-    default:
-      return 'info';
-  }
-}
 
 async function fetchData(pager: Pager) {
   const url = process.env.NEXT_PUBLIC_API_URL;
