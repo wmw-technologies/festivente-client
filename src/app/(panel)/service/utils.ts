@@ -1,5 +1,4 @@
 export function getStatus(status: string) {
-  console.log('status', status);
   switch (status) {
     case 'Accepted':
       return 'Przyjęty';
