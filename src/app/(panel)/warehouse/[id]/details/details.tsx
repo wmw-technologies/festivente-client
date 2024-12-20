@@ -62,7 +62,8 @@ export default function Details({ id, data, rentals }: DetailsProps) {
       header: '',
       item: (item: Device) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>
-          <UIDropdownItem onClick={() => findRentalWithDevice(item._id)}>Edytuj</UIDropdownItem>
+          <UIDropdownItem onClick={() => findRentalWithDevice(item._id)}>Do wypożyczenia</UIDropdownItem>
+          <UIDropdownItem>Do serwisu</UIDropdownItem>
         </UIDropdown>
       ),
       width: 36
