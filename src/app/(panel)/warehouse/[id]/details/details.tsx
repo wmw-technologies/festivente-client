@@ -6,23 +6,23 @@ import UIDetails from '@/src/components/UI/Details';
 import { UIDropdown, UIDropdownItem } from '@/src/components/UI/Dropdown';
 import UITable from '@/src/components/UI/Table';
 import UIPanel from '@/src/components/UI/Panel';
-import { Column, Device, Rental, Warehouse } from '@/src/types';
+import { Column, Device, Rental, Service, Warehouse } from '@/src/types';
 import { dashIfEmpty, formatCurrency, formatDateTime } from '@/src/utils/format';
-import React from 'react';
 
 type DetailsProps = {
   id: string;
   data: Warehouse | null;
-  rentals: Rental[][];
+  rentals: Rental[];
+  services: Service[];
 };
 
-export default function Details({ id, data, rentals }: DetailsProps) {
-  const findRentalWithDevice = (deviceID: string) => {
-    const rental = rentals.flat().find((rental) => rental.devices.some((device) => device._id === deviceID));
-    console.log(rental?._id);
-    if (rental) {
-      window.location.href = `/rentals/${rental._id}/details`;
-    }
+export default function Details({ id, data, rentals, services }: DetailsProps) {
+  const findDeviceInRentals = (deviceId: string) => {
+    return rentals.find((rental) => rental.devices.some((rentalDevice) => rentalDevice._id === deviceId))?._id;
+  };
+
+  const findDeviceInServices = (deviceId: string) => {
+    return services.find((service) => service.device._id === deviceId)?._id;
   };
 
   const columns: Array<Column> = [
@@ -33,38 +33,40 @@ export default function Details({ id, data, rentals }: DetailsProps) {
     },
     {
       id: 2,
-      header: 'Id wynajmu',
-      item: (item: Device) => <span>{dashIfEmpty(String(item.rentalId))}</span>
-    },
-    {
-      id: 3,
       header: 'Lokalizacja',
       item: (item: Device) => <span>{item.location}</span>
     },
     {
-      id: 4,
+      id: 3,
       header: 'Numer seryjny',
       item: (item: Device) => <span>{dashIfEmpty(item.serialNumber)}</span>
     },
     {
-      id: 5,
+      id: 4,
       header: 'Ostatnia aktualizacja',
       item: (item: Device) => <span>{formatDateTime(item.updatedAt)}</span>
     },
     {
-      id: 6,
+      id: 5,
       header: 'Opis',
       item: (item: Device) => <span>{dashIfEmpty(item.description)}</span>
     },
     {
-      id: 7,
+      id: 6,
       header: '',
-      item: (item: Device) => (
-        <UIDropdown icon="EllipsisHorizontalIcon" smaller>
-          <UIDropdownItem onClick={() => findRentalWithDevice(item._id)}>Do wypożyczenia</UIDropdownItem>
-          <UIDropdownItem>Do serwisu</UIDropdownItem>
-        </UIDropdown>
-      ),
+      item: (item: Device) =>
+        findDeviceInRentals(item._id) || findDeviceInServices(item._id) ? (
+          <UIDropdown icon="EllipsisHorizontalIcon" smaller>
+            {findDeviceInRentals(item._id) && (
+              <UIDropdownItem href={`/rentals/${findDeviceInRentals(item._id)}/details`}>
+                Do wypożyczenia
+              </UIDropdownItem>
+            )}
+            {findDeviceInServices(item._id) && (
+              <UIDropdownItem href={`/service/${findDeviceInServices(item._id)}/details`}>Do serwisu</UIDropdownItem>
+            )}
+          </UIDropdown>
+        ) : null,
       width: 36
     }
   ];
