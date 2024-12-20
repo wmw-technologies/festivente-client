@@ -63,14 +63,17 @@ export async function availableDevices(id: string, rentalDate: Date, returnDate:
   if (!authCookie) return [];
   const accessToken = JSON.parse(authCookie).accessToken;
 
-  // console.log('url', url);
-  // const idQuery = _id === 'add' ? '' : `?id=${_id}`;
-  const response = await fetch(`${url}/rental/available-devices`, {
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + accessToken
+  const idQuery = id === 'add' ? '' : `&id=${id}`;
+  const response = await fetch(
+    `${url}/rental/available-devices?rentalDate=${rentalDate}&returnDate=${returnDate}${idQuery}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + accessToken
+      }
     }
-  });
+  );
+
   if (!response.ok) return [];
   const data: ResponseAPI<Device[]> = await response.json();
   return data.data ?? [];

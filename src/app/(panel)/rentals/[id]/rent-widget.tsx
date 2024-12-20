@@ -10,12 +10,13 @@ import UITooltip from '@/src/components/UI/Tooltip';
 
 type RentWidegetProps = {
   availableDevices: Device[];
+  devices?: Device[];
   control: Control<Schema>;
   errors: FieldErrors<Schema>;
   setValue: UseFormSetValue<Schema>;
 };
 
-export default function RentWidget({ availableDevices, control, errors, setValue }: RentWidegetProps) {
+export default function RentWidget({ availableDevices, devices, control, errors, setValue }: RentWidegetProps) {
   const { field: deviceIds } = useController({
     control,
     name: 'devices',
@@ -51,11 +52,8 @@ export default function RentWidget({ availableDevices, control, errors, setValue
   );
 
   function calculateRentalDays(rentalDate: Date, returnDate: Date): number {
-    // const startDate = new Date(rentalDate);
-    // const endDate = new Date(returnDate);
     const timeDifference = returnDate.getTime() - rentalDate.getTime();
     const dayDifference = timeDifference / (1000 * 3600 * 24);
-    // console.log(timeDifference, dayDifference);
 
     return dayDifference ? Math.ceil(dayDifference) : 1;
   }
@@ -81,6 +79,7 @@ export default function RentWidget({ availableDevices, control, errors, setValue
 
     deviceIds.onChange(deviceIds.value.filter((id: string) => id !== device._id));
     setAddedDevices(addedDevices.filter((addedDevice) => addedDevice._id !== device._id));
+
     const totalWithoutDiscount = (countInTotal - device.warehouseId.rentalValue) * rentalDays;
     const discountAmount = ((discount.value ? discount.value : 0) / 100) * totalWithoutDiscount;
     setValue('inTotal', twoDecimals(totalWithoutDiscount - discountAmount));
@@ -88,17 +87,25 @@ export default function RentWidget({ availableDevices, control, errors, setValue
 
   useEffect(() => {
     setRentalDays(calculateRentalDays(rentalDate.value, returnDate.value));
+
     if (rentalDays) {
       const totalWithoutDiscount = countInTotal * calculateRentalDays(rentalDate.value, returnDate.value);
       const discountAmount = ((discount.value ? discount.value : 0) / 100) * totalWithoutDiscount;
       setValue('inTotal', twoDecimals(totalWithoutDiscount - discountAmount));
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rentalDate.value, returnDate.value, discount.value]);
 
   useEffect(() => {
-    if (deviceIds.value)
-      setAddedDevices(availableDevices.filter((device) => deviceIds.value.some((id: string) => id === device._id)));
-  }, [deviceIds.value]);
+    if (devices) {
+      setAddedDevices(devices);
+      console.log('devices', devices);
+      // console.log("deviceIds.value", deviceIds.value);
+      // setAddedDevices(availableDevices.filter((device) => deviceIds.value.some((id: string) => id === device._id)));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [devices]);
 
   return (
     <div className="row">

@@ -73,10 +73,17 @@ export default function Form({ id, isEdit, data }: FormProps) {
 
   const rentalDate = watch('rentalDate');
   const returnDate = watch('returnDate');
-  // const isPaid = watch('isPaid');
 
   const debouncedRentalDate = useDebounce(rentalDate, 1000);
   const debouncedReturnDate = useDebounce(returnDate, 1000);
+
+  function handleRentalDateChange(_: Date) {
+    setValue('devices', []);
+  }
+
+  function handleReturnDateChange(_: Date) {
+    setValue('devices', []);
+  }
 
   async function onSubmit(form: Schema) {
     try {
@@ -99,13 +106,6 @@ export default function Form({ id, isEdit, data }: FormProps) {
     }
   }
 
-  // async function handleEndRental() {
-  //   if (window.confirm('Czy na pewno chcesz zakończyć wypożyczenie?')) {
-  //     // add end status to rental
-  //     handleSubmit(onSubmit)();
-  //   }
-  // }
-
   function init() {
     if (!data) return;
 
@@ -125,6 +125,7 @@ export default function Form({ id, isEdit, data }: FormProps) {
       data.devices.map((device) => device._id)
     );
     setValue('inTotal', data.inTotal);
+    setValue('discount', data.discount);
     setValue('notes', data.notes);
   }
 
@@ -137,15 +138,13 @@ export default function Form({ id, isEdit, data }: FormProps) {
     async function fetchData(id: string, rentalDate: Date, returnDate: Date) {
       const response = await fetchAvailableDevices(id, rentalDate, returnDate);
 
-      console.log('availableDevices', response);
-
       setAvailableDevices(response);
     }
 
     if (debouncedRentalDate && debouncedReturnDate) {
       fetchData(id, debouncedRentalDate, debouncedReturnDate);
     }
-    // console.log('debouncedRentalDate', debouncedRentalDate);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedRentalDate, debouncedReturnDate]);
 
@@ -166,11 +165,6 @@ export default function Form({ id, isEdit, data }: FormProps) {
           >
             Zapisz
           </UIButton>
-          {/* {isEdit && isPaid && (
-            <UIButton onClick={handleEndRental} loading={isSubmitting} disabled={!isValid && isSubmitted}>
-              Zakończ wypożyczenie
-            </UIButton>
-          )} */}
         </UIPanel>
       }
     >
@@ -218,6 +212,7 @@ export default function Form({ id, isEdit, data }: FormProps) {
                 type="datetime"
                 placeholder="Wybierz datę wypożyczenia"
                 control={control}
+                onChange={handleRentalDateChange}
               />
             </UIGroup>
             <UIGroup
@@ -228,7 +223,13 @@ export default function Form({ id, isEdit, data }: FormProps) {
               error={errors.returnDate}
               required
             >
-              <UIDatepicker name="returnDate" type="datetime" placeholder="Wybierz datę zwrotu" control={control} />
+              <UIDatepicker
+                name="returnDate"
+                type="datetime"
+                placeholder="Wybierz datę zwrotu"
+                control={control}
+                onChange={handleReturnDateChange}
+              />
             </UIGroup>
             <UIGroup header="Koszt wypożyczenia" error={errors.inTotal} required>
               <UIInput
@@ -237,7 +238,12 @@ export default function Form({ id, isEdit, data }: FormProps) {
                 {...register('inTotal', { valueAsNumber: true })}
               />
             </UIGroup>
-            <UIGroup header="Procent zniżki" error={errors.discount}>
+            <UIGroup
+              header="Procent zniżki"
+              error={errors.discount}
+              help="Wprowadź 0 w przypadku braku zniżki"
+              required
+            >
               <UIInput
                 type="number"
                 placeholder="Wprowadź procent zniżki"
@@ -263,7 +269,13 @@ export default function Form({ id, isEdit, data }: FormProps) {
           </div>
         </div>
         {debouncedRentalDate && debouncedReturnDate ? (
-          <RentWidget availableDevices={availableDevices} control={control} errors={errors} setValue={setValue} />
+          <RentWidget
+            availableDevices={availableDevices}
+            devices={data?.devices}
+            control={control}
+            errors={errors}
+            setValue={setValue}
+          />
         ) : (
           <p className="mark">Wybierz datę wypożyczenia i zwrotu, aby zobaczyć dostępne urządzenia do wypożyczenia</p>
         )}

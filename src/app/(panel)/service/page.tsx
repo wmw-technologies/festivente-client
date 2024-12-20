@@ -45,7 +45,7 @@ export default async function ServicePage({ searchParams }: ServiceProps) {
   const columns: Array<Column> = [
     {
       id: 1,
-      header: 'ID urządzenia',
+      header: 'ID',
       item: (item: Service) => <span>{item.device._id}</span>
     },
     {

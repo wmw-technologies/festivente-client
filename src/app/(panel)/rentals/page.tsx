@@ -14,6 +14,32 @@ type RentalsProps = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
+function getStatus(status: string) {
+  switch (status) {
+    case 'Scheduled':
+      return 'Zaplanowany';
+    case 'In Progress':
+      return 'W trakcie';
+    case 'Completed':
+      return 'Zakończony';
+    default:
+      return 'Nieznany';
+  }
+}
+
+function getStatusVariant(status: string) {
+  switch (status) {
+    case 'Scheduled':
+      return 'info';
+    case 'In Progress':
+      return 'warning';
+    case 'Completed':
+      return 'success';
+    default:
+      return 'info';
+  }
+}
+
 async function fetchData(pager: Pager) {
   const url = process.env.NEXT_PUBLIC_API_URL;
   const authCookie = cookies().get('auth')?.value;
@@ -45,7 +71,7 @@ export default async function Rentals({ searchParams }: RentalsProps) {
   const columns: Array<Column> = [
     {
       id: 1,
-      header: 'ID wypożyczenia',
+      header: 'ID',
       item: (item: Rental) => <span>{item._id}</span>,
       sort: '_id'
     },
@@ -76,7 +102,7 @@ export default async function Rentals({ searchParams }: RentalsProps) {
     {
       id: 6,
       header: 'Status',
-      item: (item: Rental) => <UIBadge variant={item.status === 'Available' ? 'success' : 'secondary'}>asd</UIBadge>
+      item: (item: Rental) => <UIBadge variant={getStatusVariant(item.status)}>{getStatus(item.status)}</UIBadge>
     },
     {
       id: 7,
