@@ -1,6 +1,8 @@
 'use client';
+
 import { useEffect, useRef } from 'react';
 import styles from './index.module.scss';
+import UIHeader from '@/src/components/UI/Header';
 
 type Detail = {
   detailName: string;
@@ -35,11 +37,11 @@ export default function UIDetails({ details, header }: DetailsComponentProps) {
 
   return (
     <div className={styles['details-container']}>
-      <h2>{header}</h2>
+      <UIHeader>{header}</UIHeader>
       <div className={styles.details} ref={detailsRef}>
         {details.map((detail, index) => (
           <div className={styles.details__item} key={index}>
-            <span>{detail.detailName}:</span>
+            <span className={styles.header}>{detail.detailName}:</span>
             <p>{detail.detailData}</p>
           </div>
         ))}

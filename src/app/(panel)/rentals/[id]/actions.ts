@@ -57,24 +57,45 @@ export async function update(id: string, form: Schema) {
   };
 }
 
-export async function availableDevices(id: string, rentalDate: Date, returnDate: Date) {
+export async function availableDevices(rentalDate: Date, returnDate: Date) {
   const url = process.env.NEXT_PUBLIC_API_URL;
   const authCookie = cookies().get('auth')?.value;
   if (!authCookie) return [];
   const accessToken = JSON.parse(authCookie).accessToken;
 
-  const idQuery = id === 'add' ? '' : `&id=${id}`;
-  const response = await fetch(
-    `${url}/rental/available-devices?rentalDate=${rentalDate}&returnDate=${returnDate}${idQuery}`,
-    {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + accessToken
-      }
+  const response = await fetch(`${url}/rental/available-devices?rentalDate=${rentalDate}&returnDate=${returnDate}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + accessToken
     }
-  );
+  });
 
   if (!response.ok) return [];
   const data: ResponseAPI<Device[]> = await response.json();
   return data.data ?? [];
+}
+
+export async function changeStatusToPaid(id: string) {
+  const url = process.env.NEXT_PUBLIC_API_URL;
+  const authCookie = cookies().get('auth')?.value;
+  if (!authCookie) return [];
+  const accessToken = JSON.parse(authCookie).accessToken;
+
+  const response = await fetch(`${url}/rental/change-status-to-paid/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + accessToken
+    }
+  });
+
+  const json: ResponseAPI<any> = await response.json();
+
+  revalidatePath(`/rentals/${id}/details`);
+
+  return {
+    ...json,
+    status: response.status,
+    ok: response.ok
+  };
 }

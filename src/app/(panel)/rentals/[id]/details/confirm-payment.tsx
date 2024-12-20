@@ -1,5 +1,7 @@
 'use client';
 
+import { changeStatusToPaid } from '../actions';
+import toast from 'react-hot-toast';
 import UIButton from '@/src/components/UI/Button';
 
 type ConfirmPaymentProps = {
@@ -7,8 +9,10 @@ type ConfirmPaymentProps = {
 };
 
 export default function ConfirmPayment({ id }: ConfirmPaymentProps) {
-  function handleClick() {
-    console.log('clicked');
+  async function handleClick() {
+    const response = (await changeStatusToPaid(id)) as any;
+
+    toast.success(response?.message);
   }
 
   return (

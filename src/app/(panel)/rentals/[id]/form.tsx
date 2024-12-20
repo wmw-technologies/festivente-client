@@ -19,7 +19,6 @@ import UIInput from '@/src/components/UI/Input';
 import UITextarea from '@/src/components/UI/Textarea';
 import UIDatepicker from '@/src/components/UI/Datepicker';
 import UISelect from '@/src/components/UI/Select';
-import UITogglebox from '@/src/components/UI/Togglebox';
 
 const schema = z.object({
   clientName: z.string().min(1, 'Nazwa klienta jest wymagana'),
@@ -32,7 +31,6 @@ const schema = z.object({
   rentalDate: z.date({ message: 'Data wypożyczenia jest wymagana' }),
   returnDate: z.date({ message: 'Data zwrotu jest wymagana' }),
   paymentForm: z.string({ message: 'Wprowadź forme płatności' }).min(1),
-  isPaid: z.boolean(),
   devices: z.array(z.string()).min(1, 'W wypożyczeniu musi być przynajmniej jedno urządzenie'),
   inTotal: z
     .number({ message: 'Wprowadź wartość wypożyczenia' })
@@ -50,8 +48,8 @@ type FormProps = {
   id: string;
 };
 
-async function fetchAvailableDevices(_id: string, rentalDate: Date, returnDate: Date) {
-  return await availableDevices(_id, rentalDate, returnDate);
+async function fetchAvailableDevices(rentalDate: Date, returnDate: Date) {
+  return await availableDevices(rentalDate, returnDate);
 }
 
 export default function Form({ id, isEdit, data }: FormProps) {
@@ -99,7 +97,9 @@ export default function Form({ id, isEdit, data }: FormProps) {
 
       if (!response?.ok) throw response;
 
-      router.push('/rentals');
+      const rentalId = response?.data?._id as any;
+
+      router.push(`/rentals/${rentalId}/details`);
       toast.success(response?.message);
     } catch (ex: any) {
       if (ex.status === 422 || (ex.status === 400 && ex?.errors)) {
@@ -129,7 +129,6 @@ export default function Form({ id, isEdit, data }: FormProps) {
     setValue('rentalDate', new Date(data.rentalDate));
     setValue('returnDate', new Date(data.returnDate));
     setValue('paymentForm', data.paymentForm);
-    setValue('isPaid', data.isPaid);
     setValue(
       'devices',
       data.devices.map((device) => device._id)
@@ -145,14 +144,14 @@ export default function Form({ id, isEdit, data }: FormProps) {
   }, []);
 
   useEffect(() => {
-    async function fetchData(id: string, rentalDate: Date, returnDate: Date) {
-      const response = await fetchAvailableDevices(id, rentalDate, returnDate);
+    async function fetchData(rentalDate: Date, returnDate: Date) {
+      const response = await fetchAvailableDevices(rentalDate, returnDate);
 
-      setAvailableDevices(response);
+      setAvailableDevices(response ?? []);
     }
 
     if (debouncedRentalDate && debouncedReturnDate) {
-      fetchData(id, debouncedRentalDate, debouncedReturnDate);
+      fetchData(debouncedRentalDate, debouncedReturnDate);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -268,9 +267,6 @@ export default function Form({ id, isEdit, data }: FormProps) {
                   options={paymentForms}
                   control={control}
                 />
-              </UIGroup>
-              <UIGroup header="Zamówienie opłacone" error={errors.isPaid}>
-                <UITogglebox {...register('isPaid')} />
               </UIGroup>
             </div>
             <div className="col-3">

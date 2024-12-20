@@ -37,44 +37,33 @@ const columns: Array<Column> = [
   {
     id: 1,
     header: 'Nazwa urządzenia',
-    item: (item: Device) => <span>{item.warehouseId.name}</span>,
-    sort: 'name'
+    item: (item: Device) => <span>{item.warehouseId.name}</span>
   },
   {
     id: 2,
-    header: 'SKU:',
-    item: (item: Device) => <span>{dashIfEmpty(String(item.warehouseId.skuNumber))}</span>,
-    sort: 'skuNumber'
+    header: 'SKU',
+    item: (item: Device) => <span>{dashIfEmpty(String(item.warehouseId.skuNumber))}</span>
   },
   {
     id: 3,
     header: 'Numer seryjny',
-    item: (item: Device) => <span>{dashIfEmpty(item.serialNumber)}</span>,
-    sort: 'serialNumber'
+    item: (item: Device) => <span>{dashIfEmpty(item.serialNumber)}</span>
   },
   {
     id: 4,
     header: 'Lokalizacja',
-    item: (item: Device) => <span>{item.location}</span>,
-    sort: 'location'
+    item: (item: Device) => <span>{item.location}</span>
   },
   {
     id: 5,
     header: 'Ostatnia aktualizacja',
-    item: (item: Device) => <span>{formatDateTime(item.updatedAt)}</span>,
-    sort: 'updatedAt'
+    item: (item: Device) => <span>{formatDateTime(item.updatedAt)}</span>
   },
   {
     id: 6,
     header: 'Dodane przez',
     item: (item: Device) => (
-      <span>
-        {dashIfEmpty(
-          item.warehouseId.createdBy.first_name || item.warehouseId.createdBy.last_name === undefined
-            ? undefined
-            : `${item.warehouseId.createdBy.first_name} ${item.warehouseId.createdBy.last_name}`
-        )}
-      </span>
+      <span>{`${item.warehouseId.createdBy.first_name} ${item.warehouseId.createdBy.last_name}`}</span>
     )
   },
   {
@@ -96,16 +85,14 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
     { detailName: 'Telefon klienta', detailData: data?.clientPhone },
     { detailName: 'Wartość', detailData: formatCurrency(data?.inTotal ?? 0) },
     { detailName: 'Data wypożyczenia', detailData: formatDateTime(data?.rentalDate) },
+    { detailName: 'Forma płatności', detailData: data?.paymentForm },
+    { detailName: 'Wypożyczenie opłacone', detailData: data?.isPaid ? 'Tak' : 'Nie' },
     { detailName: 'Data zwrotu', detailData: formatDateTime(data?.returnDate) },
     { detailName: 'Data dodania', detailData: formatDateTime(data?.createdAt) },
     { detailName: 'Data ostatniej aktualizacji', detailData: formatDateTime(data?.updatedAt) },
     {
       detailName: 'Dodane przez',
-      detailData: dashIfEmpty(
-        data?.createdBy.first_name || data?.createdBy.last_name === undefined
-          ? undefined
-          : `${data?.createdBy.first_name} ${data?.createdBy.last_name}`
-      )
+      detailData: `${data?.createdBy.first_name} ${data?.createdBy.last_name}`
     },
     { detailName: 'Status', detailData: data?.status },
     { detailName: 'Opis', detailData: data?.notes }
@@ -118,7 +105,7 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
           <UIButton href="/rentals" icon="ArrowLongLeftIcon" variant="gray">
             Powrót
           </UIButton>
-          <ConfirmPayment id={id} />
+          {!data?.isPaid ? <ConfirmPayment id={id} /> : null}
         </UIPanel>
       }
     >
