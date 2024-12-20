@@ -7,6 +7,7 @@ import { dashIfEmpty, formatCurrency, formatDateTime } from '@/src/utils/format'
 import ConfirmPayment from './confirm-payment';
 import UITable from '@/src/components/UI/Table';
 import UIDetails from '@/src/components/UI/Details';
+import { getStatus } from '../../utis';
 
 type DetailsProps = {
   params: {
@@ -94,7 +95,7 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
       detailName: 'Dodane przez',
       detailData: `${data?.createdBy.first_name} ${data?.createdBy.last_name}`
     },
-    { detailName: 'Status', detailData: data?.status },
+    { detailName: 'Status', detailData: getStatus(data?.status ?? '') },
     { detailName: 'Opis', detailData: data?.notes }
   ];
 
@@ -104,6 +105,9 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
         <UIPanel header="Szczegóły">
           <UIButton href="/rentals" icon="ArrowLongLeftIcon" variant="gray">
             Powrót
+          </UIButton>
+          <UIButton href={`/rentals/${id}`} icon="PencilIcon">
+            Edytuj
           </UIButton>
           {!data?.isPaid ? <ConfirmPayment id={id} /> : null}
         </UIPanel>
