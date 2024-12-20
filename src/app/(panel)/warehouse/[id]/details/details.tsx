@@ -89,7 +89,9 @@ export default function Details({ id, data, rentals, services }: DetailsProps) {
           <UIButton href="/warehouse" icon="ArrowLongLeftIcon" variant="gray">
             Powrót
           </UIButton>
-          <UIButton href={`/warehouse/${id}`}>Edytuj</UIButton>
+          <UIButton href={`/warehouse/${id}`} icon="PencilSquareIcon">
+            Edytuj
+          </UIButton>
         </UIPanel>
       }
     >

@@ -105,6 +105,9 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
           <UIButton href="/rentals" icon="ArrowLongLeftIcon" variant="gray">
             Powrót
           </UIButton>
+          <UIButton href={`/rentals/${id}`} icon="PencilIcon">
+            Edytuj
+          </UIButton>
           {!data?.isPaid ? <ConfirmPayment id={id} /> : null}
         </UIPanel>
       }

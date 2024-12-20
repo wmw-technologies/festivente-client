@@ -97,6 +97,9 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
           <UIButton href="/service" icon="ArrowLongLeftIcon" variant="gray">
             Powrót
           </UIButton>
+          <UIButton href={`/service/${id}`} icon="PencilIcon">
+            Edytuj
+          </UIButton>
         </UIPanel>
       }
     >

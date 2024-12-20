@@ -93,7 +93,9 @@ export default function Details({ id, data }: DetailsProps) {
           <UIButton href="/events" icon="ArrowLongLeftIcon" variant="gray">
             Powrót
           </UIButton>
-          <UIButton href={`/events/${id}`}>Edytuj</UIButton>
+          <UIButton href={`/events/${id}`} icon="PencilSquareIcon">
+            Edytuj
+          </UIButton>
           <UIButton type="button" variant="black" onClick={() => exportToExcel(details, 'Wydarzenie')}>
             Eksport do excel
           </UIButton>
