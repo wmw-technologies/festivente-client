@@ -71,45 +71,51 @@ export default async function TransportPage({ searchParams }: TransportProps) {
   const columns: Array<Column> = [
     {
       id: 1,
+      header: 'ID',
+      item: (item: Transport) => <span>{item._id}</span>,
+      sort: '_id'
+    },
+    {
+      id: 2,
       header: 'Odjazd',
       item: (item: Transport) => <span>{formatDateTime(item.departureTime)}</span>,
       sort: 'departureTime'
     },
     {
-      id: 2,
+      id: 3,
       header: 'Przyjazd',
       item: (item: Transport) => <span>{formatDateTime(item.arrivalTime)}</span>,
       sort: 'arrivalTime'
     },
     {
-      id: 3,
+      id: 4,
       header: 'Skąd',
       item: (item: Transport) => <span>{item.departureLocation}</span>,
       sort: 'departureLocation'
     },
     {
-      id: 4,
+      id: 5,
       header: 'Dokąd',
       item: (item: Transport) => <span>{item.destinationLocation}</span>,
       sort: 'destinationLocation'
     },
     {
-      id: 5,
+      id: 6,
       header: 'Kontakt (numer telefonu)',
       item: (item: Transport) => <span>{dashIfEmpty(item.phoneNumber)}</span>
     },
     {
-      id: 6,
+      id: 7,
       header: 'Wydarzenie',
       item: (item: Transport) => <span>{item.event.eventName}</span>
     },
     {
-      id: 7,
+      id: 8,
       header: 'Status',
       item: (item: Transport) => <UIBadge variant={getStatusVariant(item.status)}>{getStatus(item.status)}</UIBadge>
     },
     {
-      id: 8,
+      id: 9,
       header: '',
       item: (item: Transport) => (
         <UIDropdown icon="EllipsisHorizontalIcon" smaller>

@@ -108,6 +108,7 @@ export interface Rental {
   inTotal: number;
   notes?: string;
   status: string;
+  discount: number;
   createdBy: User;
   createdAt: string;
   updatedAt: string;

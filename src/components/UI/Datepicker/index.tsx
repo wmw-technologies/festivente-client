@@ -14,9 +14,10 @@ type UIDatepickerProps = {
   type?: 'date' | 'datetime';
   placeholder?: string;
   control: Control<any>;
+  onChange?: (date: Date) => void;
 };
 
-export default function UICard({ name, type = 'date', placeholder, control }: UIDatepickerProps) {
+export default function UICard({ name, type = 'date', placeholder, control, onChange }: UIDatepickerProps) {
   const { field } = useController({
     control,
     name
@@ -26,6 +27,11 @@ export default function UICard({ name, type = 'date', placeholder, control }: UI
     e.preventDefault();
     e.stopPropagation();
     field.onChange(undefined);
+  }
+
+  function handleChange(date: Date | null) {
+    field.onChange(date);
+    if (onChange && date) onChange(date);
   }
 
   return (
@@ -38,7 +44,7 @@ export default function UICard({ name, type = 'date', placeholder, control }: UI
         dateFormat={type === 'datetime' ? 'dd.MM.YYYY, HH:mm' : 'dd.MM.YYYY'}
         placeholderText={placeholder}
         showTimeSelect={type === 'datetime'}
-        onChange={(date) => field.onChange(date)}
+        onChange={(date) => handleChange(date)}
         popperProps={{
           strategy: 'fixed'
         }}
