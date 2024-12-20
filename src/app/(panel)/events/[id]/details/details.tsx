@@ -8,7 +8,6 @@ import UITable from '@/src/components/UI/Table';
 import { Column, Employee, Event } from '@/src/types';
 import { dashIfEmpty, formatCurrency, formatDateTime } from '@/src/utils/format';
 import { exportToExcel } from '@/src/utils/globalFunctions';
-import { utils, writeFile } from 'xlsx';
 
 type DetailsProps = {
   id: string;
