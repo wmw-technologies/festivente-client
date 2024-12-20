@@ -52,6 +52,9 @@ export default async function RentalsDetailsPage({ params }: DetailsProps) {
           <UIButton href="/vehicles" icon="ArrowLongLeftIcon" variant="gray">
             Powrót
           </UIButton>
+          <UIButton href={`/vehicles/${id}`} icon="PencilIcon">
+            Edytuj
+          </UIButton>
         </UIPanel>
       }
     >
