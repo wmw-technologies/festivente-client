@@ -74,6 +74,11 @@ export const SITEMAP: Array<SitemapItem> = [
         name: 'Edytuj w magazynie',
         path: '/warehouse/:id',
         visible: false
+      },
+      {
+        name: 'Szczegóły wydarzenia',
+        path: '/warehouse/:id/details',
+        visible: false
       }
     ]
   },
@@ -91,6 +96,11 @@ export const SITEMAP: Array<SitemapItem> = [
       {
         name: 'Edytuj wypożyczenie',
         path: '/rentals/:id',
+        visible: false
+      },
+      {
+        name: 'Szczegóły wydarzenia',
+        path: '/rentals/:id/details',
         visible: false
       }
     ]
